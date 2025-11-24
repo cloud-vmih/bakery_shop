@@ -1,0 +1,47 @@
+/* Container */
+.auth-container {
+  @apply flex items-center justify-center min-h-screen 
+         bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-100;
+}
+
+/* Card */
+.auth-card {
+  @apply w-full max-w-sm bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl
+         border border-white/30 animate-[fadeIn_0.6s_ease-out];
+}
+
+/* Inputs */
+.input-box {
+  @apply w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl
+         text-gray-800 placeholder-gray-400 outline-none
+         focus:ring-2 focus:ring-cyan-400 focus:border-transparent
+         transition-all duration-300 ease-out
+         group-hover:border-cyan-300 disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+/* Button */
+.auth-btn {
+  @apply w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-xl
+         font-semibold text-lg shadow-lg hover:shadow-xl transform
+         hover:scale-[1.02] active:scale-[0.98]
+         transition-all duration-300 ease-out flex items-center justify-center gap-2
+         disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100;
+}
+
+.auth-text {
+  @apply text-center mt-6 text-gray-600 text-sm;
+}
+
+.auth-link {
+  @apply text-cyan-600 hover:text-cyan-700 font-medium 
+         hover:underline underline-offset-2 transition-all;
+}
+
+.input-wrapper {
+  @apply relative top-1;
+}
+
+.input-icon {
+  @apply w-5 h-5 text-cyan-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none;
+}
+

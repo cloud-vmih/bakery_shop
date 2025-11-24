@@ -1,0 +1,13 @@
+CÁC BƯỚC ĐỂ CHẠY ĐƯỢC PROJECT
+1. Clone github về: git clone https:// , sau đó mở bằng VSCode hoặc Intellij
+2. Cài đặt NodeJS và npm (có thể hỏi chatgpt hoặc google) -> Check node -v và npm -v có là thành công
+3. Sau khi install xong, split terminal thành 2
+    4.1. Chạy lệnh "cd server" ở 1 bên
+    4.2. Bên còn lại chạy "cd client"
+4. Chạy "npm install" ở cả 2 bên (có lỗi gì thì hỏi chatgpt hoặc Thùy Vân nhé)
+5. Chỉnh thông tin file env theo đúng thông tin postgres của mình (nhớ tạo db trước)
+6. Start project bằng lệnh "npm start" (chạy bên server xong tới client)
+
+#Lưu ý: 
+- Chạy lần đầu -> Sửa file server/src/config/database.ts phần synchronize thành true.
+- Sau khi đã tạo được bảng, sửa lại thành false như cũ nhé.

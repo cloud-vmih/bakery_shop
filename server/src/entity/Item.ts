@@ -1,0 +1,38 @@
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMany } from "typeorm";
+import { ECategory } from "./enum/enum";
+import { Wishlist } from "./Wishlist";
+import { Rating } from "./Rating";
+
+@Entity("item")
+export class Item extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+
+  @Column()
+  description?: string;
+
+  @Column()
+  price?: number;
+
+  @Column({ nullable: true })
+  imageURL?: string;
+
+  @Column({
+    type: "enum",
+    enum: ECategory,
+    nullable: true,
+  })
+  category?: ECategory;
+
+  @Column({ type: "json", nullable: true })
+  itemDetail?: any;
+
+  @ManyToMany(() => Wishlist, w => w.item)
+  wishlist?: Wishlist[];
+
+  @OneToMany(() => Rating, r => r.item)
+  ratings?: Rating[];
+}
