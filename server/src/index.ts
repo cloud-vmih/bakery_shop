@@ -1,6 +1,6 @@
-import app from "./server";
 import "reflect-metadata";
 import { AppDataSource } from "./config/database";
+import { server } from "./socket";
 
 AppDataSource.initialize().then(() => {
   console.log("Data Source has been initialized!");
@@ -10,6 +10,6 @@ AppDataSource.initialize().then(() => {
 
 const PORT = process.env.PORT || 9000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

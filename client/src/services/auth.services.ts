@@ -1,4 +1,4 @@
-import API from "../api/axois.config";
+ import API from "../api/axois.config";
 import { AxiosError } from "axios";
 
 interface LoginResponse {
