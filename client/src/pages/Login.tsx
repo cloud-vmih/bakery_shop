@@ -17,7 +17,8 @@ export default function AuthPage() {
     try {
       const data = await loginService(username, password);
       setUser(data.user);
-      localStorage.setItem("token", data.token);
+      // Lưu dạng JSON string để interceptor JSON.parse đọc được
+      localStorage.setItem("token", JSON.stringify(data.token));
       switch (data.user.type) {
         case "admin":
           navigate(`/admin`);

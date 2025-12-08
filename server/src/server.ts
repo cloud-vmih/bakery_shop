@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/account.routes";
+import categoryRoutes from "./routes/category.routes";
+import cartRoutes from "./routes/cart.routes";
+
+
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -10,8 +14,8 @@ app.use(cors({
   credentials: true                 // cho phép gửi cookie / auth headers
 }));
 app.use(express.json());
+app.use("/api/category", categoryRoutes);
+app.use("/api/cart", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
 
 export default app;
-
-
