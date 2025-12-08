@@ -3,10 +3,12 @@ import "../styles/auth.css";
 import toast from "react-hot-toast";
 import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
+import { useNavigate } from 'react-router-dom';
 
 export default function Menu() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -28,6 +30,7 @@ export default function Menu() {
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
         toast.error("Vui lòng đăng nhập để thêm vào giỏ");
+        navigate("/login")
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");

@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { useUser } from "../context/authContext";
 import { useEffect } from "react";
+import { Header } from "../components/Header";
 
 const HomePage = () => {
   const { user } = useUser();
@@ -11,7 +12,12 @@ const HomePage = () => {
     }
   }, [user]);
 
-  return <div>Trang chủ</div>;
+  return (
+    <>
+      <Header user={user}/>
+      <div>Trang chủ</div>;
+    </>
+  )
 };
 
 export default HomePage;
