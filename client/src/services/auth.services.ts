@@ -53,8 +53,9 @@ export const getUserInfo = async (id: number): Promise<any> => {
   }
 };
 
-
 export const googleLoginService = async (idToken: string) => {
   const res = await API.post(`/google`, { id_token: idToken });
   return res.data; 
 };
+
+

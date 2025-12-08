@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
-import { createEmailVerification, isEmailVerified } from "../db/verify.db";
+import { createEmailVerification, isAccountVerified } from "../db/verify.db";
 import { sendVerifyEmail } from "../helper/sendEmail"
 
-import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo } from "../db/db.account";
+import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, isEmailTaken, isPhoneNumberTaken } from "../db/db.account";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 
@@ -14,6 +14,9 @@ export const registerUser = async (username: string, password: string, email: st
   
     const existing = await findAccountByUsername(username);
     if (existing) throw new Error("Username already exists");
+
+    if(await isEmailTaken(email)) throw new Error("Email already used");
+    if(await isPhoneNumberTaken(phoneNumber)) throw new Error("Phone Number already used")
 
     const hashed = await bcrypt.hash(password, 10);
     const account = new Account();
@@ -58,8 +61,8 @@ export const registerUser = async (username: string, password: string, email: st
 export const loginUser = async (username: string, password: string) => {
   const acc = await findAccountByUsername(username);
   if (!acc) throw new Error("User not found");
-
-  const verified = await isEmailVerified(acc.id!);
+  
+  const verified = await isAccountVerified(acc.id!);
   if (!verified) throw new Error("Email not verified");
 
   const valid = await bcrypt.compare(password, acc.password!);

@@ -1,6 +1,4 @@
 import { createContext, useState, useContext, ReactNode } from "react";
-import { login as loginService } from "../services/auth.services";
-import { register as registerService } from "../services/auth.services";
 
 interface AuthContextType {
   user: any | null;
