@@ -58,4 +58,8 @@ export const googleLoginService = async (idToken: string) => {
   return res.data; 
 };
 
+export const verifyToken = async () => {
+  const res = await API.get('/token')
+  return res.data
+}
 

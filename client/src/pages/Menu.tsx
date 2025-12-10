@@ -4,10 +4,12 @@ import toast from "react-hot-toast";
 import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
+import { useUser } from "../context/authContext";
 
 export default function Menu() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user, setUser } = useUser()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function Menu() {
   };
 
   return (
+    <>
     <div className="auth-container">
       <div className="auth-card" style={{ maxWidth: "1200px" }}>
         <h2 className="text-3xl font-bold text-cyan-800 mb-2 text-center">
@@ -116,5 +119,6 @@ export default function Menu() {
         )}
       </div>
     </div>
+    </>
   );
 }

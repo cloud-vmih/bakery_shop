@@ -7,6 +7,9 @@ const HomePage = () => {
   const { user } = useUser();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
     if (user) {
       toast.success("Chào mừng " + user.fullName + " (" + user.type + ") trở lại trang chủ!");
     }
@@ -14,7 +17,6 @@ const HomePage = () => {
 
   return (
     <>
-      <Header user={user}/>
       <div>Trang chủ</div>;
     </>
   )

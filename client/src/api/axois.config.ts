@@ -17,9 +17,8 @@ API.interceptors.request.use(
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const parsedToken = JSON.parse(token);
         if (req.headers) {
-            req.headers.Authorization = `Bearer ${parsedToken}`;
+            req.headers.Authorization = `Bearer ${token}`;
         }
       } catch {
         console.warn("Token in localStorage is not valid JSON");
@@ -29,5 +28,6 @@ API.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
 
 export default API;

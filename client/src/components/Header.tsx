@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/authContext"
+import { Link } from "react-router-dom";
 
 type User = {
   fullName: string;
@@ -13,12 +15,18 @@ type HeaderProps = {
   onLogout?: () => void;
 };
 
-export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
+export const Header: React.FC<HeaderProps> = ({ onLogin, onLogout }) => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { user } = useUser();
 
   // Default onLogin nếu cha không truyền vào
   const handleLogin = onLogin ?? (() => navigate("/login"));
+
+  const handleLogout = onLogout ?? (() => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  });
 
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50">
@@ -32,9 +40,9 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 text-gray-700 text-sm">
 
-          <a href="#" className="hover:text-blue-600 transition">Home</a>
-          <a href="#" className="hover:text-blue-600 transition">About</a>
-          <a href="#" className="hover:text-blue-600 transition">Services</a>
+          <Link to="#" className="hover:text-blue-600 transition">Home</Link>
+          <Link to="/menu" className="hover:text-blue-600 transition">Menu</Link>
+          <Link to="#" className="hover:text-blue-600 transition">About Us</Link>
 
           {/* === Switch Login / User === */}
           {!user ? (
@@ -55,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
               {/* Dropdown */}
               <div className="absolute hidden group-hover:flex flex-col right-0 mt-10 bg-white shadow-md rounded-lg w-32 py-2">
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="text-left px-4 py-2 hover:bg-gray-100 text-sm"
                 >
                   Logout
@@ -78,9 +86,9 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
       {open && (
         <div className="md:hidden bg-white shadow-sm">
           <nav className="flex flex-col gap-4 px-6 py-4 text-gray-700 text-sm">
-            <a href="#" className="hover:text-blue-600 transition">Home</a>
-            <a href="#" className="hover:text-blue-600 transition">About</a>
-            <a href="#" className="hover:text-blue-600 transition">Services</a>
+            <Link to="#" className="hover:text-blue-600 transition">Home</Link>
+            <Link to="/menu" className="hover:text-blue-600 transition">Menu</Link>
+            <Link to="#" className="hover:text-blue-600 transition">About us</Link>
 
             {/* Mobile Switch */}
             {!user ? (

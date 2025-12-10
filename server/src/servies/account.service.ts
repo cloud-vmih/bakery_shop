@@ -72,7 +72,7 @@ export const loginUser = async (username: string, password: string) => {
 
   console.log("User type:", userInfo!.type);
 
-  const token = jwt.sign({ id: acc.id, username: acc.username }, process.env.JWT_SECRET!, {
+  const token = jwt.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET!, {
     expiresIn: "1h",
   });
   return { token, user: userInfo };
@@ -135,6 +135,7 @@ export const googleService = {
         fullName: user.fullName,
         email: user.email,
         avatarURL: user.avatarURL,
+        type: user.type,
       },
     };
 

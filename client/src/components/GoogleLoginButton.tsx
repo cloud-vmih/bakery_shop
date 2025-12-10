@@ -20,7 +20,7 @@ export default function GoogleLoginButton() {
           setUser(data.user);
           if (data.token) {
             // Interceptor JSON.parse => phải lưu dưới dạng JSON string
-            localStorage.setItem("token", JSON.stringify(data.token));
+            localStorage.setItem("token", data.token);
           }
 
           toast.success("Đăng nhập Google thành công!");
