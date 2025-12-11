@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000",  // chỉ định frontend origin
+  origin: "https://bakeryshop-a2pludbkv-hgiang-workspaces-projects.vercel.app/",  // chỉ định frontend origin
   credentials: true                 // cho phép gửi cookie / auth headers
 }));
 app.use(express.json());

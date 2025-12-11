@@ -11,7 +11,7 @@ export class CartItem extends BaseEntity {
   @JoinColumn({ name: "cartID" })
   cart?: Cart;
 
-  @OneToOne(() => Item)
+  @ManyToOne(() => Item)
   @JoinColumn({ name: "itemID" })
   item?: Item;
 
