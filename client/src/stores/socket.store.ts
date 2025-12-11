@@ -5,7 +5,7 @@ import { SocketState, getSocketAuth } from "../services/socket.services";
 const baseURL = "http://localhost:5000";
 
 
-export const socketStore = create<SocketState>((set, get) => ({
+export const useSocketStore = create<SocketState>((set, get) => ({
     socket: null,
     
     connectSocket: () => {        

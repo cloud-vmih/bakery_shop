@@ -21,6 +21,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     // Xác thực token
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as JwtPayload;
+    console.log("Decoded JWT:", decoded);
 
     // Gắn thông tin user vào req (để các route sau có thể dùng)
     (req as any).user = decoded;
