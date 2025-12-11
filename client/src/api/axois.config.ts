@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 
 //baseURL tự động theo môi trường
 const baseURL = process.env.NODE_ENV === "production"
-  ? "/api"
+  ? process.env.REACT_APP_API_URL
   : "http://localhost:5000/api";
 
 //Tạo instance axios
@@ -29,5 +29,30 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+API.interceptors.response.use(
+  res => res,
+  async err => {
+    const original = err.config;
+
+    // Nếu 401 -> thử refresh
+    if (err.response?.status === 401 && !original._retry) {
+      original._retry = true;
+
+      const res = await API.post("/auth/refresh");
+      const newAccess = res.data.accessToken;
+
+      // Lưu access token mới
+      localStorage.setItem("token", newAccess);
+
+      // gắn lại header
+      API.defaults.headers.common["Authorization"] = "Bearer " + newAccess;
+      original.headers["Authorization"] = "Bearer " + newAccess;
+
+      return API(original);
+    }
+
+    return Promise.reject(err);
+  }
+);
 
 export default API;
