@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { register as registerService } from "../services/auth.services";
 import "../styles/auth.css";
 import toast from "react-hot-toast";
-import { GoogleLogin } from "@react-oauth/google";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function RegisterPage() {

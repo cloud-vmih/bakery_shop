@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface JwtPayload {
-  id: number;
-  email: string;
+  accountId: any,
+  user: any
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +24,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     console.log("Decoded JWT:", decoded);
 
     // Gắn thông tin user vào req (để các route sau có thể dùng)
-    (req as any).user = decoded;
+    (req as any).user = decoded.user;
 
     next(); // Cho đi tiếp
   } catch (err) {
