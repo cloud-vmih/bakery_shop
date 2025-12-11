@@ -15,10 +15,9 @@ type HeaderProps = {
   onLogout?: () => void;
 };
 
-export const Header: React.FC<HeaderProps> = ({ onLogin, onLogout }) => {
+export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
 
   // Default onLogin nếu cha không truyền vào
   const handleLogin = onLogin ?? (() => navigate("/login"));

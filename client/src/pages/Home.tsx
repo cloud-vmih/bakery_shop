@@ -17,6 +17,7 @@ const HomePage = () => {
 
   return (
     <>
+      <Header user={user}/>
       <div>Trang chủ</div>;
     </>
   )
