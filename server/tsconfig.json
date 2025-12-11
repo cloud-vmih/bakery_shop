@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",  // thay vì "ES2020" hoặc "esnext"
-    "target": "ES2020",
-    "moduleResolution": "Node",
-    "outDir": "dist",
-    "rootDir": "src",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    
     "strict": true,
-    "skipLibCheck": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "types": ["node"]         
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]
