@@ -3,8 +3,6 @@ import cors from "cors";
 import userRoutes from "./routes/account.routes";
 import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
-
-
 import dotenv from "dotenv";
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
@@ -12,7 +10,7 @@ if (process.env.NODE_ENV !== "production") {
 const app = express();
 
 app.use(cors({
-  origin: "https://bakeryshop-a2pludbkv-hgiang-workspaces-projects.vercel.app/",  // chỉ định frontend origin
+  origin: process.env.CLIENT_URL,  // chỉ định frontend origin
   credentials: true                 // cho phép gửi cookie / auth headers
 }));
 app.use(express.json());

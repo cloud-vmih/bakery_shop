@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 
 //baseURL tự động theo môi trường
 const baseURL = process.env.NODE_ENV === "production"
-  ? process.env.REACT_APP_API_URL
+  ? process.env.API_URL
   : "http://localhost:5000/api";
 
 //Tạo instance axios
