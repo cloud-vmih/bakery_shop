@@ -16,5 +16,4 @@ export async function sendVerifyEmail(email: string, subject: string, html: stri
     subject: subject,
     html: html
   });
-  
 }

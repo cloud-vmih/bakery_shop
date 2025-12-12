@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import API from "../api/axois.config";
 import { toast } from "react-hot-toast";
+import { verifyEmail } from "../services/email.service";
 
 export default function VerifyEmail() {
   const [params] = useSearchParams();
@@ -14,13 +14,13 @@ export default function VerifyEmail() {
       return;
     }
 
-    API.get(`/verify-email?token=${token}`)
-      .then(() => {
-        toast.success("Email verified! You can now login.");
+    verifyEmail(token)
+      .then((data) => {
+        toast.success(data.message);
         navigate("/login");
       })
-      .catch(() => {
-        toast.error("Invalid or expired token.");
+      .catch((error: any) => {
+        toast.error(error);
       });
   }, []);
 

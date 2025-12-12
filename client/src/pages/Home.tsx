@@ -1,6 +1,7 @@
 // src/pages/Home.tsx
 import toast from "react-hot-toast";
 import { useUser } from "../context/authContext";
+import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
 import { 
   CakeIcon, 
@@ -21,6 +22,9 @@ const Home = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
     if (user) {
       toast.success(`Chào mừng ${user.fullName} (${user.type}) trở lại trang chủ!`, {
         duration: 10000,
@@ -29,6 +33,14 @@ const Home = () => {
     }
   }, [user]);
 
+  return (
+    <>
+      <div>Trang chủ</div>;
+    </>
+  )
+};
+
+export default HomePage;
   // Dữ liệu banner quảng cáo
   const banners = [
     {

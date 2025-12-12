@@ -2,12 +2,14 @@
 import { AppDataSource } from "../config/database";
 import { Cart } from "../entity/Cart";
 import { CartItem } from "../entity/CartItem";
+import { Item } from "../entity/Item";
 
 // Thêm lại hàm này (đã mất)
 export const getCartByUserId = async (userId: number) => {
+  console.log(userId)
   return await AppDataSource.getRepository(Cart).findOne({
     where: { customer: { id: userId } },
-    relations: ["items"],
+    relations: ["items", "items.item"],
   });
 };
 
@@ -16,15 +18,19 @@ export const createOrUpdateCart = async (userId: number, itemId: number, quantit
   const cartItemRepo = AppDataSource.getRepository(CartItem);
 
   // Kiểm tra item tồn tại
-  const itemExists = await AppDataSource.getRepository("Item")
+  const itemExists = await AppDataSource.getRepository(Item)
     .createQueryBuilder("item")
     .where("item.id = :id", { id: itemId })
     .getOne();
+
+  console.log(itemExists)
 
   if (!itemExists) throw new Error("Sản phẩm không tồn tại");
 
   // Tìm hoặc tạo giỏ hàng
   let cart = await getCartByUserId(userId);
+
+  console.log(cart)
 
   if (!cart) {
     cart = cartRepo.create({
@@ -35,29 +41,31 @@ export const createOrUpdateCart = async (userId: number, itemId: number, quantit
     await cartRepo.save(cart);
   }
 
+  console.log(cart)
+
+  console.log(itemId)
+
   // Tìm CartItem cũ (dùng any để tránh lỗi TS)
-  let cartItem = (cart.items || []).find((ci: any) => ci.itemID === itemId);
+  let cartItem = (cart.items || []).find((ci: any) => ci.item.id === itemId);
+  console.log(cartItem)
 
   if (cartItem) {
     // Fix lỗi undefined: dùng || 0
     cartItem.quantity = (cartItem.quantity || 0) + quantity;
     await cartItemRepo.save(cartItem);
   } else {
-    // Tạo mới bằng Query Builder – 100% chạy
-    await AppDataSource.createQueryBuilder()
-      .insert()
-      .into("cartItem")
-      .values({
-        cartID: cart.id!,
-        itemID: itemId,
-        quantity: quantity,
-      })
-      .execute();
+    cartItem = await cartItemRepo.create({
+      cart: { id: cart.id },
+      item: { id: itemId },
+      quantity,
+    });
+    await cartItemRepo.save(cartItem)
   }
 
   // Cập nhật thời gian
   cart.updateAt = new Date();
   await cartRepo.save(cart);
+
 
   return cart;
 };
