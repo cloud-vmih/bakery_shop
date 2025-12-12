@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, 
   synchronize: true, 
-  entities: [path.join(__dirname, "../entity/**/*.ts")],
-  migrations: [path.join(__dirname, "../migration/*.ts")],
+  entities: [path.join(__dirname, "../entity/**/*.js")],
+  migrations: [path.join(__dirname, "../migration/*.js")],
   logging: ["error"],
 });

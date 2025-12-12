@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
         const secret = process.env.JWT_SECRET;
         const decoded = jsonwebtoken_1.default.verify(token, secret);
         // Gắn thông tin user vào req (để các route sau có thể dùng)
-        req.user = decoded;
+        req.user = decoded.user;
         next(); // Cho đi tiếp
     }
     catch (err) {

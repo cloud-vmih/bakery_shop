@@ -55,7 +55,7 @@ const loginUser = async (username, password) => {
     const acc = await (0, db_account_1.findAccountByUsername)(username);
     if (!acc)
         throw new Error("User not found");
-    const verified = await (0, verify_db_1.isEmailVerified)(acc.id);
+    const verified = await (0, verify_db_1.isAccountVerified)(acc.id);
     if (!verified)
         throw new Error("Email not verified");
     const valid = await bcryptjs_1.default.compare(password, acc.password);
@@ -63,7 +63,7 @@ const loginUser = async (username, password) => {
         throw new Error("Invalid password");
     const userInfo = await (0, db_account_1.findUserByAccountId)(acc.id);
     console.log("User type:", userInfo.type);
-    const token = jsonwebtoken_1.default.sign({ id: acc.id, username: acc.username }, process.env.JWT_SECRET, {
+    const token = jsonwebtoken_1.default.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET, {
         expiresIn: "1h",
     });
     return { token, user: userInfo };
@@ -117,6 +117,7 @@ exports.googleService = {
                 fullName: user.fullName,
                 email: user.email,
                 avatarURL: user.avatarURL,
+                type: user.type,
             },
         };
         const token = jsonwebtoken_1.default.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: "1h" });

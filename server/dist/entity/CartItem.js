@@ -26,7 +26,7 @@ __decorate([
     __metadata("design:type", Cart_1.Cart)
 ], CartItem.prototype, "cart", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Item_1.Item),
+    (0, typeorm_1.ManyToOne)(() => Item_1.Item),
     (0, typeorm_1.JoinColumn)({ name: "itemID" }),
     __metadata("design:type", Item_1.Item)
 ], CartItem.prototype, "item", void 0);
