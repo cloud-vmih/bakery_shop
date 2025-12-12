@@ -1,13 +1,14 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
-
 import userRoutes from "./routes/account.routes";
+import categoryRoutes from "./routes/category.routes";
+import cartRoutes from "./routes/cart.routes";
 import itemsDiscountRoutes from "./routes/itemsDiscount.routes";
 import staffRoutes from "./routes/staff.routes";
 
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
 
 app.use(cors({
@@ -16,11 +17,13 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
-// Đăng ký routes
+app.use("/api/category", categoryRoutes);
+app.use("/api/cart", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
 app.use("/api/items-discount", itemsDiscountRoutes);
 app.use("/api/staff", staffRoutes);
 
 // export đặt CUỐI CÙNG
 export default app;
+
+
