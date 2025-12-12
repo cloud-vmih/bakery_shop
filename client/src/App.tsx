@@ -5,6 +5,11 @@ import Home from "./pages/Home";
 import { AuthProvider } from "./context/authContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
+import ItemsDiscountPage from "./pages/ItemsDiscountPage";
+import StaffPage from "./pages/Staff";
+
+
+
 
 export default function AppRoutes() {
   return (
@@ -16,6 +21,9 @@ export default function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
+        <Route path="/promotion" element={<ItemsDiscountPage />} />
+        <Route path="/staff" element={<StaffPage />} />
+
       </Routes>
     </BrowserRouter>
     </AuthProvider>

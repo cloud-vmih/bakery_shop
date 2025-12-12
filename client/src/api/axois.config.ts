@@ -15,19 +15,15 @@ const API = axios.create({
 API.interceptors.request.use(
   (req: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const parsedToken = JSON.parse(token);
-        if (req.headers) {
-            req.headers.Authorization = `Bearer ${parsedToken}`;
-        }
-      } catch {
-        console.warn("Token in localStorage is not valid JSON");
-      }
+
+    if (token && req.headers) {
+      req.headers.Authorization = `Bearer ${token}`;
     }
+
     return req;
   },
   (error) => Promise.reject(error)
 );
+
 
 export default API;
