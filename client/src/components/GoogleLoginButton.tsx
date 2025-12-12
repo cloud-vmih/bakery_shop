@@ -18,6 +18,10 @@ export default function GoogleLoginButton() {
           const data = await googleLoginService(idToken);
 
           setUser(data.user);
+          if (data.token) {
+            // Interceptor JSON.parse => phải lưu dưới dạng JSON string
+            localStorage.setItem("token", data.token);
+          }
 
           toast.success("Đăng nhập Google thành công!");
           navigate("/");

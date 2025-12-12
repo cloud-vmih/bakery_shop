@@ -15,6 +15,9 @@ export class Order extends BaseEntity {
   @Column({ type: "timestamp", nullable: true, default: () => "NOW()" })
   createAt?: Date;
 
+  @Column({ type: "timestamp", nullable: true})
+  deliveryAt?: Date
+
   @Column({
     type: "enum",
     enum: EOrderStatus,
