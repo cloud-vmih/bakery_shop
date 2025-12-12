@@ -5,19 +5,21 @@ import Home from "./pages/Home";
 import { AuthProvider } from "./context/authContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
+import Menu from "./pages/Menu";
+import { Header } from "./components/Header";
 import ProfilePage from "./pages/User"
 
 export default function AppRoutes() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
-    <AuthProvider>
+    <AuthProvider>  
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
-        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>

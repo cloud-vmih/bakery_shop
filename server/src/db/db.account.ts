@@ -33,6 +33,22 @@ export const findUserByAccountId = async (id: number) => {
   });
 }
 
+export const isEmailTaken = async (email: string) => {
+  const repo = AppDataSource.getRepository(User);
+  const user = await repo.findOne({
+    where: { email}
+  })
+  return !!user
+}
+
+export const isPhoneNumberTaken = async (phoneNumber: string) => {
+  const repo = AppDataSource.getRepository(User);
+  const user = await repo.findOne({
+    where: { phoneNumber}
+  })
+  return !!user
+}
+
 export const socialAuthRepo = {
   findSocialAccount: async (providerUserId: string) => {
     const repo = AppDataSource.getRepository(GoogleAccount);

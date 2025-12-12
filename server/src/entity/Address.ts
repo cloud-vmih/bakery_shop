@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, OneToOne } from "typeorm";
 import { Customer } from "./Customer";
+import { Branch } from "./Branch";
 
 @Entity("address")
 export class Address extends BaseEntity {
@@ -9,6 +10,10 @@ export class Address extends BaseEntity {
   @ManyToOne(() => Customer, c => c.addresses)
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
+
+  @OneToOne(() => Branch, b => b.address )
+  @JoinColumn({name: "branchID"})
+  branch?: Branch
 
   @Column({ type: "char", length: 15 })
   addressNumber?: string;
