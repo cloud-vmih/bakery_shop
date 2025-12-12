@@ -3,6 +3,7 @@ import { getProfile, updateProfile } from '../servies/user.service';
 
 export const getProfileController = async (req: Request, res: Response) => {
   try {
+    console.log((req as any).user.id);
     const user = await getProfile((req as any).user.id);
     res.status(200).json({ success: true, data: user });
   } catch (error: any) {

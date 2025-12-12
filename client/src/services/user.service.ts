@@ -1,4 +1,4 @@
-import axios from 'axios';
+import API  from "../api/axois.config";
 //import { UserResponse, UpdateUserPayload } from '../types/user'; // Import types khớp backend
 
 export interface UserResponse {
@@ -19,27 +19,11 @@ export interface UpdateUserPayload {
   avatar?: string;
 }
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api/users'; // Dùng env var cho linh hoạt
-
-// Axios instance
-const api = axios.create({
-  baseURL: API_BASE,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-// Interceptor add token tự động (từ localStorage, hoặc thay bằng useAuth() nếu dùng context)
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // Giả sử lưu token sau login
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 // Lấy profile (GET /)
 export const getProfile = async (): Promise<UserResponse> => {
   try {
-    const response = await api.get('/');
+    const response = await API.get('/profile');
     if (!response.data.success) {
       throw new Error(response.data.message || 'Lỗi lấy thông tin hồ sơ');
     }
@@ -55,7 +39,7 @@ export const updateProfile = async (updates: UpdateUserPayload): Promise<UserRes
     if (Object.keys(updates).length === 0) {
       throw new Error('Không có thay đổi nào để cập nhật');
     }
-    const response = await api.put('/profile', updates);
+    const response = await API.put('/profile', updates);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Lỗi cập nhật hồ sơ');
     }

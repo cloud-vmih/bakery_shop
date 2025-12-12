@@ -18,5 +18,5 @@ app.use(express.json());
 app.use("/api/category", categoryRoutes);
 app.use("/api/cart", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
-app.use('/profile', profileRoutes);
+app.use('/api', profileRoutes);
 export default app;

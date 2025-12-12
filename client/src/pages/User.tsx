@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 //import { useAuth } from '../context/authContext'; // Giả sử có context cho auth
 import { getProfile, updateProfile } from '../services/user.service';
 import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
+import { useUser } from '../context/authContext';
+import toast from 'react-hot-toast';
 
 const ProfilePage: React.FC = () => {
-  const token = localStorage.getItem("token")
+  const { user}  = useUser();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<UserResponse | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -23,12 +25,12 @@ const ProfilePage: React.FC = () => {
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof UpdateUserPayload, string>>>({});
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login'); // Redirect nếu chưa login
-      return;
-    }
+    // if (!token) {
+    //   navigate('/login'); // Redirect nếu chưa login
+    //   return;
+    // }
     fetchProfile();
-  }, [token, navigate]);
+  }, []);
 
   const fetchProfile = async () => {
     try {
@@ -152,7 +154,7 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div className="loading">Đang tải thông tin hồ sơ...</div>;
+  if(isLoading) return <div className="loading">Đang tải thông tin hồ sơ...</div>;
   if (error) return <div className="error">Lỗi: {error} <button onClick={fetchProfile}>Thử lại</button></div>;
 
   return (

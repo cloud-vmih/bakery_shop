@@ -4,7 +4,7 @@ import {verifyToken} from '../middleware/verifyToken'; // Giả sử đã có, c
 
 const router = express.Router();
 
-router.get('/', verifyToken, getProfileController);
+router.get('/profile', verifyToken, getProfileController);
 router.put('/update', verifyToken, updateProfileController);
 
 export default router; // Hoặc module.exports = router; nếu CommonJS
