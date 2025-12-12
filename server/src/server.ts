@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/account.routes";
+import profileRoutes from "./routes/user.routes";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -11,7 +12,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use("/api", userRoutes);
-
+app.use('/profile', profileRoutes);
 export default app;
 
 
