@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
 import Menu from "./pages/Menu";
 import { Header } from "./components/Header";
+import WishlistPage from "./pages/Wishlist";
 
 export default function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/menu" element={<Menu />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CategoryService } from "../servies/category.service";
+import { CategoryService } from "../services/category.service";
 import { ECategory } from "../entity/enum/enum";
 
 const service = new CategoryService();

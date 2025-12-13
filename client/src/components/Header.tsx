@@ -63,6 +63,13 @@ export const Header: React.FC<HeaderProps> = ({ onLogin, onLogout }) => {
               {/* Dropdown */}
               <div className="absolute hidden group-hover:flex flex-col right-0 mt-10 bg-white shadow-md rounded-lg w-32 py-2">
                 <button
+                  onClick={() => navigate("/wishlist")}
+                  className="text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                >
+                  Wishlist
+                </button>
+
+                <button
                   onClick={handleLogout}
                   className="text-left px-4 py-2 hover:bg-gray-100 text-sm"
                 >

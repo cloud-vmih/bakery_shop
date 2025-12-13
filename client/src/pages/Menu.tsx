@@ -5,12 +5,14 @@ import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
+import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
 
 export default function Menu() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useUser()
+  const { user } = useUser();
   const navigate = useNavigate();
+  const [wishlist, setWishlist] = useState<number[]>([]);
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -26,26 +28,59 @@ export default function Menu() {
     loadMenu();
   }, []);
 
-  const handleAddToCart = async (itemId: number) => {
+  // Load wishlist nếu user đăng nhập
+  useEffect(() => {
+    if (!user) return;
+
+    getWishlist().then(data => {
+      setWishlist(
+        data.map(i => i.id!).filter(Boolean)
+      );
+    });
+  }, [user]);
+
+  const handleAddToCart = async (itemId?: number) => {
+    if (!itemId) return;
     try {
       await addToCart(itemId);
+      toast.success("Đã thêm vào giỏ");
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
         toast.error("Vui lòng đăng nhập để thêm vào giỏ");
-        navigate("/login")
+        navigate("/login");
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");
-      console.error("Lỗi thêm giỏ:", err);
     }
   };
 
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
+  const handleToggleWishlist = async (itemId?: number) => {
+    if (!itemId) return;
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để sử dụng wishlist");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (wishlist.includes(itemId)) {
+        await removeFromWishlist(itemId);
+        setWishlist(prev => prev.filter(id => id !== itemId));
+        toast.success("Đã xóa khỏi wishlist");
+      } else {
+        await addToWishlist(itemId);
+        setWishlist(prev => [...prev, itemId]);
+        toast.success("Đã thêm vào wishlist");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Có lỗi xảy ra");
+    }
   };
 
+  const formatPrice = (price?: number) =>
+    price ? price.toLocaleString("vi-VN") + " VNĐ" : "Liên hệ";
+
   return (
-    <>
     <div className="auth-container">
       <div className="auth-card" style={{ maxWidth: "1200px" }}>
         <h2 className="text-3xl font-bold text-cyan-800 mb-2 text-center">
@@ -59,32 +94,31 @@ export default function Menu() {
           <p className="text-center text-cyan-700">Đang tải...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-            {/* DÙNG ?. ĐỂ TRÁNH LỖI UNDEFINED */}
-            {items?.map((item: any) => (
+            {items.map((item) => (
               <div
                 key={item.id}
                 className="relative p-4 rounded-xl border shadow bg-white hover:shadow-xl transition-all duration-300 group"
               >
-                {/* Nút thêm giỏ hiện khi hover */}
+                {/* Nút wishlist */}
+                <div className="absolute top-2 right-2 z-20">
+                  <button
+                    onClick={() => handleToggleWishlist(item.id)}
+                    className="text-2xl"
+                  >
+                    {item.id && wishlist.includes(item.id) ? (
+                      <span className="text-red-500">❤️</span>
+                    ) : (
+                      <span className="text-gray-400">🤍</span>
+                    )}
+                  </button>
+                </div>
+
+                {/* Nút thêm giỏ */}
                 <div className="absolute inset-0 bg-cyan-900 bg-opacity-0 group-hover:bg-opacity-70 rounded-xl transition-all duration-300 flex items-center justify-center z-10">
                   <button
                     onClick={() => handleAddToCart(item.id)}
                     className="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 bg-white text-cyan-800 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-cyan-50 flex items-center gap-2"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
                     Thêm vào giỏ
                   </button>
                 </div>
@@ -102,16 +136,12 @@ export default function Menu() {
                   </div>
                 )}
 
-                <h3 className="font-bold text-lg text-cyan-800 mb-1">
-                  {item.name}
-                </h3>
-
+                <h3 className="font-bold text-lg text-cyan-800 mb-1">{item.name}</h3>
                 <p className="text-sm text-cyan-700 mb-2 line-clamp-2">
                   {item.description || "Bánh ngọt thơm ngon"}
                 </p>
-
                 <p className="font-bold text-xl text-cyan-900">
-                  {item.price ? formatPrice(item.price) : "Liên hệ"}
+                  {formatPrice(item.price)}
                 </p>
               </div>
             ))}
@@ -119,6 +149,5 @@ export default function Menu() {
         )}
       </div>
     </div>
-    </>
   );
 }
