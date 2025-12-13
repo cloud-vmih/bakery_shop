@@ -2,6 +2,10 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import path from "path";
 import dotenv from "dotenv";
+import { Order } from '../entity/Orders';
+import { OrderDetail } from '../entity/OrderDetails';
+import { Item } from '../entity/Item';
+import { User } from '../entity/User'; // Nếu có
 dotenv.config();
 
 // import { Account } from "../entity/Account";
