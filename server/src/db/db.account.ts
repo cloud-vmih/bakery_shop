@@ -3,6 +3,9 @@ import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 import { GoogleAccount } from "../entity/GoogleAccount";
 import { User } from "../entity/User";
+import { EmailVerification } from "../entity/EmailVerification";
+import { LessThan } from "typeorm";
+
 
 export const createAccount = async (account: Account) => {
   //console.log("Creating account for username:", username);
@@ -12,11 +15,33 @@ export const createAccount = async (account: Account) => {
   return acc;
 }
 
-export const createUser = async (user: User) => {
-  const repo = AppDataSource.getRepository(User);
+export const createUser = async (user: Customer) => {
+  const repo = AppDataSource.getRepository(Customer);
   const newUser = repo.create(user);
   await repo.save(newUser);
   return newUser;
+}
+
+
+export const deletedUserNotVerified = async () => {
+  const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000);
+
+  const verRepo = AppDataSource.getRepository(EmailVerification);
+  const accRepo = AppDataSource.getRepository(Account);
+
+  // Tìm account chưa verify
+  const pending = await verRepo.find({
+    where: {
+      isVerified: false,
+      verifiedAt: LessThan(thirtyMinsAgo)
+    },
+    relations: ["account"],
+  });
+
+  // Xoá account -> auto xoá user + verification
+  for (const v of pending) {
+    await accRepo.delete(v.account!.id!);
+  }
 }
 
 export const findAccountByUsername = async (username: string) => {
@@ -33,12 +58,21 @@ export const findUserByAccountId = async (id: number) => {
   });
 }
 
-export const isEmailTaken = async (email: string) => {
+export const updatePassword = async (hash: string, id: number) => {
+  const accountRepo = AppDataSource.getRepository(Account)
+  await accountRepo.update(
+    { id },
+    { password: hash }
+  );
+}
+
+export const findUserByEmail = async (email: string) => {
   const repo = AppDataSource.getRepository(User);
   const user = await repo.findOne({
-    where: { email}
+    where: { email},
+    relations: ["account"]
   })
-  return !!user
+  return user ?? null
 }
 
 export const isPhoneNumberTaken = async (phoneNumber: string) => {

@@ -38,7 +38,7 @@ API.interceptors.response.use(
     if (err.response?.status === 401 && !original._retry) {
       original._retry = true;
 
-      const res = await API.post("/auth/refresh");
+      const res = await API.post("/refresh");
       const newAccess = res.data.accessToken;
 
       // Lưu access token mới

@@ -5,6 +5,7 @@ import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
+import { Header } from "../components/Header";
 
 export default function Menu() {
   const [items, setItems] = useState<any[]>([]);
@@ -46,6 +47,7 @@ export default function Menu() {
 
   return (
     <>
+    <Header user={user} />
     <div className="auth-container">
       <div className="auth-card" style={{ maxWidth: "1200px" }}>
         <h2 className="text-3xl font-bold text-cyan-800 mb-2 text-center">
