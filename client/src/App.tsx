@@ -5,8 +5,9 @@ import Home from "./pages/Home";
 import { AuthProvider } from "./context/authContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
-import Menu from "./pages/Menu";
+import MenuPage from "./pages/MenuPage";
 import { Header } from "./components/Header";
+import ProductDetails from "./pages/ProductDetails";
 
 export default function AppRoutes() {
   return (
@@ -19,7 +20,9 @@ export default function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+
       </Routes>
     </BrowserRouter>
     </AuthProvider>

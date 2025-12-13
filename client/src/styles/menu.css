@@ -1,0 +1,296 @@
+/* Menu Page Styles */
+.menuPage {
+  @apply min-h-screen;
+  background-color: #f0fdf4;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuPage * {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuSection {
+  @apply py-8 md:py-12;
+  background-color: #f0fdf4;
+}
+
+.sectionHeader {
+  @apply text-center mb-6;
+}
+
+.titleGreen {
+  @apply text-3xl md:text-4xl font-bold text-green-700;
+}
+
+/* Layout with Sidebar */
+.menuLayout {
+  @apply flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4;
+}
+
+/* Category Sidebar - Pastel Theme */
+.categorySidebar {
+  @apply w-full lg:w-56 bg-gradient-to-b from-green-50 via-amber-50 to-amber-50
+         rounded-xl shadow-md p-4 h-fit lg:sticky lg:top-4
+         border-2 border-green-100;
+}
+
+.sidebarHeader {
+  @apply mb-4 pb-3 border-b-2 border-amber-200;
+}
+
+.sidebarTitle {
+  @apply text-sm font-bold text-green-700;
+}
+
+.categoryList {
+  @apply space-y-1.5 mb-6;
+}
+
+.categoryItem {
+  @apply w-full flex items-center gap-2 px-3 py-2 rounded-lg
+         transition-all duration-300 ease-in-out
+         bg-white/80 border-2 border-green-100
+         hover:border-green-300 hover:bg-green-50/90
+         hover:shadow-sm hover:translate-x-0.5
+         text-left backdrop-blur-sm;
+}
+
+.categoryItem.active {
+  @apply bg-gradient-to-r from-green-300 to-green-400 
+         border-green-400 text-green-900 shadow-md
+         transform translate-x-1;
+}
+
+.categoryIndicator {
+  @apply w-2 h-2 rounded-full bg-amber-200 
+         transition-all duration-300;
+}
+
+.categoryItem.active .categoryIndicator {
+  @apply bg-white w-2 h-2 ring-1 ring-white ring-offset-1 ring-offset-green-400;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+.categoryLabel {
+  @apply font-medium text-green-800 text-xs flex-1;
+}
+
+.categoryItem.active .categoryLabel {
+  @apply text-green-900 font-semibold;
+}
+
+/* Price Sort Section */
+.priceSortSection {
+  @apply mt-4 pt-4 border-t-2 border-amber-200;
+}
+
+.priceSortOptions {
+  @apply space-y-1.5 mt-3;
+}
+
+.priceSortButton {
+  @apply w-full flex items-center gap-2 px-3 py-2 rounded-lg
+         transition-all duration-300 ease-in-out
+         bg-white/80 border-2 border-amber-100
+         hover:border-amber-300 hover:bg-amber-50/90
+         hover:shadow-sm hover:translate-x-0.5
+         text-left text-xs font-medium text-amber-800 backdrop-blur-sm;
+}
+
+.priceSortButton.active {
+  @apply bg-gradient-to-r from-amber-300 to-amber-400 
+         border-amber-400 text-amber-900 shadow-md
+         transform translate-x-1;
+}
+
+.priceSortIndicator {
+  @apply w-2 h-2 rounded-full bg-amber-200 
+         transition-all duration-300;
+}
+
+.priceSortButton.active .priceSortIndicator {
+  @apply bg-white w-2 h-2 ring-1 ring-white ring-offset-1 ring-offset-amber-400;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+.priceSortButton.active {
+  @apply text-amber-900;
+}
+
+.priceSortButton.active > span:not(.priceSortIndicator) {
+  @apply text-amber-900 font-semibold;
+}
+
+/* Main Content Area */
+.menuContentArea {
+  @apply flex-1;
+}
+
+.menuGrid {
+  @apply grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 
+         lg:grid-cols-4 xl:grid-cols-4 
+         gap-5 md:gap-6 lg:gap-7;
+}
+
+.menuCard {
+  @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
+         transition-all duration-300 relative border-2 border-amber-100
+         flex flex-col h-full;
+}
+
+.menuImageWrapper {
+  @apply relative overflow-hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Hình vuông */
+}
+
+.menuImage {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
+
+.menuCard:hover .menuImage {
+  @apply scale-110;
+}
+
+.menuCardContent {
+  @apply p-3 flex flex-col gap-1 relative z-10 bg-white;
+  min-height: auto;
+  transition: filter 0.3s ease-in-out;
+}
+
+
+/* Giá luôn hiển thị, không bị ẩn */
+.menuTitle {
+  @apply text-sm font-semibold text-amber-900 line-clamp-2 leading-tight;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.menuPrice {
+  @apply text-sm text-green-600;
+  font-weight: normal;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Nút Thêm vào giỏ - chỉ che phần tên và giá khi hover với hiệu ứng fade và scale */
+.menuButton {
+  @apply absolute inset-0 flex items-center justify-center
+         bg-green-500/90 text-white font-semibold
+         shadow-lg rounded-none
+         opacity-0 pointer-events-none
+         backdrop-blur-md transition-all duration-300;
+  transform: translateY(8px) scale(0.95);
+  filter: blur(3px);
+}
+
+.menuCard:hover .menuButton {
+  @apply opacity-100 pointer-events-auto;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+
+/* Search Bar */
+.searchBar {
+  @apply relative max-w-md mb-6;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400
+         transition-colors duration-300;
+}
+
+.searchInput {
+  @apply w-full pl-10 pr-4 py-2.5 rounded-full border-2 border-green-200 
+         focus:border-green-500 focus:outline-none text-sm
+         bg-white shadow-sm transition-all duration-300
+         hover:border-green-300 hover:shadow-md;
+}
+
+.searchBar:focus-within .searchIcon {
+  @apply text-green-500;
+}
+
+/* Pagination Styles */
+.paginationContainer {
+  @apply flex justify-center items-center gap-2 mt-8;
+}
+
+.paginationButton {
+  @apply px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 border-2;
+}
+
+.paginationButton.active {
+  @apply bg-green-600 text-white border-green-600 shadow-md;
+}
+
+.paginationButton.inactive {
+  @apply bg-white text-green-600 border-green-600 hover:bg-green-50 
+         hover:shadow-md hover:scale-105;
+}
+
+.paginationButton.disabled {
+  @apply bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed;
+}
+
+.paginationInfo {
+  @apply text-gray-600 text-xs mx-4;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-indicator {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .categorySidebar {
+    @apply w-full;
+  }
+  
+  .menuLayout {
+    @apply flex-col;
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.menuButton:active::after {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-white/30;
+  animation: ripple 0.6s ease-out;
+}

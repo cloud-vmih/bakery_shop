@@ -14,8 +14,8 @@ app.use(cors({
   credentials: true                 // cho phép gửi cookie / auth headers
 }));
 app.use(express.json());
-app.use("/api/category", categoryRoutes);
-app.use("/api/cart", cartRoutes);  // Thêm dòng này
+app.use("/api", categoryRoutes);
+app.use("/api", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
 
 export default app;
