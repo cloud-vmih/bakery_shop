@@ -22,3 +22,8 @@ VALUES
 ('Macaron TrippleCuties Box', 'Hộp 3 macaron nhiều vị', 70000, 'https://i.pinimg.com/1200x/0f/7f/fc/0f7ffcf3a636f20623e64218f518fff7.jpg', 'OTHER', '{}'),
 ('Panna Cotta Strawberry', 'Panna cotta mềm mịn kèm sốt dâu', 45000, 'https://i.pinimg.com/736x/7e/38/0b/7e380bd817aa5be31447451069635a2e.jpg', 'OTHER', '{}'),
 ('Handmade Gift Card', 'Thiệp handmade trang trí dễ thương, phù hợp tặng kèm bánh', 30000, 'https://i.pinimg.com/736x/cd/c4/7a/cdc47a209381b6b457c8d603665ec969.jpg', 'OTHER', '{}');
+
+
+import thư viện gg maps api bên folder client: npm install @react-google-maps/api@2.18.1
+
+đừng test gg maps api nhìu nha :3

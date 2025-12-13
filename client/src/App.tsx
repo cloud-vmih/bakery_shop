@@ -8,6 +8,7 @@ import VerifyEmail from "./pages/verifyEmail";
 import MenuPage from "./pages/MenuPage";
 import { Header } from "./components/Header";
 import ProductDetails from "./pages/ProductDetails";
+import NearestBranch from "./pages/NearestBranch";
 
 export default function AppRoutes() {
   return (
@@ -22,7 +23,7 @@ export default function AppRoutes() {
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-
+        <Route path="/nearest-branch" element={<NearestBranch />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>
