@@ -1,0 +1,125 @@
+/* =========================================================
+   PROFILE PAGE WRAPPER
+   ========================================================= */
+.profile-page {
+  @apply max-w-3xl mx-auto p-6 md:p-10;
+}
+
+.profile-page h1 {
+  @apply text-center text-green-600 font-bold text-3xl tracking-wide 
+         mb-10 mt-6;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* =========================================================
+   VIEW MODE
+   ========================================================= */
+.profile-content {
+  @apply bg-white rounded-3xl shadow-xl border-2 border-amber-100 
+         p-8 transition-all duration-300;
+}
+
+.profile-view .avatar {
+  @apply w-32 h-32 mx-auto mb-6 rounded-full object-cover 
+         border-4 border-amber-200 shadow-lg 
+         transition-transform duration-300;
+}
+
+.profile-view:hover .avatar {
+  @apply scale-105;
+}
+
+.profile-view p {
+  @apply text-black text-center space-y-3 text-lg;
+}
+
+.profile-view p strong {
+  @apply font-bold text-amber-900;
+}
+
+.edit-btn {
+  @apply block mx-auto mt-6 px-6 py-2 rounded-full font-semibold 
+         bg-green-600 text-white shadow 
+         transition-transform hover:bg-green-700 hover:scale-105;
+}
+
+/* =========================================================
+   EDIT MODE (FORM)
+   ========================================================= */
+.profile-form {
+  @apply bg-white rounded-3xl shadow-xl border-2 border-amber-100 
+         p-8 space-y-6;
+}
+
+.form-group {
+  @apply flex flex-col gap-2;
+}
+
+.form-group label {
+  @apply text-amber-900 font-semibold;
+}
+
+.form-group input {
+  @apply border border-gray-300 rounded-xl px-4 py-2 
+         outline-none transition-all
+         focus:ring-2 focus:ring-amber-400 focus:border-amber-400;
+}
+
+.error {
+  @apply text-red-600 text-sm mt-1;
+}
+
+/* =========================================================
+   FORM BUTTONS
+   ========================================================= */
+.form-actions {
+  @apply flex justify-end gap-4 pt-4;
+}
+
+.form-actions button {
+  @apply px-5 py-2 rounded-full font-semibold transition-all;
+}
+
+.form-actions button[type="button"] {
+  @apply bg-gray-300 hover:bg-gray-400;
+}
+
+.form-actions button[type="submit"] {
+  @apply bg-green-600 text-white hover:bg-green-700 hover:scale-105;
+}
+
+.change-password-btn {
+  @apply mt-4 bg-amber-500 text-white px-6 py-2 rounded-full 
+         font-semibold mx-auto block shadow 
+         hover:bg-amber-600 transition-transform hover:scale-105;
+}
+
+/* =========================================================
+   LOADING + ERROR BOX
+   ========================================================= */
+.loading {
+  @apply text-center text-amber-700 text-lg font-semibold py-10;
+}
+
+.errorBox {
+  @apply bg-red-100 text-red-700 p-4 rounded-xl text-center;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+@keyframes bounce {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(2px); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

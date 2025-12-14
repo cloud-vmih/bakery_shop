@@ -1,4 +1,4 @@
-import { ProductDB } from '../db.ProductUpdate';
+import { ProdukctDB } from '../db.ProductUpdate';
 import { Item } from '../entity/Item'; // Entity import
 
 export class ProductService {

@@ -1,24 +1,28 @@
-import { Item } from '../entity/Item'; // Assuming Item.ts exports Product interface and model
+import { Item } from '../entity/Item'; // Adjust path as needed; assuming entity/Item.ts
+import { AppDataSource } from '../config/database'; // Assuming your TypeORM DataSource is exported here
 
-// Mock DB for illustration; replace with actual DB client (e.g., Prisma, Sequelize)
-let mockProducts: Item[] = [
-  { id: 1, name: 'Cake A', quantity: 10, status: 'visible' as const },
-  { id: 2, name: 'Cake B', quantity: 0, status: 'hidden' as const },
-];
+const productRepository = AppDataSource.getRepository(Item);
 
-export class ProductDB {
-  async getAllProducts(): Promise<Item[]> {
-    // In real: return await prisma.item.findMany({ where: { type: 'product' } });
-    return mockProducts;
+export async function getAllProducts(): Promise<Item[]> {
+  // Assuming all items are products; if filtering by type/category, adjust WHERE clause
+  // e.g., return await productRepository.find({ where: { category: Not(IsNull()) } });
+  return await productRepository.find();
+}
+
+export async function updateProduct(data: Partial<Item> & { id: number }): Promise<Item> {
+  const existingProduct = await productRepository.findOne({ where: { id: data.id } });
+  if (!existingProduct) {
+    throw new Error('Product not found');
   }
 
-  async updateProduct(data: Partial<Item> & { id: number }): Promise<Item> {
-    const index = mockProducts.findIndex(p => p.id === data.id);
-    if (index === -1) throw new Error('Product not found');
-    
-    mockProducts[index] = { ...mockProducts[index], ...data, status: data.status || mockProducts[index].status };
-    
-    // In real: return await prisma.item.update({ where: { id: data.id }, data });
-    return mockProducts[index];
+  // Merge data with existing; handle itemDetail update for isHidden if quantity is 0
+  const updatedData: Partial<Item> = { ...data };
+  if (data.quantity === 0 && !updatedData.itemDetail) {
+    updatedData.itemDetail = { ...existingProduct.itemDetail, isHidden: true };
+  } else if (data.quantity === 0) {
+    updatedData.itemDetail = { ...updatedData.itemDetail, isHidden: true };
   }
+
+  const updatedProduct = await productRepository.save({ ...existingProduct, ...updatedData });
+  return updatedProduct;
 }

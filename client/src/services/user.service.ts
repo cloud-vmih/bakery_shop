@@ -19,7 +19,6 @@ export interface UpdateUserPayload {
   avatar?: string;
 }
 
-
 // Lấy profile (GET /)
 export const getProfile = async (): Promise<UserResponse> => {
   try {
@@ -39,7 +38,7 @@ export const updateProfile = async (updates: UpdateUserPayload): Promise<UserRes
     if (Object.keys(updates).length === 0) {
       throw new Error('Không có thay đổi nào để cập nhật');
     }
-    const response = await API.put('/profile', updates);
+    const response = await API.put('/update', updates);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Lỗi cập nhật hồ sơ');
     }

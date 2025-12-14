@@ -5,6 +5,8 @@ import { getProfile, updateProfile } from '../services/user.service';
 import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
 import { useUser } from '../context/authContext';
 import toast from 'react-hot-toast';
+import '../styles/Profile.css';
+
 
 const ProfilePage: React.FC = () => {
   const { user}  = useUser();
@@ -169,13 +171,14 @@ const ProfilePage: React.FC = () => {
                 src={profile.avatar || '/default-avatar.png'} 
                 alt="Avatar" 
                 className="avatar" 
-                style={{ width: '100px', height: '100px', borderRadius: '50%' }} 
+                // style={{ width: '100px', height: '100px', borderRadius: '50%' }} 
               />
               <p><strong>Tên:</strong> {profile.fullName}</p>
               <p><strong>Email:</strong> {profile.email}</p>
               <p><strong>Số điện thoại:</strong> {profile.phoneNumber}</p>
               <p><strong>Ngày sinh:</strong> {profile.dateOfBirth}</p>
               <button onClick={handleEdit} className="edit-btn">Chỉnh sửa hồ sơ</button>
+              <button onClick={() => navigate('/')} className="change-password-btn" > Đổi mật khẩu </button>
             </div>
           ) : (
             // Edit mode với form
@@ -235,7 +238,7 @@ const ProfilePage: React.FC = () => {
                   value={formData.avatar} 
                   onChange={handleInputChange} 
                   id="avatar" 
-                  type="url" 
+                  type="string" 
                   placeholder="https://example.com/avatar.jpg" 
                 />
                 {formErrors.avatar && <p className="error">{formErrors.avatar}</p>}
