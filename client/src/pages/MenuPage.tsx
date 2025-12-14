@@ -6,7 +6,7 @@ import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
 
-export default function Menu() {
+export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser()

@@ -10,14 +10,14 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any | null>(null);
-
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem("token");
       if (!token) return; // đỡ gọi API thừa
 
       try {
-        const data = await verifyToken(); // FE sẽ tự gửi token bằng headers
+        const data = await verifyToken();
+         // FE sẽ tự gửi token bằng headers
         setUser(data.user); // BE trả user/info
       } catch (err) {
         console.log("Token lỗi, clear luôn user");

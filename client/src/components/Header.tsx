@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Menu, X } from "lucide-react";
+import { Menu as MenuIcon, X as XIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/authContext"
 import { Link } from "react-router-dom";
@@ -19,6 +19,16 @@ export const Header: React.FC<HeaderProps> = ({ onLogin, onLogout }) => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
+
+  console.log("USER VALUE:", user);
+
+if (user) {
+  console.log("USER FULLNAME:", user.fullName);
+  console.log("USER FULLNAME TYPE:", typeof user.fullName);
+  console.log("USER FULLNAME HAS $$typeof:", user.fullName?.$$typeof);
+
+  console.log("USER IS REACT ELEMENT:", !!user?.$$typeof);
+}
 
   // Default onLogin nếu cha không truyền vào
   const handleLogin = onLogin ?? (() => navigate("/login"));
@@ -78,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({ onLogin, onLogout }) => {
           className="md:hidden"
           onClick={() => setOpen(!open)}
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {open ? <><XIcon size={26} /></> : <><MenuIcon size={26} /></>}
         </button>
       </div>
 

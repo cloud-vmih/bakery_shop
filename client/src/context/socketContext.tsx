@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { socketStore } from "../stores/socket.store";
+import { useSocketStore } from "../stores/socket.store";
 import { useEffect } from "react";
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
-    const { connectSocket, disconnectSocket } = socketStore();
+    const { connectSocket, disconnectSocket } = useSocketStore();
 
     useEffect(() => {
         connectSocket();
