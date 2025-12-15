@@ -27,3 +27,5 @@ VALUES
 import thư viện gg maps api bên folder client: npm install @react-google-maps/api@2.18.1
 
 đừng test gg maps api nhìu nha :3
+
+thêm vô .env : REACT_APP_GOOGLE_MAPS_KEY=AIzaSyA4lKLhL_fwCsbd1CiHbNiDA1CxhD1uyWU
