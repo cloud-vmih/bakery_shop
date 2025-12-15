@@ -15,13 +15,14 @@ export class Address extends BaseEntity {
   @JoinColumn({name: "branchID"})
   branch?: Branch
 
-  @Column({ type: "char", length: 15 })
-  addressNumber?: string;
+  @Column()
+  fullAddress?: string;
 
-  @Column()
-  street?: string;  
-  @Column()
-  ward?: string;
+  @Column("decimal", { precision: 10, scale: 7 })
+  lat?: number;
+
+  @Column("decimal", { precision: 10, scale: 7 })
+  lng?: number;
 
   @Column({ default: true })
   isDefault?: boolean;
