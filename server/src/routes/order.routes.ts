@@ -7,5 +7,6 @@ const router = Router();
 
 router.get("/my-orders", verifyToken, OrderController.getMyOrders);
 router.get("/:orderId/status", verifyToken, OrderController.getOrderStatus);
-
+// routes/order.routes.ts
+router.post("/:orderId/cancel", verifyToken, OrderController.cancelOrder);
 export default router;

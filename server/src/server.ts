@@ -3,6 +3,7 @@ import cors from "cors";
 import userRoutes from "./routes/account.routes";
 import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
+import orderRoutes from "./routes/order.routes"
 
 
 import dotenv from "dotenv";
@@ -17,5 +18,6 @@ app.use(express.json());
 app.use("/api/category", categoryRoutes);
 app.use("/api/cart", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
+app.use("/api", orderRoutes);
 
 export default app;

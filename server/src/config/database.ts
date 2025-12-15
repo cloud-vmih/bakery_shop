@@ -11,7 +11,6 @@ export const AppDataSource = new DataSource({
   password: String(process.env.DB_PASS), 
   database: process.env.DB_NAME ,
   synchronize: false, 
->>>>>>> origin/feature/thuyvan
   entities: [path.join(__dirname, "../entity/**/*.ts")],
   migrations: [path.join(__dirname, "../migration/*.ts")],
   logging: ["error"],

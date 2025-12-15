@@ -15,5 +15,8 @@ export class OrderDetail extends BaseEntity {
 
   @Column({ nullable: true })
   note?: string;
+
+  @Column()
+  quantity?: number;
 }
 

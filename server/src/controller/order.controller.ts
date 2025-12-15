@@ -1,43 +1,70 @@
 // server/src/controllers/order.controller.ts
 import { Request, Response } from "express";
-import { getMyOrders, getOrderStatus } from "../servies/order.service";
+import { getMyOrders, getOrderStatus, cancelOrder } from "../servies/order.service"; // sửa "servies" → "services"
 import { EOrderStatus } from "../entity/enum/enum";
 
 export class OrderController {
   static async getMyOrders(req: Request, res: Response) {
     try {
-      const user = (req as any).user; // từ auth middleware
-      const user_orders = await getMyOrders(user.id);
+      const userId = (req as any).user.id; // từ auth middleware
 
-      if (user_orders.orders.length === 0) {
-        return res.json({ message: "Bạn chưa có đơn hàng nào.", orders: [] });
-      }
+      const result = await getMyOrders(userId);
 
-      res.json({ user_orders });
-    } catch (error) {
-      res.status(500).json({ message: "Không thể tải danh sách đơn hàng. Vui lòng thử lại sau." });
+      return res.status(200).json(result);
+    } catch (error: any) {
+      console.error("Lỗi lấy danh sách đơn hàng:", error);
+      return res.status(500).json({
+        message: "Không thể tải đơn hàng. Vui lòng thử lại sau.",
+        orders: [],
+      });
     }
   }
 
   static async getOrderStatus(req: Request, res: Response) {
     try {
-      const user = (req as any).user;
+      const userId = (req as any).user.id;
       const orderId = Number(req.params.orderId);
 
-      const data = await getOrderStatus(orderId, user.id);
-
-      if (!data) {
-        return res.status(404).json({ message: "Không tìm thấy đơn hàng hoặc bạn không có quyền xem." });
+      if (isNaN(orderId)) {
+        return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
       }
 
-    //   // Trường hợp mới đặt, chưa xác nhận
-    //   if (data.status === EOrderStatus.PENDING && data.timeline.length === 1) {
-    //     data.message = "Đơn hàng đang chờ được xác nhận.";
-    //   }
+      const data = await getOrderStatus(orderId, userId);
 
-      res.json(data);
-    } catch (error) {
-      res.status(500).json({ message: "Không thể tải trạng thái đơn hàng. Vui lòng thử lại sau." });
+      if (!data) {
+        return res.status(404).json({
+          message: "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.",
+        });
+      }
+
+      return res.status(200).json(data);
+    } catch (error: any) {
+      console.error("Lỗi lấy trạng thái đơn hàng:", error);
+      return res.status(500).json({
+        message: "Không thể tải trạng thái đơn hàng. Vui lòng thử lại sau.",
+      });
+    }
+  }
+
+  static async cancelOrder(req: Request, res: Response) {
+    try {
+      const orderId = Number(req.params.orderId);
+      const userId = (req as any).user.id;
+
+      if (isNaN(orderId)) {
+        return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
+      }
+
+      const result = await cancelOrder(orderId, userId);
+
+      if (!result.success) {
+        return res.status(400).json({ message: result.message });
+      }
+
+      return res.status(200).json({ message: "Đơn hàng đã được hủy thành công" });
+    } catch (error: any) {
+      console.error("Lỗi hủy đơn hàng:", error);
+      return res.status(500).json({ message: "Lỗi hệ thống khi hủy đơn hàng" });
     }
   }
 }

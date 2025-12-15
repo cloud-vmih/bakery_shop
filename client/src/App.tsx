@@ -8,6 +8,7 @@ import VerifyEmail from "./pages/verifyEmail";
 import Menu from "./pages/Menu";
 import { Header } from "./components/Header";
 import MyOrders from "./pages/MyOrders";
+import OrderStatus from "./pages/OrderStatus";
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function AppRoutes() {
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/order" element={<MyOrders />} />
+        <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>
