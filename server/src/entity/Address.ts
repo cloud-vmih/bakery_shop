@@ -18,14 +18,13 @@ export class Address extends BaseEntity {
   @JoinColumn({name: "branchID"})
   branch?: Branch
 
-  @Column({ nullable: true })
-  formattedAddress?: string;
+  @Column()
+  fullAddress?: string;
 
   @Column("decimal", { precision: 10, scale: 7 })
-  @Index()
-  latitude?: Number;
+  lat?: number;
 
   @Column("decimal", { precision: 10, scale: 7 })
-  @Index()
-  longitude?: Number;
+  lng?: number;
+
 }

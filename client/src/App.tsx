@@ -5,8 +5,10 @@ import Home from "./pages/Home";
 import { AuthProvider } from "./context/authContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
-import Menu from "./pages/Menu";
+import MenuPage from "./pages/MenuPage";
 import ChangePassword from "./pages/ChangePassword";
+import ProductDetails from "./pages/ProductDetails";
+import NearestBranch from "./pages/NearestBranch";
 
 export default function AppRoutes() {
   return (
@@ -19,7 +21,9 @@ export default function AppRoutes() {
         <Route path="/changePW" element={<ChangePassword />}/>
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/nearest-branch" element={<NearestBranch />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>

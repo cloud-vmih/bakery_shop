@@ -9,9 +9,9 @@ export const createBranch = async (name: string, placeId: Number, formattedAddre
 
     const address = new Address()
     address.placeId = placeId;
-    address.formattedAddress = formattedAddress;
-    address.latitude = latitude;
-    address.longitude = longitude;
+    address.fullAddress = formattedAddress;
+    address.lat = latitude;
+    address.lng = longitude;
     address.branch = branch
     await branchRepo.createBranchWithAddress(branch, address)
     return ({message: "Branch added successfully!"})

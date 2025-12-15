@@ -4,7 +4,7 @@ import { getAllItems, getAllByCategory, getItemDetail } from "../controller/cate
 const router = Router();
 
 // GET /api/category  → lấy tất cả sản phẩm
-router.get("/", getAllItems);
+router.get("/category", getAllItems);
 
 // GET /api/category/:category → lấy theo category (để dùng sau)
 router.get("/:category", getAllByCategory);

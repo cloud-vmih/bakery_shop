@@ -3,3 +3,29 @@ VALUES
 ('Chocolate Cheesecake', 'Bánh cheesecake chocolate béo, mềm mịn', 65000, 'https://i.pinimg.com/736x/8d/12/ae/8d12aeb2dc3370699cbdd135823448d6.jpg', 'CAKE', '{}'),
 ('Matcha Cookie', 'Cookie trà xanh giòn nhẹ, thơm matcha', 25000, 'https://i.pinimg.com/1200x/e9/d2/e9/e9d2e9ef327f3681048277dc708f04fc.jpg', 'COOKIE', '{}'),
 ('Banana Bread', 'Bánh chuối mềm, ngọt nhẹ, kết hợp cùng chocolate chips, hợp ăn sáng', 30000, 'https://i.pinimg.com/736x/ed/4d/e2/ed4de277da714e0f66f7857e5479d7cf.jpg', 'BREAD', '{}');
+
+
+INSERT INTO item (name, description, price, "imageURL", category, "itemDetail")
+VALUES
+('Red Velvet Cake', 'Bánh red velvet mềm, vị cacao nhẹ và kem béo', 70000, 'https://i.pinimg.com/736x/93/33/c8/9333c857ebb4831615d1afff9e72e790.jpg', 'CAKE', '{}'),
+('Matcha Cream Cake', 'Bánh matcha thơm dịu, lớp kem nhẹ, ít ngọt', 375000, 'https://i.pinimg.com/736x/97/9c/dc/979cdcb3bbca64c9aca7138bc857fd20.jpg', 'CAKE', '{}'),
+('Blueberry Cheesecake', 'Cheesecake việt quất chua nhẹ, béo mịn', 80000, 'https://i.pinimg.com/736x/78/2d/c8/782dc8fbbf80cbac2b8398d57337c26c.jpg', 'CAKE', '{}'),
+
+('Garlic Butter Bread', 'Bánh mì bơ tỏi nướng giòn, thơm bơ', 35000, 'https://i.pinimg.com/736x/a7/ad/f7/a7adf7439a207184bfba23973c06a485.jpg', 'BREAD', '{}'),
+('Croissant Bơ Pháp', 'Croissant nhiều lớp, thơm bơ cao cấp', 45000, 'https://i.pinimg.com/1200x/12/29/fd/1229fddb9de6202140170b8b04e54c26.jpg', 'BREAD', '{}'),
+('Milk Bun Nhật', 'Bánh mì sữa mềm, vị ngọt nhẹ kiểu Nhật', 24000, 'https://i.pinimg.com/736x/9f/4f/78/9f4f78754c26581520076b23a8d816ff.jpg', 'BREAD', '{}'),
+
+('Chocolate Chip Cookie', 'Cookie truyền thống với chocolate chip', 20000, 'https://i.pinimg.com/1200x/02/3b/b2/023bb26cba5082d7beba647cb30b6095.jpg', 'COOKIE', '{}'),
+('Coffee Butter Cookie', 'Cookie vị cà phê kết hợp với lớp áo chocolate và hạt dẻ cười', 22000, 'https://i.pinimg.com/1200x/1f/6c/cd/1f6ccd0ea126a6d8d9d1b7f0577273b9.jpg', 'COOKIE', '{}'),
+('Oatmeal Raisin Cookie', 'Cookie yến mạch nho khô healthy, ít ngọt', 21000, 'https://i.pinimg.com/1200x/92/94/5d/92945d5e9aba544e1b5b0bf1ff6f7aa0.jpg', 'COOKIE', '{}'),
+
+('Macaron TrippleCuties Box', 'Hộp 3 macaron nhiều vị', 70000, 'https://i.pinimg.com/1200x/0f/7f/fc/0f7ffcf3a636f20623e64218f518fff7.jpg', 'OTHER', '{}'),
+('Panna Cotta Strawberry', 'Panna cotta mềm mịn kèm sốt dâu', 45000, 'https://i.pinimg.com/736x/7e/38/0b/7e380bd817aa5be31447451069635a2e.jpg', 'OTHER', '{}'),
+('Handmade Gift Card', 'Thiệp handmade trang trí dễ thương, phù hợp tặng kèm bánh', 30000, 'https://i.pinimg.com/736x/cd/c4/7a/cdc47a209381b6b457c8d603665ec969.jpg', 'OTHER', '{}');
+
+
+import thư viện gg maps api bên folder client: npm install @react-google-maps/api@2.18.1
+
+đừng test gg maps api nhìu nha :3
+
+thêm vô .env : REACT_APP_GOOGLE_MAPS_KEY=AIzaSyA4lKLhL_fwCsbd1CiHbNiDA1CxhD1uyWU

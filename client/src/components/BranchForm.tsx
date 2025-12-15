@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import GooglePlaceInput from "./GooglePlaceInput";
+import GooglePlaceInput from "./AddressAutocomplete";
 import toast from "react-hot-toast";
 type Props = {
   open: boolean;
