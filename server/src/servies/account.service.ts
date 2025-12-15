@@ -7,7 +7,6 @@ import { createAccount, findAccountByUsername, findUserByAccountId, createUser, 
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 import { redis } from "../config/redis";
-import { error } from "console";
 
 export const registerUser = async (username: string, password: string, email: string, phoneNumber: string, fullName: string, dateOfBirth: Date, avatarURL: string) => {
 
@@ -169,14 +168,15 @@ export const changePassword = {
     const OTP_TTL = 300;      // 5 phút
     const COOLDOWN_TTL = 30;  // 30 giây
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(otp)
 
     try {
       const cooldownKey = `otp_cooldown:${email}`;
       if (await redis.exists(cooldownKey)) {
         throw new Error("Vui lòng chờ 30s để gửi lại OTP");
       }
-      await redis.set(`otp:${email}`, otp, "EX", OTP_TTL);
-      await redis.set(cooldownKey, "1", "EX", COOLDOWN_TTL);
+      await redis.set(`otp:${email}`, otp, {ex: OTP_TTL});
+      await redis.set(cooldownKey, "1", {ex: COOLDOWN_TTL});
 
       const html = `
       <h2>Verify your OTP</h2>
@@ -195,15 +195,18 @@ export const changePassword = {
     const key = `otp:${email}`;
     const savedOtp = await redis.get(key);
 
+    console.log(savedOtp)
+    console.log(otp)
     if (!savedOtp) {
       throw new Error("OTP đã hết hạn");
     }
 
-    if (savedOtp !== otp) {
+    if (savedOtp.toString() !== otp.toString()) {
       throw new Error("OTP không đúng");
     }
+
     await redis.del(key);
-    await redis.set(`otp_verified:${email}`, "true", "EX", 300);
+    await redis.set(`otp_verified:${email}`, "true", {ex: 300});
 
     return true;
   },

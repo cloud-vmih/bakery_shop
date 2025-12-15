@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, JoinColumn, Column, Unique, BaseEntity, PrimaryColumn } from "typeorm";
+import { Entity, ManyToOne, JoinColumn, Column, BaseEntity, PrimaryColumn } from "typeorm";
 import { Order } from "./Orders";
 
 @Entity("orderDetail")
@@ -15,5 +15,7 @@ export class OrderDetail extends BaseEntity {
 
   @Column({ nullable: true })
   note?: string;
-}
 
+  @Column()
+  quantity?: number
+}

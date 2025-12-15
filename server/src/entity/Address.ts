@@ -7,6 +7,9 @@ export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column()
+  ggMapId!: number;
+
   @ManyToOne(() => Customer, c => c.addresses)
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
