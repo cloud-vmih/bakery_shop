@@ -39,8 +39,8 @@ export default function MenuPage() {
       toast.success("Đã thêm vào giỏ hàng!");
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
-        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
         navigate("/login")
+        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");

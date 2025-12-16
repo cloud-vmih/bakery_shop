@@ -9,8 +9,13 @@ interface CreateResponse {
 }
 // CREATE
 export const createBranch = async (data: CreateResponse) => {
-    const res = await API.post("/branchs/create", data)
-    return res.data.message;
+    try {
+        const res = await API.post("/branchs/create", data)
+        return res.data.message;
+    }
+    catch (err: any) {
+        throw err;
+    }
 };
 
 // GET ALL
@@ -23,11 +28,21 @@ export const updateBranch = async (
     id: Number,
     data: any
 ) => {
-    const res = await API.put(`/branchs/update/${id}`, data);
-    return res.data.message;
+    try {
+        const res = await API.put(`/branchs/update/${id}`, data);
+        return res.data.message;
+    }
+    catch (err: any) {
+        throw err;
+    }
 }
 // DELETE
 export const deleteBranch = async (id: number) => {
-    const res = await API.delete(`/branchs/delete/${id}`)
-    return res.data.message;
+    try {
+        const res = await API.delete(`/branchs/delete/${id}`)
+        return res.data.message;
+    }
+    catch (err: any) {
+       throw err;
+    }
 };

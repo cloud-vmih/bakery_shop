@@ -155,8 +155,9 @@ export const googleService = {
       },
     };
 
-    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: "1h" });
-    return { token, user: jwtPayload.user };
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: "15m" });
+    const refresh_token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {expiresIn: "7d",});
+    return { refresh_token, token, user: jwtPayload.user };
   },
 };
 

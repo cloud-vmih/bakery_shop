@@ -64,6 +64,12 @@ export const googleLogin = async (req: Request, res: Response) => {
       if (!id_token) return res.status(400).json({ message: "id_token missing" });
 
       const result = await googleService.loginWithGoogle(id_token);
+      res.cookie("refresh_token", result.refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      });
       return res.json(result);
 
     } catch (err) {
@@ -103,3 +109,20 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(400).json({message: err.message});
   }
 }
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+    // Xóa cookie
+    res.clearCookie("refresh_token", {
+      path: "/api/refresh"
+    });
+
+    res.status(200).json({ 
+      message: "Logged out successfully" 
+    });
+  } catch (err: any) {
+    console.error("Logout error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
