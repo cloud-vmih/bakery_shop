@@ -6,6 +6,7 @@ import cartRoutes from "./routes/cart.routes";
 import branchRoutes from "./routes/branch.routes"
 
 
+import profileRoutes from "./routes/user.routes";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -20,4 +21,5 @@ app.use("/api", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
 app.use("/api/branchs", branchRoutes);
 
+app.use('/api', profileRoutes);
 export default app;
