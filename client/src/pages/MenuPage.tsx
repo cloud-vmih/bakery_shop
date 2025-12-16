@@ -5,6 +5,7 @@ import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
+import { Header } from "../components/Header";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function MenuPage() {
@@ -102,6 +103,8 @@ export default function MenuPage() {
   ];
 
   return (
+    <>
+    <Header user={user} />
     <div className="menuPage">
       <section className="menuSection">
         <div className="sectionHeader">
@@ -282,5 +285,6 @@ export default function MenuPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

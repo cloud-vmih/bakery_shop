@@ -40,13 +40,15 @@ export const createBranchWithAddress = async (
 };
 
 export const getAllBranch = async () => {
-    const repoBranch = AppDataSource.getRepository(Branch);
-    const branches = await repoBranch.find({
+  console.log("DB")
+  const repoBranch = AppDataSource.getRepository(Branch);
+  const branches = await repoBranch.find({
     relations: {
-      address: true,
-    },
-  });
-    return branches
+      address: true
+    }}
+  );
+  console.log(branches)
+  return branches
 }
 
 export const updateBranchWithAddress = async (

@@ -8,7 +8,7 @@ export class Address extends BaseEntity {
   id?: Number;
 
   @Column()
-  placeId!: Number;
+  placeId!: string;
 
   @ManyToOne(() => Customer, c => c.addresses)
   @JoinColumn({ name: "customerID" })

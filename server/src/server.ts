@@ -18,6 +18,6 @@ app.use(express.json());
 app.use("/api", categoryRoutes);
 app.use("/api", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
-app.use("/api", branchRoutes);
+app.use("/api/branchs", branchRoutes);
 
 export default app;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import GooglePlaceInput from "./AddressAutocomplete";
 import toast from "react-hot-toast";
+import MapProvider from "../components/MapProvider";
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -14,23 +15,25 @@ export default function BranchModal({
   onSubmit,
   initialData,
 }: Props) {
-  const [name, setName] = useState(initialData?.name || "");
+  const [name, setName] = useState("");
   const [place, setPlace] = useState<any>(null);
 
   useEffect(() => {
-    if (initialData?.address) {
+    if (initialData) {
+      setName(initialData.name || "")
       setPlace({
-        place_id: initialData.address.placeId,
-        formatted_address: initialData.address.formattedAddress,
-        geometry: {
-          location: {
-            lat: () => initialData.address.latitude,
-            lng: () => initialData.address.longitude,
-          },
-        },
+        placeId: initialData.address.placeId,
+        fullAddress: initialData.address.fullAddress,
+        lat: initialData.address.lat,
+        lng: initialData.address.lng
       });
     }
-  }, [initialData]);
+    else {
+      setName("");
+      setPlace(null);
+    }
+    
+  }, [initialData, open]);
 
   if (!open) return null;
 
@@ -40,15 +43,16 @@ export default function BranchModal({
     onSubmit({
       branch: { name },
       address: {
-        placeId: place.place_id,
-        formattedAddress: place.formatted_address,
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
+        placeId: place.placeId,
+        formattedAddress: place.fullAddress,
+        latitude: place.lat,
+        longitude: place.lng,
       },
     });
   };
 
   return (
+    <MapProvider>
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
       <div className="bg-white p-6 w-full max-w-md rounded">
         <h2 className="text-xl font-semibold mb-4">
@@ -66,7 +70,7 @@ export default function BranchModal({
 
         {place && (
           <p className="text-sm text-gray-600 mb-3">
-            📍 {place.formatted_address}
+            📍 {place.fullAddress}
           </p>
         )}
 
@@ -83,5 +87,6 @@ export default function BranchModal({
         </div>
       </div>
     </div>
+    </MapProvider>
   );
 }

@@ -2,7 +2,7 @@ import { Branch } from "../entity/Branch";
 import { Address } from "../entity/Address";
 import * as branchRepo from "../db/db.branch";
 
-export const createBranch = async (name: string, placeId: Number, formattedAddress?: string, latitude?: number, longitude?: number) => {
+export const createBranch = async (name: string, placeId: string, formattedAddress?: string, latitude?: number, longitude?: number) => {
   try{ 
     const branch = new Branch();
     branch.name = name;
@@ -13,8 +13,7 @@ export const createBranch = async (name: string, placeId: Number, formattedAddre
     address.lat = latitude;
     address.lng = longitude;
     address.branch = branch
-    await branchRepo.createBranchWithAddress(branch, address)
-    return ({message: "Branch added successfully!"})
+    return await branchRepo.createBranchWithAddress(branch, address)
   }
   catch (err) {
     throw err

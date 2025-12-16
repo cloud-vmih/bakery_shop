@@ -7,6 +7,6 @@ const router = Router();
 router.post("/create", verifyToken, branchController.createBranchWithAddres);
 router.put("/update/:id", verifyToken, branchController.updateBranchWithAddres);
 router.delete("/delete/:id", verifyToken, branchController.deleteBranch);
-router.get("/branches", branchController.getBranches)
+router.get("/", branchController.getBranches)
 
 export default router;
