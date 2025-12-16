@@ -5,6 +5,7 @@ import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
 
 
+import profileRoutes from "./routes/user.routes";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -17,5 +18,5 @@ app.use(express.json());
 app.use("/api", categoryRoutes);
 app.use("/api", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
-
+app.use('/api', profileRoutes);
 export default app;

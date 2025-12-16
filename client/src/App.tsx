@@ -9,13 +9,14 @@ import MenuPage from "./pages/MenuPage";
 import { Header } from "./components/Header";
 import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
+import ProfilePage from "./pages/User";
 
 export default function AppRoutes() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
     <AuthProvider>  
     <BrowserRouter>
-      <Header />
+    <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -24,6 +25,7 @@ export default function AppRoutes() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>
