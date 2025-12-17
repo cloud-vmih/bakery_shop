@@ -1,6 +1,6 @@
 // src/controller/cart.controller.ts
 import { Request, Response } from "express";
-import { CartService } from "../servies/cart.service";
+import { CartService } from "../services/cart.service";
 
 const cartService = new CartService();
 

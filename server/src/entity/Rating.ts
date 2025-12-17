@@ -1,16 +1,13 @@
-import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, Unique, PrimaryColumn } from "typeorm"
+import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, PrimaryGeneratedColumn, OneToOne, OneToMany } from "typeorm"
 import { Item } from "./Item"
 import { Customer } from "./Customer"
+import { ResponseRating } from "./ResponseRating";
 
 @Entity("rating")
-@Unique(["itemID", "customerID"])
 export class Rating extends BaseEntity {
 
-  @PrimaryColumn({ name: "itemID", type: "bigint" })
-  itemID!: number;
-
-  @PrimaryColumn({ name: "customerID", type: "bigint" })
-  customerID!: number;
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ManyToOne(() => Item, (i) => i.ratings)
   @JoinColumn({ name: "itemID" })
@@ -20,9 +17,14 @@ export class Rating extends BaseEntity {
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
 
+  @OneToMany(() => ResponseRating, (responseRating) => responseRating.rating)
+  responses?: ResponseRating[];
+
   @Column()
   contents!: string;
 
   @Column({ type: "timestamp", default: () => "NOW()" })
   createAt!: Date;
+
 }
+
