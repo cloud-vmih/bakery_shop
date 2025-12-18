@@ -2,7 +2,6 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/items";
 
-// Định nghĩa kiểu Category rõ ràng
 export type Category = "CAKE" | "BREAD" | "COOKIE" | "OTHER";
 
 export type CakeSubType = "CHEESECAKE" | "BIRTHDAYCAKE" | "MOUSSE";

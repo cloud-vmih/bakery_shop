@@ -1,8 +1,8 @@
 // src/pages/MenuManagement.tsx
 import { useEffect, useState } from "react";
-import itemService from "../services/itemService";
+import itemService from "../services/items.service";
 import { toast } from "react-toastify";
-import {Item} from "../services/itemService";
+import {Item} from "../services/items.service";
 
 type CakeType = "CHEESECAKE" | "BIRTHDAYCAKE" | "MOUSSE";
 

@@ -1,26 +1,23 @@
 // src/services/item.service.ts
 import {
-  getAllItemsDB,
-  createItemDB,
-  updateItemDB,
-  deleteItemDB,
+ ItemDB
 } from "../db/db.item";
 
 export class ItemService {
   static async getAll() {
-    return await getAllItemsDB();
+    return await ItemDB.getAllItemsDB();
   }
 
   static async create(data: any) {
-    return await createItemDB(data);
+    return await ItemDB.createItemDB(data);
   }
 
   static async update(id: number, data: any) {
     console.log(data);
-    return await updateItemDB(id, data);
+    return await ItemDB.updateItemDB(id, data);
   }
 
   static async delete(id: number) {
-    return await deleteItemDB(id);
+    return await ItemDB.deleteItemDB(id);
   }
 }
