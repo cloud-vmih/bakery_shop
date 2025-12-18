@@ -93,6 +93,7 @@ const ManageReviews: React.FC = () => {
           <th>Sản phẩm</th>
           <th>Ngày tạo</th>
           <th>Trạng thái</th>
+          <th>Số phản hồi</th> {/* Thêm cột này */}
           <th>Hành động</th>
         </tr>
       </thead>
@@ -104,6 +105,7 @@ const ManageReviews: React.FC = () => {
             <td>{review.item?.name || 'N/A'}</td>
             <td>{new Date(review.createdAt).toLocaleDateString()}</td>
             <td>{review.hasResponse ? 'Đã phản hồi' : 'Chưa xử lý'}</td>
+            <td>{review.responses.length}</td> {/* Hiển thị số lượng */}
             <td>
               <button onClick={() => setSelectedReview(review)}>Chi tiết</button>
             </td>
@@ -119,8 +121,27 @@ const ManageReviews: React.FC = () => {
         <div className="modal">
           <h3>Đánh giá ID: {selectedReview.id}</h3>
           <p>{selectedReview.contents}</p>
+
+          {/* Thêm phần Lịch sử */}
+        <div className="history-section">
+          <h4>Lịch sử phản hồi:</h4>
+          {selectedReview.responses.length > 0 ? (
+            <ul>
+              {selectedReview.responses
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // Sort mới nhất đầu
+                .map((res) => (
+                  <li key={res.id}>
+                    <strong>{res.repliedBy}</strong> ({new Date(res.createdAt).toLocaleString()}): {res.contents}
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            <p>Chưa có phản hồi nào.</p>
+          )}
+        </div>
+
           <div>
-            <h4>Phản hồi:</h4>
+            <h4>Phản hồi mới:</h4>
             <textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}

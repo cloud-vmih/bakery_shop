@@ -7,6 +7,12 @@ export interface Review {
     createdAt: string;
     item?: { name: string };
     hasResponse: boolean;
+    responses: { // Thêm array này
+    id: number;
+    contents: string;
+    createdAt: string;
+    repliedBy: string; // Tên staff/admin hoặc 'Unknown'
+  }[];
 }
 
 export const getReviews = async (filter: { productName?: string; dateFrom?: string; unhandled?: boolean }): Promise<Review[]> => {
@@ -23,6 +29,12 @@ export const getReviews = async (filter: { productName?: string; dateFrom?: stri
     createdAt: new Date(rating.createAt).toISOString(),  // Convert Date → ISO string
     item: rating.item ? { name: rating.item.name } : undefined,
     hasResponse: !!(rating.responses.length > 0),  // Boolean: true nếu response tồn tại
+    responses: rating.responses?.map((res: any) => ({
+      id: res.id,
+      contents: res.contents,
+      createdAt: new Date(res.createdAt).toISOString(),
+      repliedBy: res.staff?.name || res.admin?.name || 'Unknown' // Giả sử entity Staff/Admin có field 'name'
+    })) || []
   }));
 
   if (response.data.message) {

@@ -13,7 +13,7 @@ export const ratingRepository = {
     async findFilteredRatings(filters: { productName?: string; dateFrom?: string; unhandled?: boolean }) {
     const repo = AppDataSource.getRepository(Rating);
     const where: any = {};
-    console.log(filters.unhandled)
+    //console.log(filters.unhandled)
 
 
     if (filters.productName) {

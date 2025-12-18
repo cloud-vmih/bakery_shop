@@ -1,17 +1,17 @@
-import { MoreThanOrEqual, IsNull } from 'typeorm';
+import { MoreThanOrEqual, IsNull, Like } from 'typeorm';
 import { AppDataSource } from "../config/database";
 import { ResponseRating } from '../entity/ResponseRating';
 
 export const reviewRepository = {
-  async findReviews(filters: { productId?: string; dateFrom?: string; unhandled?: boolean }) {
+  async findReviews(filters: { productName?: string; dateFrom?: string; unhandled?: boolean }) {
     const repo = AppDataSource.getRepository(ResponseRating);
     const where: any = {};
 
-    if (filters.productId) {
-      where.item = { id: parseInt(filters.productId) };
+    if (filters.productName) {
+      where.item = { name: Like(`%${filters.productName}%`) };
     }
     if (filters.dateFrom) {
-      where.createdAt = MoreThanOrEqual(new Date(filters.dateFrom));
+      where.createdAt = MoreThanOrEqual(new Date(filters.dateFrom));  
     }
     if (filters.unhandled) {
       where.response = IsNull();
