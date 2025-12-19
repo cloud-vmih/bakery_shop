@@ -13,7 +13,6 @@ export const getReviewsController = async (req: Request, res: Response) => {
     };
 
     const reviews = await reviewService.getReviews(filters);
-    //console.log(reviews)
     res.json(reviews);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi tải danh sách đánh giá!' });

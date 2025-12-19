@@ -10,6 +10,7 @@ import { Header } from "./components/Header";
 import ProfilePage from "./pages/User";
 import MenuManagement from "./pages/MenuManagement";
 import ManageReviews from "./pages/review";
+import MenuManagement_P from "./pages/ProductUpdate";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/reviews" element={<ManageReviews />} />
+            <Route path="/updateProduct" element={<MenuManagement_P />} />
       </Routes>
 
         </BrowserRouter>

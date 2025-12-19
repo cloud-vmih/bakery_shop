@@ -27,7 +27,7 @@ export const ratingRepository = {
 
     const reviews = await repo.find({
         where,
-        relations: ['item', 'customer', 'responses'],
+        relations: ['item', 'customer', 'responses', 'responses.admin', 'responses.staff'],
         order: { createAt: 'DESC' }, // Mới nhất → cũ nhất
     });
 

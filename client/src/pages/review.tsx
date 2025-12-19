@@ -3,22 +3,32 @@ import { getReviews, replyReview, deleteReview, Review } from '../services/revie
 import '../styles/review.css';
 
 const ManageReviews: React.FC = () => {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [filter, setFilter] = useState({ productName: '', dateFrom: '', unhandled: false });
+  const [fullReviews, setFullReviews] = useState<Review[]>([]);
+  const [productName, setProductName] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [unhandled, setUnhandled] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5; // Số lượng đánh giá mỗi trang, có thể điều chỉnh
+
+  const filter = { productName, dateFrom, unhandled };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [productName, dateFrom, unhandled]);
 
   useEffect(() => {
     fetchReviews();
-  }, [filter]);
+  }, [productName, dateFrom, unhandled, currentPage]);
 
   const fetchReviews = async () => {
     setLoading(true);
     try {
       const data = await getReviews(filter);
-      setReviews(data);
+      setFullReviews(data);
       setError('');
     } catch (err) {
       setError('Lỗi tải danh sách đánh giá!');
@@ -26,6 +36,10 @@ const ManageReviews: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const displayedReviews = fullReviews.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const totalItems = fullReviews.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   const handleReply = async () => {
     if (!selectedReview || !replyContent.trim()) {
@@ -58,88 +72,124 @@ const ManageReviews: React.FC = () => {
   return (
     <div className="manage-reviews">
       <h1>Quản lý Đánh giá</h1>
-      
+
       {/* Filter Form */}
       <div className="filter-section">
         <input
           type="text"
           placeholder="Tên Sản phẩm"
-          value={filter.productName}
-          onChange={(e) => setFilter({ ...filter, productName: e.target.value })}
+          value={productName}
+          onChange={(e) => setProductName(e.target.value)}
         />
         <input
           type="date"
-          value={filter.dateFrom}
-          onChange={(e) => setFilter({ ...filter, dateFrom: e.target.value })}
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
         />
         <label>
           <input
             type="checkbox"
-            checked={filter.unhandled}
-            onChange={(e) => setFilter({ ...filter, unhandled: e.target.checked })}
+            checked={unhandled}
+            onChange={(e) => setUnhandled(e.target.checked)}
           />
           Chưa xử lý
         </label>
       </div>
-
       {/* Reviews Table */}
-{loading ? <p>Đang tải...</p> : (
-  <div className="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nội dung</th>
-          <th>Sản phẩm</th>
-          <th>Ngày tạo</th>
-          <th>Trạng thái</th>
-          <th>Số phản hồi</th> {/* Thêm cột này */}
-          <th>Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        {reviews.map((review) => (
-          <tr key={review.id}>
-            <td>{review.id}</td>
-            <td>{review.contents}</td>
-            <td>{review.item?.name || 'N/A'}</td>
-            <td>{new Date(review.createdAt).toLocaleDateString()}</td>
-            <td>{review.hasResponse ? 'Đã phản hồi' : 'Chưa xử lý'}</td>
-            <td>{review.responses.length}</td> {/* Hiển thị số lượng */}
-            <td>
-              <button onClick={() => setSelectedReview(review)}>Chi tiết</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
-
+      {loading ? <p>Đang tải...</p> : (
+        <>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nội dung</th>
+                  <th>Sản phẩm</th>
+                  <th>Ngày tạo</th>
+                  <th>Trạng thái</th>
+                  <th>Số phản hồi</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayedReviews.map((review) => (
+                  <tr key={review.id}>
+                    <td>{review.id}</td>
+                    <td>{review.contents}</td>
+                    <td>{review.item?.name || 'N/A'}</td>
+                    <td>{new Date(review.createdAt).toLocaleDateString()}</td>
+                    <td>{review.hasResponse ? 'Đã phản hồi' : 'Chưa xử lý'}</td>
+                    <td>{review.responses.length}</td>
+                    <td>
+                      <button onClick={() => setSelectedReview(review)}>Chi tiết</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* Pagination */}
+          <div className="pagination">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+            >
+              Trước
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={page === currentPage ? 'active' : ''}
+              >
+                {page}
+              </button>
+            ))}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+            >
+              Sau
+            </button>
+          </div>
+        </>
+      )}
       {/* Modal for Reply/Delete */}
       {selectedReview && (
         <div className="modal">
           <h3>Đánh giá ID: {selectedReview.id}</h3>
           <p>{selectedReview.contents}</p>
-
           {/* Thêm phần Lịch sử */}
-        <div className="history-section">
-          <h4>Lịch sử phản hồi:</h4>
-          {selectedReview.responses.length > 0 ? (
-            <ul>
-              {selectedReview.responses
-                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // Sort mới nhất đầu
-                .map((res) => (
-                  <li key={res.id}>
-                    <strong>{res.repliedBy}</strong> ({new Date(res.createdAt).toLocaleString()}): {res.contents}
-                  </li>
-                ))}
-            </ul>
-          ) : (
-            <p>Chưa có phản hồi nào.</p>
-          )}
-        </div>
+          <div className="history-section">
+            <h4>Lịch sử phản hồi:</h4>
 
+            {selectedReview.responses && selectedReview.responses.length > 0 ? (
+              <ul>
+                {selectedReview.responses
+                  .map((res: any) => ({
+                    id: res.id,
+                    contents: res.contents,
+                    createdAt: res.createAt,
+                    repliedBy: res.staff?.fullName || res.admin?.fullName || 'Unknown'
+                  }))
+                  .sort(
+                    (a: any, b: any) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )
+                  .map((res: any) => (
+                    <li key={res.id}>
+                      <strong>{res.repliedBy}</strong>{' '}
+                      ({new Date(res.createdAt).toLocaleString()}):{' '}
+                      {res.contents}
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p>Chưa có phản hồi nào.</p>
+            )}
+
+          </div>
           <div>
             <h4>Phản hồi mới:</h4>
             <textarea
