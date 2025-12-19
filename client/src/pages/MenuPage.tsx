@@ -5,6 +5,7 @@ import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
+import { Header } from "../components/Header";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function MenuPage() {
@@ -38,8 +39,8 @@ export default function MenuPage() {
       toast.success("Đã thêm vào giỏ hàng!");
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
-        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
         navigate("/login")
+        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");
@@ -102,6 +103,8 @@ export default function MenuPage() {
   ];
 
   return (
+    <>
+    <Header user={user} />
     <div className="menuPage">
       <section className="menuSection">
         <div className="sectionHeader">
@@ -282,5 +285,6 @@ export default function MenuPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

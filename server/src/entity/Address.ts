@@ -26,5 +26,10 @@ export class Address extends BaseEntity {
 
   @Column("decimal", { precision: 10, scale: 7 })
   lng?: number;
+<<<<<<< HEAD
   
 }
+=======
+
+}
+>>>>>>> origin/feature/for_merge

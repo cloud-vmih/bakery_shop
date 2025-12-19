@@ -9,6 +9,6 @@ export class Branch extends BaseEntity {
   @Column()
   name?: string; 
     
-  @OneToOne(() => Address, (a: Address) => a.id)
+  @OneToOne(() => Address, (a: Address) => a.branch)
   address?: Address;
 }

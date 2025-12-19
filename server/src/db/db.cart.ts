@@ -6,7 +6,6 @@ import { Item } from "../entity/Item";
 
 // Thêm lại hàm này (đã mất)
 export const getCartByUserId = async (userId: number) => {
-  console.log(userId)
   return await AppDataSource.getRepository(Cart).findOne({
     where: { customer: { id: userId } },
     relations: ["items", "items.item"],

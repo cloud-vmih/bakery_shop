@@ -10,7 +10,11 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER, 
   password: String(process.env.DB_PASS), 
   database: process.env.DB_NAME ,
+<<<<<<< HEAD
   synchronize: true, 
+=======
+  synchronize: false, 
+>>>>>>> origin/feature/for_merge
   entities: [path.join(__dirname, "../entity/**/*.ts")],
   migrations: [path.join(__dirname, "../migration/*.ts")],
   logging: ["error"],

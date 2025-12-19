@@ -7,7 +7,7 @@ const router = Router();
 router.get("/category", getAllItems);
 
 // GET /api/category/:category → lấy theo category (để dùng sau)
-router.get("/:category", getAllByCategory);
+// router.get("/:category", getAllByCategory);
 
 // GET /api/category/item/:id
 router.get("/item/:id", getItemDetail);
