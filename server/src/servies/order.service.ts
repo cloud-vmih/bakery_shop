@@ -1,14 +1,21 @@
 // server/src/services/order.service.ts
 
 import { orderRepo } from "../db/order.db";
-import { EOrderStatus } from "../entity/enum/enum";
+import { EOrderStatus, ECancelStatus,EPayStatus } from "../entity/enum/enum";
+
+
+interface CancelResult {
+  success: boolean;
+  message: string;
+  action?: "canceled_directly" | "cancel_requested";
+}
 
 // Hàm chuyển trạng thái sang tiếng Việt
 const getStatusText = (status: EOrderStatus): string => {
   const map: Record<EOrderStatus, string> = {
     [EOrderStatus.PENDING]: "Chờ xác nhận",
     [EOrderStatus.CONFIRMED]: "Đã xác nhận",
-    [EOrderStatus.PREPARING]: "Đang chuẩn bị hàng",
+    [EOrderStatus.PREPARING]: "Đang chuẩn bị",
     [EOrderStatus.DELIVERING]: "Đang giao",
     [EOrderStatus.COMPLETED]: "Giao thành công",
     [EOrderStatus.CANCELED]: "Đã hủy",
@@ -21,7 +28,7 @@ const buildTimeline = (currentStatus: EOrderStatus) => {
   const steps = [
     { status: EOrderStatus.PENDING, label: "Chờ xác nhận" },
     { status: EOrderStatus.CONFIRMED, label: "Đã xác nhận" },
-    { status: EOrderStatus.PREPARING, label: "Đang chuẩn bị hàng" },
+    { status: EOrderStatus.PREPARING, label: "Đang chuẩn bị" },
     { status: EOrderStatus.DELIVERING, label: "Đang giao" },
     { status: EOrderStatus.COMPLETED, label: "Giao thành công" },
   ];
@@ -86,26 +93,88 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
   };
 };
 
-// Hủy đơn hàng
-export const cancelOrder = async (orderId: number, userId: number) => {
+interface CancelResult {
+  success: boolean;
+  message: string;
+  action?: "canceled_directly" | "cancel_requested"; // để frontend xử lý thông báo phù hợp
+}
+/**
+ * Hủy đơn hàng - Phiên bản mới có phân biệt theo trạng thái thanh toán
+ */
+export const cancelOrder = async (
+  orderId: number,
+  userId: number
+): Promise<CancelResult> => {
+  // Tìm đơn hàng thuộc về user
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
 
   if (!order) {
     return { success: false, message: "Đơn hàng không tồn tại hoặc không thuộc về bạn" };
   }
-  const status: EOrderStatus = order.status ?? EOrderStatus.PENDING;
 
-  // Chỉ cho phép hủy ở trạng thái PENDING hoặc CONFIRMED
-  if (![EOrderStatus.PENDING, EOrderStatus.CONFIRMED].includes(status)) {
-    return { success: false, message: "Đơn hàng không thể hủy vì đã được xử lý" };
+  const currentStatus = order.status ?? EOrderStatus.PENDING;
+  const payStatus = order.payStatus ?? EPayStatus.PENDING;
+  const cancelStatus = order.cancelStatus ?? ECancelStatus.NONE;
+
+  // 1. Chỉ cho phép hủy ở PENDING hoặc CONFIRMED
+  if (![EOrderStatus.PENDING, EOrderStatus.CONFIRMED].includes(currentStatus)) {
+    return {
+      success: false,
+      message: "Đơn hàng không thể hủy vì đã bắt đầu chuẩn bị hoặc giao hàng",
+    };
   }
 
-  // Cập nhật trạng thái
-  order.status = EOrderStatus.CANCELED;
-  await orderRepo.save(order);
+  // 2. Nếu đã có yêu cầu hủy đang xử lý hoặc đã xử lý → không cho làm lại
+  if (
+    cancelStatus === ECancelStatus.REQUESTED ||
+    cancelStatus === ECancelStatus.APPROVED ||
+    cancelStatus === ECancelStatus.REJECTED
+  ) {
+    let message = "";
+    if (cancelStatus === ECancelStatus.REQUESTED) message = "Đơn hàng đang được xử lý yêu cầu hủy";
+    else if (cancelStatus === ECancelStatus.APPROVED) message = "Đơn hàng đã được hủy";
+    else if (cancelStatus === ECancelStatus.REJECTED) message = "Yêu cầu hủy đã bị từ chối";
+    return { success: false, message };
+  }
 
-  // TODO: Gửi email thông báo hủy đơn (nếu cần)
-  // await sendCancelEmail(order);
+  // 3. Trường hợp CHƯA THANH TOÁN (payStatus = PENDING) → Hủy trực tiếp
+  if (payStatus === EPayStatus.PENDING) {
+    order.status = EOrderStatus.CANCELED;
+    order.cancelStatus = ECancelStatus.NONE; // Reset cancelStatus vì hủy trực tiếp
 
-  return { success: true, message: "Đơn hàng đã được hủy thành công" };
+    await orderRepo.save(order);
+
+    // TODO: Gửi email thông báo hủy (tùy chọn)
+    // await sendCancelEmail(order);
+
+    return {
+      success: true,
+      message: "Đơn hàng đã được hủy thành công!",
+      action: "canceled_directly",
+    };
+  }
+
+  // 4. Trường hợp ĐÃ THANH TOÁN (payStatus = PAID) → Chỉ gửi yêu cầu hủy, chờ admin duyệt
+  if (payStatus === EPayStatus.PAID) {
+    order.cancelStatus = ECancelStatus.REQUESTED;
+    // KHÔNG thay đổi order.status (giữ PENDING/CONFIRMED để admin xử lý)
+    // Frontend sẽ hiển thị "đơn hàng đang được xử lý" dựa trên cancelStatus = REQUESTED
+
+    await orderRepo.save(order);
+
+    // TODO: Gửi thông báo cho admin/staff (email, notification, v.v.)
+    // await notifyAdminCancelRequest(order);
+
+    return {
+      success: true,
+      message: "Yêu cầu hủy đơn hàng đã được gửi. Chúng tôi sẽ xử lý và hoàn tiền sớm nhất có thể.",
+      action: "cancel_requested",
+    };
+  }
+
+  // 5. Trường hợp REFUNDED hoặc trạng thái khác (phòng ngừa)
+  return {
+    success: false,
+    message: "Trạng thái thanh toán không hợp lệ hoặc đơn hàng đã được hoàn tiền",
+  };
 };

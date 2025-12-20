@@ -9,7 +9,7 @@ export default function OrderStatus() {
   const [loading, setLoading] = useState(true);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
-  const [cancelSuccess, setCancelSuccess] = useState(false);
+  const [actionMessage, setActionMessage] = useState<{ text: string; type: "success" | "info" } | null>(null);
 
   useEffect(() => {
     if (!orderId) return;
@@ -50,7 +50,7 @@ export default function OrderStatus() {
     "Lý do khác",
   ];
 
-  // Xử lý hủy đơn
+  // Xử lý hủy/yêu cầu hủy
   const handleCancelOrder = async () => {
     if (!selectedReason) {
       alert("Vui lòng chọn lý do hủy đơn hàng");
@@ -58,16 +58,49 @@ export default function OrderStatus() {
     }
 
     try {
-      await orderService.cancelOrder(Number(orderId));
-      setCancelSuccess(true);
-      setShowCancelModal(false);
-      setSelectedReason("");
+      const res = await orderService.cancelOrder(Number(orderId));
+
+      if (res.action === "canceled_directly") {
+        setActionMessage({ text: "Đơn hàng đã được hủy thành công!", type: "success" });
+      } else if (res.action === "cancel_requested") {
+        setActionMessage({
+          text: "Yêu cầu hủy đơn hàng đã được gửi thành công! Chúng tôi sẽ xử lý và phản hồi sớm nhất.",
+          type: "info",
+        });
+      }
+
       // Reload dữ liệu để cập nhật trạng thái mới
       const updatedData = await orderService.getOrderStatus(Number(orderId));
       setData(updatedData);
+
+      setShowCancelModal(false);
+      setSelectedReason("");
+
+      // Tự động ẩn thông báo sau 5 giây
+      setTimeout(() => setActionMessage(null), 5000);
     } catch (error) {
-      alert("Hủy đơn hàng thất bại. Vui lòng thử lại.");
+      alert("Thao tác thất bại. Vui lòng thử lại.");
     }
+  };
+
+  // Kiểm tra điều kiện
+  const canCancel = ["PENDING", "CONFIRMED"].includes(data?.status);
+  const isPaid = data?.payStatus === "PAID";
+  const cancelStatus = data?.cancelStatus || "NONE";
+
+  // Văn bản và class cho nút hủy
+  const getCancelButtonText = () => {
+    if (cancelStatus === "REQUESTED") return "Đang chờ duyệt yêu cầu hủy";
+    if (cancelStatus === "APPROVED") return "Đơn hàng đã được hủy";
+    if (cancelStatus === "REJECTED") return "Yêu cầu hủy bị từ chối";
+    return isPaid ? "Yêu cầu hủy đơn (cần duyệt)" : "Hủy đơn hàng";
+  };
+
+  const getCancelButtonClass = () => {
+    if (cancelStatus === "REQUESTED") return "bg-orange-600 cursor-not-allowed";
+    if (cancelStatus === "APPROVED") return "bg-green-600";
+    if (cancelStatus === "REJECTED") return "bg-red-600";
+    return isPaid ? "bg-orange-600 hover:bg-orange-700" : "bg-red-600 hover:bg-red-700";
   };
 
   if (loading) {
@@ -88,6 +121,14 @@ export default function OrderStatus() {
     );
   }
 
+  const handleBuyAgain = () => {
+    alert("Chức năng mua lại đang được phát triển!");
+  };
+
+  const handleReview = () => {
+    alert("Chuyển đến trang đánh giá đơn hàng...");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-6xl mx-auto">
@@ -95,9 +136,30 @@ export default function OrderStatus() {
           Đơn hàng {data.orderId}
         </h1>
 
-        {/* 2 cột */}
+        {/* Thông báo hành động thành công (popup) */}
+        {actionMessage && (
+          <div
+            className={`fixed top-4 left-1/2 -translate-x-1/2 px-8 py-4 rounded-full shadow-lg z-50 text-white font-bold text-xl animate-pulse ${
+              actionMessage.type === "success" ? "bg-green-500" : "bg-blue-600"
+            }`}
+          >
+            {actionMessage.text}
+          </div>
+        )}
+
+        {/* Thông báo trạng thái hủy (nếu có) - nổi bật trên đầu */}
+        {cancelStatus !== "NONE" && (
+          <div className="mb-8 p-6 bg-yellow-50 border-2 border-yellow-400 rounded-3xl text-center">
+            <p className="text-xl font-bold text-yellow-800">
+              {cancelStatus === "REQUESTED" && "Đơn hàng đang được xử lý yêu cầu hủy. Chúng tôi sẽ phản hồi sớm nhất!"}
+              {cancelStatus === "APPROVED" && "Đơn hàng đã được hủy và sẽ được hoàn tiền (nếu đã thanh toán)."}
+              {cancelStatus === "REJECTED" && "Yêu cầu hủy đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý bình thường."}
+            </p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* CỘT TRÁI: Ngày đặt + Tiến trình + Ngày giao */}
+          {/* CỘT TRÁI */}
           <div className="space-y-8">
             {/* Ngày đặt */}
             <div className="bg-white rounded-3xl shadow-lg p-8">
@@ -176,7 +238,7 @@ export default function OrderStatus() {
             </div>
           </div>
 
-          {/* CỘT PHẢI: Sản phẩm + Tổng cộng + Nút hành động */}
+          {/* CỘT PHẢI */}
           <div className="space-y-8">
             {/* Sản phẩm */}
             <div className="bg-white rounded-3xl shadow-lg p-8">
@@ -199,7 +261,7 @@ export default function OrderStatus() {
                         />
                       ) : (
                         <div className="w-24 h-24 bg-gray-200 rounded-2xl flex items-center justify-center text-gray-500 text-4xl flex-shrink-0">
-                          Cake
+                          🍰
                         </div>
                       )}
 
@@ -219,7 +281,7 @@ export default function OrderStatus() {
                         </p>
 
                         <p className="text-xl font-bold text-gray-800 mt-2">
-                          {(info.price).toLocaleString("vi-VN")}đ
+                          {(info.price * quantity).toLocaleString("vi-VN")}đ
                         </p>
 
                         {item.note && (
@@ -233,6 +295,8 @@ export default function OrderStatus() {
                 })}
               </div>
             </div>
+
+            {/* Thông tin thanh toán */}
             {data.payment && (
               <div className="bg-white rounded-3xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">
@@ -243,21 +307,21 @@ export default function OrderStatus() {
                     <p className="text-xl text-gray-700">Phương thức thanh toán</p>
                     <p className="text-xl font-bold text-gray-800">
                       {data.payment.method === "COD" ? "Thanh toán khi nhận hàng" :
-                       data.payment.method === "BANKING" ? "VNPAY" :
-                       data.payment.method}
+                        data.payment.method === "BANKING" ? "VNPAY" :
+                          data.payment.method || "Chưa xác định"}
                     </p>
                   </div>
                   <div className="flex justify-between">
-                    <p className="text-xl text-gray-700">Trạng thái</p>
+                    <p className="text-xl text-gray-700">Trạng thái thanh toán</p>
                     <p className={`text-xl font-bold ${data.payment.status === "PAID" ? "text-green-600" : "text-orange-600"}`}>
-                      {data.payment.status === "PAID" ? "Đã thanh toán" : "Chưa thanh toán"}
+                      {data.payment.status=== "PAID" ? "Đã thanh toán" : "Chưa thanh toán"}
                     </p>
                   </div>
-              </div>
+                </div>
               </div>
             )}
 
-            {/* Tổng cộng */}
+            {/* Tổng cộng + Nút hành động */}
             <div className="bg-white rounded-3xl shadow-lg p-8">
               <div className="space-y-4 border-b border-gray-200 pb-4">
                 <div className="flex justify-between">
@@ -279,17 +343,43 @@ export default function OrderStatus() {
                 </p>
               </div>
 
-              {/* Nút hủy đơn */}
-              {["PENDING", "CONFIRMED"].includes(data.status) && (
-                <div className="mt-8">
+              {/* NÚT HÀNH ĐỘNG */}
+              <div className="mt-8 space-y-4">
+                {/* Nút hủy khi còn được phép và chưa gửi yêu cầu */}
+                {canCancel && cancelStatus === "NONE" && (
                   <button
                     onClick={() => setShowCancelModal(true)}
-                    className="w-full px-8 py-4 bg-red-600 text-white text-xl font-bold rounded-full hover:bg-red-700 transition shadow-lg"
+                    className={`w-full px-8 py-4 text-white text-xl font-bold rounded-full transition shadow-lg ${getCancelButtonClass()}`}
                   >
-                    Huỷ đơn hàng
+                    {getCancelButtonText()}
                   </button>
-                </div>
-              )}
+                )}
+
+                {/* Trạng thái khi đã có xử lý hủy */}
+                {cancelStatus !== "NONE" && (
+                  <div className={`w-full px-8 py-4 text-white text-xl font-bold rounded-full text-center ${getCancelButtonClass()}`}>
+                    {getCancelButtonText()}
+                  </div>
+                )}
+
+                {/* Đánh giá + Mua lại khi hoàn thành */}
+                {data.status === "COMPLETED" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button
+                      onClick={handleReview}
+                      className="px-8 py-4 bg-yellow-500 text-white text-xl font-bold rounded-full hover:bg-yellow-600 transition shadow-lg"
+                    >
+                      Đánh giá
+                    </button>
+                    <button
+                      onClick={handleBuyAgain}
+                      className="px-8 py-4 bg-pink-600 text-white text-xl font-bold rounded-full hover:bg-pink-700 transition shadow-lg"
+                    >
+                      Mua lại
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -299,13 +389,16 @@ export default function OrderStatus() {
       {showCancelModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-lg w-full">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
-              Lý do hủy đơn hàng
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              {isPaid ? "Yêu cầu hủy đơn hàng" : "Xác nhận hủy đơn hàng"}
             </h3>
-            <p className="text-gray-600 mb-6">
-              Vui lòng chọn lý do để chúng tôi phục vụ bạn tốt hơn:
+            <p className="text-gray-600 mb-6 text-center">
+              {isPaid
+                ? "Bạn đã thanh toán. Yêu cầu hủy sẽ được gửi đến cửa hàng để duyệt và hoàn tiền (nếu được chấp thuận)."
+                : "Bạn chưa thanh toán, đơn hàng sẽ được hủy ngay lập tức."}
             </p>
 
+            <p className="text-gray-700 mb-4">Vui lòng chọn lý do:</p>
             <div className="space-y-3 mb-8">
               {cancelReasons.map((reason) => (
                 <label
@@ -338,23 +431,16 @@ export default function OrderStatus() {
               <button
                 onClick={handleCancelOrder}
                 disabled={!selectedReason}
-                className={`flex-1 px-6 py-3 font-bold rounded-full transition
-                  ${selectedReason
+                className={`flex-1 px-6 py-3 font-bold rounded-full transition ${
+                  selectedReason
                     ? "bg-red-600 text-white hover:bg-red-700"
                     : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                  }`}
+                }`}
               >
-                Xác nhận hủy
+                Xác nhận
               </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Thông báo hủy thành công */}
-      {cancelSuccess && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-8 py-4 rounded-full shadow-lg z-50 animate-pulse">
-          Hủy thành công!
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, Column, BaseEntity, OneToMany, OneToOne } from "typeorm";
 import { User } from "./User";          
-import { EOrderStatus } from "./enum/enum";
+import { EOrderStatus, EPayStatus, ECancelStatus } from "./enum/enum";
 import { OrderDetail } from "./OrderDetails";
 import { Payment } from "./Payment";
 
@@ -25,6 +25,20 @@ export class Order extends BaseEntity {
     default: EOrderStatus.PENDING,
   })
   status?: EOrderStatus;
+  
+  @Column({
+    type: "enum",
+    enum: EPayStatus,
+    default: EPayStatus.PENDING,
+  })
+  payStatus?: EPayStatus;
+
+  @Column({
+    type: "enum",
+    enum: ECancelStatus,
+    default: ECancelStatus.NONE,
+  })
+  cancelStatus?: ECancelStatus;
 
   @OneToMany(() => OrderDetail, od => od.order)
   orderDetails?: OrderDetail[];
