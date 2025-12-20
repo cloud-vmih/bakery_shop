@@ -11,12 +11,21 @@ import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
 import ManageBranch from "./pages/ManageBranch";
 import ProfilePage from "./pages/User";
+import MenuManagement from "./pages/MenuManagement";
 
-export default function AppRoutes() {
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+export default function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
-    <AuthProvider>  
+    <AuthProvider>
     <BrowserRouter>
+        <ToastContainer
+            position="bottom-right"
+            autoClose={2000}
+            theme="light"
+        />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -27,7 +36,7 @@ export default function AppRoutes() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
         <Route path="/admin/branch" element={<ManageBranch />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile" element={<ProfilePage />} /><Route path="/M-menu" element={<MenuManagement />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>
