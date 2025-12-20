@@ -5,11 +5,11 @@ import { getProfile, updateProfile } from '../services/user.service';
 import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
 import { useUser } from '../context/authContext';
 import toast from 'react-hot-toast';
+import { Header } from '../components/Header';
 import '../styles/Profile.css';
 
 
 const ProfilePage: React.FC = () => {
-  const { user}  = useUser();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<UserResponse | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -40,7 +40,6 @@ const ProfilePage: React.FC = () => {
       setError(null);
       const data = await getProfile();
       setProfile(data);
-      // Reset form với data khi edit
       if (isEditing) {
         setFormData({
           fullName: data.fullName,
@@ -160,6 +159,8 @@ const ProfilePage: React.FC = () => {
   if (error) return <div className="error">Lỗi: {error} <button onClick={fetchProfile}>Thử lại</button></div>;
 
   return (
+    <>
+    <Header/>
     <div className="profile-page">
       <h1>Hồ sơ cá nhân</h1>
       {profile && (
@@ -178,7 +179,7 @@ const ProfilePage: React.FC = () => {
               <p><strong>Số điện thoại:</strong> {profile.phoneNumber}</p>
               <p><strong>Ngày sinh:</strong> {profile.dateOfBirth}</p>
               <button onClick={handleEdit} className="edit-btn">Chỉnh sửa hồ sơ</button>
-              <button onClick={() => navigate('/')} className="change-password-btn" > Đổi mật khẩu </button>
+              <button onClick={() => navigate('/changePW')} className="change-password-btn" > Đổi mật khẩu </button>
             </div>
           ) : (
             // Edit mode với form
@@ -255,6 +256,7 @@ const ProfilePage: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

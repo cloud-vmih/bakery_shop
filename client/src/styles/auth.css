@@ -1,47 +1,360 @@
-/* Container */
+/* Authentication Pages Styles (Login & Register) */
 .auth-container {
-  @apply flex items-center justify-center min-h-screen 
-         bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-100;
+    @apply min-h-screen flex items-center justify-center p-4 relative overflow-hidden;
+    background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Card */
+.auth-container::before {
+    content: '';
+    @apply absolute inset-0;
+    background-image:
+            radial-gradient(at 40% 20%, rgba(110, 231, 183, 0.1) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, rgba(253, 230, 138, 0.1) 0px, transparent 50%),
+            radial-gradient(at 0% 50%, rgba(167, 243, 208, 0.1) 0px, transparent 50%),
+            radial-gradient(at 80% 50%, rgba(254, 240, 138, 0.1) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, rgba(110, 231, 183, 0.1) 0px, transparent 50%),
+            radial-gradient(at 80% 100%, rgba(253, 230, 138, 0.1) 0px, transparent 50%),
+            radial-gradient(at 0% 0%, rgba(167, 243, 208, 0.1) 0px, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+}
+
 .auth-card {
-  @apply w-full max-w-sm bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl
-         border border-white/30 animate-[fadeIn_0.6s_ease-out];
+    @apply w-full max-w-md bg-white/90 backdrop-blur-lg
+    rounded-2xl shadow-2xl p-8 md:p-10 relative z-10
+    border-2 border-green-100;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 252, 232, 0.9) 100%);
+    animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Inputs */
-.input-box {
-  @apply w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl
-         text-gray-800 placeholder-gray-400 outline-none
-         focus:ring-2 focus:ring-cyan-400 focus:border-transparent
-         transition-all duration-300 ease-out
-         group-hover:border-cyan-300 disabled:opacity-60 disabled:cursor-not-allowed;
+.auth-card::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl opacity-50;
+    background: linear-gradient(135deg, transparent 0%, rgba(167, 243, 208, 0.2) 100%);
 }
 
-/* Button */
-.auth-btn {
-  @apply w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-xl
-         font-semibold text-lg shadow-lg hover:shadow-xl transform
-         hover:scale-[1.02] active:scale-[0.98]
-         transition-all duration-300 ease-out flex items-center justify-center gap-2
-         disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100;
+/* Header */
+.auth-card h2 {
+    @apply text-3xl md:text-4xl font-bold mb-2 text-center relative;
+    background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
 }
 
-.auth-text {
-  @apply text-center mt-6 text-gray-600 text-sm;
+.auth-card {
+    @apply text-green-600 text-sm md:text-base mb-8;
 }
 
-.auth-link {
-  @apply text-cyan-600 hover:text-cyan-700 font-medium 
-         hover:underline underline-offset-2 transition-all;
+/* Form Styles */
+.auth-card form {
+    @apply space-y-6;
 }
 
+/* Input Wrapper */
 .input-wrapper {
-  @apply relative top-1;
+    @apply relative;
 }
 
 .input-icon {
-  @apply w-5 h-5 text-cyan-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none;
+    @apply absolute left-4 top-1/2 transform -translate-y-1/2
+    w-5 h-5 bg-gradient-to-br from-green-400 to-amber-400
+    rounded-full transition-all duration-300;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
+.input-wrapper:hover .input-icon {
+    @apply scale-110;
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.input-box {
+    @apply w-full pl-12 pr-4 py-3.5 rounded-xl border-2
+    bg-white/80 backdrop-blur-sm text-gray-800
+    focus:outline-none transition-all duration-300
+    text-sm font-medium;
+    border-color: #d1fae5;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+}
+
+.input-box:focus {
+    @apply border-green-500 shadow-lg;
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.15);
+    transform: translateY(-1px);
+}
+
+.input-box::placeholder {
+    @apply text-gray-400 font-normal;
+}
+
+.input-box:focus::placeholder {
+    @apply text-gray-300;
+}
+
+/* Auth Button */
+.auth-btn {
+    @apply w-full py-3.5 px-4 rounded-xl font-bold text-white
+    transition-all duration-300 relative overflow-hidden
+    shadow-lg hover:shadow-xl active:scale-[0.98]
+    flex items-center justify-center gap-2 mt-2;
+    background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+    border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.auth-btn:hover {
+    background: linear-gradient(135deg, #0f766e 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(16, 185, 129, 0.25);
+}
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+.auth-btn:disabled {
+    @apply opacity-60 cursor-not-allowed grayscale;
+    transform: none !important;
+}
+
+.auth-btn::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent
+    -translate-x-full;
+    animation: shimmer 2s infinite;
+}
+
+/* Google Login Button */
+.google-btn-wrapper {
+    @apply w-full;
+}
+
+.google-btn {
+    @apply w-full py-3.5 px-4 rounded-xl font-semibold
+    transition-all duration-300 flex items-center
+    justify-center gap-3 border-2
+    hover:shadow-lg active:scale-[0.98];
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-color: #e2e8f0;
+    color: #475569;
+}
+
+.google-btn:hover {
+    @apply border-gray-300;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(148, 163, 184, 0.15);
+}
+
+.google-icon {
+    @apply w-5 h-5;
+}
+
+.google-btn:active {
+    transform: scale(0.98);
+}
+
+/* Auth Text & Links */
+.auth-text {
+    @apply text-center text-gray-600 text-sm mt-6 pt-6
+    border-t border-green-100;
+}
+
+.auth-link {
+    @apply font-bold transition-all duration-300 relative
+    inline-block;
+    background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-link:hover {
+    @apply transform translate-x-0.5;
+}
+
+.auth-link::after {
+    content: '';
+    @apply absolute left-0 -bottom-0.5 w-0 h-0.5
+    transition-all duration-300;
+    background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+}
+
+.auth-link:hover::after {
+    @apply w-full;
+}
+
+/* Forgot Password Link */
+.forgot-link {
+    @apply text-right mt-2 mb-6;
+}
+
+.forgot-link a {
+    @apply text-sm text-green-600 hover:text-green-800
+    transition-colors duration-300 font-medium
+    inline-flex items-center gap-1;
+}
+
+/* Error Message */
+.auth-error {
+    @apply text-sm p-3 rounded-lg mb-4 border-2 text-center;
+    background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%);
+    border-color: #fca5a5;
+    color: #dc2626;
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Success Message */
+.auth-success {
+    @apply text-sm p-3 rounded-lg mb-4 border-2 text-center;
+    background: linear-gradient(135deg, #f0fdf4 0%, #fffbeb 100%);
+    border-color: #86efac;
+    color: #059669;
+    animation: slideDown 0.3s ease-out;
+}
+.terms-checkbox {
+    @apply flex items-start gap-2 mb-4;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    @apply w-4 h-4 mt-0.5 rounded border-2 border-emerald-300 bg-white
+    checked:bg-emerald-500 checked:border-emerald-500
+    focus:ring-emerald-500 focus:ring-offset-0
+    cursor-pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.terms-checkbox input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+}
+
+.terms-label {
+    @apply text-sm text-gray-600 cursor-pointer leading-relaxed;
+}
+
+.terms-link {
+    @apply text-emerald-600 hover:text-emerald-800 font-medium transition-colors duration-300;
+}
+
+/* Loading State */
+.loading-spinner {
+    @apply inline-block w-5 h-5 border-2 border-white
+    border-t-transparent rounded-full animate-spin;
+}
+
+/* Decorations */
+.floating-shape {
+    @apply absolute rounded-full opacity-10;
+    animation: float 15s ease-in-out infinite;
+}
+
+.shape-1 {
+    @apply w-64 h-64 bg-gradient-to-br from-green-400 to-amber-400
+    -top-32 -left-32;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    @apply w-48 h-48 bg-gradient-to-br from-amber-400 to-green-400
+    -bottom-24 -right-24;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    @apply w-32 h-32 bg-gradient-to-br from-green-300 to-amber-300
+    top-1/4 right-1/4;
+    animation-delay: 10s;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-20px) rotate(120deg);
+    }
+    66% {
+        transform: translateY(10px) rotate(240deg);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translateX(-1px);
+    }
+    20%, 80% {
+        transform: translateX(2px);
+    }
+    30%, 50%, 70% {
+        transform: translateX(-3px);
+    }
+    40%, 60% {
+        transform: translateX(3px);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .auth-card {
+        @apply p-6;
+    }
+
+    .auth-card h2 {
+        @apply text-2xl;
+    }
+
+    .input-box {
+        @apply py-3;
+    }
+
+    .auth-btn, .google-btn {
+        @apply py-3;
+    }
+}
+/*!* Thêm vào auth.css *!*/
+.password-toggle-btn {
+    @apply absolute right-3 top-1/2 transform -translate-y-1/2
+    text-gray-400 hover:text-gray-600 transition-colors
+    duration-300 focus:outline-none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.password-toggle-btn:focus {
+    @apply outline-none ring-2 ring-emerald-500 ring-offset-1 rounded-full;
+}

@@ -48,14 +48,13 @@ API.interceptors.response.use(
       
       try {
         // Thử refresh token
-        const refreshRes = await API.post("/auth/refresh");
+        const refreshRes = await API.post("/refresh_token");
         const newAccessToken = refreshRes.data.accessToken;
-        
         // Lưu token mới
         localStorage.setItem("token", newAccessToken);
         
         // Cập nhật header cho request gốc
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         
         // Thực hiện lại request gốc
         return API(originalRequest);

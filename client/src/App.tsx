@@ -26,7 +26,7 @@ export default function AppRoutes() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
-        <Route path="/branch" element={<ManageBranch />} />
+        <Route path="/admin/branch" element={<ManageBranch />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>

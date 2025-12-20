@@ -169,7 +169,7 @@ export default function BranchPage() {
 
   return (
     <>
-      <Header user={user} />
+      <Header/>
       <div className="p-6 max-w-3xl mx-auto">
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-bold">Branch Management</h1>

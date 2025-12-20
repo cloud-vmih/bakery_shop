@@ -76,7 +76,7 @@ export const loginUser = async (username: string, password: string) => {
     expiresIn: "15m",
   });
 
-  const refresh_token = jwt.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET!, {
+  const refresh_token = jwt.sign({ accountId: acc.id, user: userInfo }, process.env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 
@@ -146,16 +146,10 @@ export const googleService = {
 
     const jwtPayload = {
       accountId,
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        avatarURL: user.avatarURL,
-        type: user.type,
-      },
+      user: user
     };
 
-    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: "15m" });
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: 10 });
     const refresh_token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {expiresIn: "7d",});
     return { refresh_token, token, user: jwtPayload.user };
   },
@@ -188,7 +182,7 @@ export const changePassword = {
         "Verify your OTP",
         html
       )
-      return ({message: "The OTP has been sent to your email, please check it."})
+      return ({message: "The OTP send successfully, please check it."})
     }
     catch (err) {throw err}
   },

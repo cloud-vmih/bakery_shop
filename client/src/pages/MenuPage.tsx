@@ -104,7 +104,7 @@ export default function MenuPage() {
 
   return (
     <>
-    <Header user={user} />
+    <Header/>
     <div className="menuPage">
       <section className="menuSection">
         <div className="sectionHeader">

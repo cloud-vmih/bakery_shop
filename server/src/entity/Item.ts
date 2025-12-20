@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMa
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
+import {BranchItem} from "./BranchItems";
 
 @Entity("item")
 export class Item extends BaseEntity {
@@ -35,4 +36,7 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => Rating, r => r.item)
   ratings?: Rating[];
+
+  @OneToMany(() => BranchItem, (BI: BranchItem)=> BI.branch)
+  branchItems?: BranchItem[]
 }
