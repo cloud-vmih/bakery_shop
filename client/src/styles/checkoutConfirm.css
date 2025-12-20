@@ -1,0 +1,146 @@
+/* ================================
+   LAYOUT
+================================ */
+.confirm-container {
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.confirm-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #111;
+}
+
+/* ================================
+   CARD
+================================ */
+.confirm-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.confirm-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #111;
+}
+
+/* ================================
+   INFO GRID
+================================ */
+.confirm-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  font-size: 14px;
+}
+
+.confirm-info div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.confirm-info span {
+  color: #6b7280;
+}
+
+.confirm-info strong {
+  font-weight: 600;
+  color: #111;
+  text-align: right;
+}
+
+/* PAYMENT BADGE */
+.payment-badge {
+  background: #ecfeff;
+  color: #0e7490;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+.confirm-empty {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+/* ================================
+   ACTIONS
+================================ */
+.confirm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.confirm-btn {
+  height: 52px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+/* PRIMARY */
+.confirm-btn.primary {
+  background: #2b8dbd;
+  color: #fff;
+}
+
+.confirm-btn.primary:hover {
+  background: #247aa5;
+}
+
+/* GHOST */
+.confirm-btn.ghost {
+  background: #f9fafb;
+  color: #111;
+  border: 1px solid #e5e7eb;
+}
+
+.confirm-btn.ghost:hover {
+  background: #f3f4f6;
+}
+
+/* BACK LINK */
+.confirm-back {
+  text-align: center;
+  font-size: 14px;
+  color: #0e7490;
+  text-decoration: none;
+}
+
+.confirm-back:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 640px) {
+  .confirm-info div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .confirm-info strong {
+    text-align: left;
+  }
+}

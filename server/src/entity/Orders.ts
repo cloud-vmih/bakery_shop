@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, Column, BaseEntity, OneToMany } from "typeorm";
-import { User } from "./User";          
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+} from "typeorm";
+import { User } from "./User";
 import { EOrderStatus } from "./enum/enum";
 import { OrderDetail } from "./OrderDetails";
 
@@ -15,9 +24,6 @@ export class Order extends BaseEntity {
   @Column({ type: "timestamp", nullable: true, default: () => "NOW()" })
   createAt?: Date;
 
-  @Column({ type: "timestamp", nullable: true})
-  deliveryAt?: Date
-
   @Column({
     type: "enum",
     enum: EOrderStatus,
@@ -25,6 +31,6 @@ export class Order extends BaseEntity {
   })
   status?: EOrderStatus;
 
-  @OneToMany(() => OrderDetail, od => od.order)
+  @OneToMany(() => OrderDetail, (od) => od.order)
   orderDetails?: OrderDetail[];
 }

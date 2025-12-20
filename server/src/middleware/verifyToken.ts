@@ -2,11 +2,15 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface JwtPayload {
-  accountId: any,
-  user: any
+  accountId: any;
+  user: any;
 }
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Lấy token từ header
   const authHeader = req.headers["authorization"];
 
@@ -14,7 +18,9 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Access denied. No token provided." });
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
   }
 
   try {

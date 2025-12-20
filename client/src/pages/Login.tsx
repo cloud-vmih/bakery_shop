@@ -1,12 +1,11 @@
 import { useState, FormEvent } from "react";
-import { login as loginService } from "../services/auth.services";
+import { login as loginService } from "../services/auth.service";
 import toast from "react-hot-toast";
 import "../styles/auth.css";
-import { useNavigate } from 'react-router-dom';
-import { useUser } from "../context/authContext";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/AuthContext";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 export default function AuthPage() {
-  
   const { user, setUser } = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,14 +35,12 @@ export default function AuthPage() {
 
   return (
     <div className="auth-container">
-      <div
-        className="auth-card"
-      >
+      <div className="auth-card">
         <h2 className="text-3xl font-bold text-cyan-800 mb-2 text-center">
           Đăng nhập
         </h2>
         <p className="text-cyan-600 text-center mb-6 text-sm">
-          Chào mừng quay trở lại 
+          Chào mừng quay trở lại
         </p>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -79,9 +76,11 @@ export default function AuthPage() {
         </form>
 
         <p className="auth-text">
-        Chưa có có tài khoản?{" "}
-        <a href="/register" className="auth-link">Đăng ký ngay</a>
-      </p>
+          Chưa có có tài khoản?{" "}
+          <a href="/register" className="auth-link">
+            Đăng ký ngay
+          </a>
+        </p>
       </div>
     </div>
   );

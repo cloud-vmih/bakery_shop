@@ -1,28 +1,59 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, OneToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+  BaseEntity,
+  Index,
+} from "typeorm";
 import { Customer } from "./Customer";
 import { Branch } from "./Branch";
 
 @Entity("address")
 export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
-  @ManyToOne(() => Customer, c => c.addresses)
+  /* ========================
+     GOOGLE MAP DATA
+  ======================== */
+
+  // place_id từ Google Places
+  @Column({ nullable: true })
+  placeId?: string;
+
+  // formatted_address từ Google
+  @Column({ nullable: true })
+  formattedAddress?: string;
+
+  @Column("decimal", { precision: 10, scale: 7 })
+  @Index()
+  latitude!: number;
+
+  @Column("decimal", { precision: 10, scale: 7 })
+  @Index()
+  longitude!: number;
+
+  /* ========================
+     RELATION
+  ======================== */
+
+  // Customer có nhiều address
+  @ManyToOne(() => Customer, (c) => c.addresses, { nullable: true })
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
 
-  @OneToOne(() => Branch, b => b.address )
-  @JoinColumn({name: "branchID"})
-  branch?: Branch
+  // Branch có 1 address cố định
+  @OneToOne(() => Branch, (b) => b.address, { nullable: true })
+  @JoinColumn({ name: "branchID" })
+  branch?: Branch;
 
-  @Column({ type: "char", length: 15 })
-  addressNumber?: string;
+  /* ========================
+     BUSINESS LOGIC
+  ======================== */
 
-  @Column()
-  street?: string;  
-  @Column()
-  ward?: string;
-
-  @Column({ default: true })
-  isDefault?: boolean;
+  @Column({ default: false })
+  isDefault!: boolean;
 }

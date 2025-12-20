@@ -1,5 +1,3 @@
-
-
 export enum ENotiType {
   ORDER = "ORDER",
   SYSTEM = "SYSTEM",
@@ -29,6 +27,7 @@ export enum EPayment {
 export enum EPayStatus {
   PENDING = "PENDING",
   PAID = "PAID",
+  FAILED = "FAILED",
   REFUNDED = "REFUNDED",
 }
 
@@ -37,4 +36,10 @@ export enum ECategory {
   BREAD = "BREAD",
   COOKIE = "COOKIE",
   OTHER = "OTHER",
+}
+
+export enum EAddressType {
+  HOME = "HOME",
+  OFFICE = "OFFICE",
+  SCHOOL = "SCHOOL",
 }

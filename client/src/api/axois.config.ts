@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 
 //baseURL tự động theo môi trường
-const baseURL = process.env.NODE_ENV === "production"
-  ? process.env.REACT_APP_API_URL
-  : "http://localhost:5000/api";
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API_URL
+    : "http://localhost:5000/api";
 
 //Tạo instance axios
 const API = axios.create({
@@ -18,7 +19,7 @@ API.interceptors.request.use(
     if (token) {
       try {
         if (req.headers) {
-            req.headers.Authorization = `Bearer ${token}`;
+          req.headers.Authorization = `Bearer ${token}`;
         }
       } catch {
         console.warn("Token in localStorage is not valid JSON");
@@ -30,27 +31,10 @@ API.interceptors.request.use(
 );
 
 API.interceptors.response.use(
-  res => res,
-  async err => {
-    const original = err.config;
-
-    // Nếu 401 -> thử refresh
-    if (err.response?.status === 401 && !original._retry) {
-      original._retry = true;
-
-      const res = await API.post("/auth/refresh");
-      const newAccess = res.data.accessToken;
-
-      // Lưu access token mới
-      localStorage.setItem("token", newAccess);
-
-      // gắn lại header
-      API.defaults.headers.common["Authorization"] = "Bearer " + newAccess;
-      original.headers["Authorization"] = "Bearer " + newAccess;
-
-      return API(original);
-    }
-
+  (res) => res,
+  (err) => {
+    // ❗ KHÔNG refresh token cho request thường
+    // ❗ Chỉ đẩy lỗi lên UI xử lý
     return Promise.reject(err);
   }
 );
