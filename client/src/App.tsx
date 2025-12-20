@@ -7,12 +7,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
 import MenuPage from "./pages/MenuPage";
 import { Header } from "./components/Header";
-<<<<<<<<< Temporary merge branch 1
 import ProfilePage from "./pages/User";
-=========
 import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
->>>>>>>>> Temporary merge branch 2
+import ChangePassword from "./pages/ChangePassword";
+import User from "./pages/User";
 
 export default function AppRoutes() {
   return (
@@ -23,12 +22,12 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/changePW" element={<ChangePassword />}/>
+        <Route path="/profile" element={<User />} />
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
->>>>>>>>> Temporary merge branch 2
       </Routes>
     </BrowserRouter>
     </AuthProvider>

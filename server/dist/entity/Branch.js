@@ -24,7 +24,7 @@ __decorate([
     __metadata("design:type", String)
 ], Branch.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Address_1.Address, (a) => a.id),
+    (0, typeorm_1.OneToOne)(() => Address_1.Address, (a) => a.branch),
     __metadata("design:type", Address_1.Address)
 ], Branch.prototype, "address", void 0);
 exports.Branch = Branch = __decorate([

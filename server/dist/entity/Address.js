@@ -21,27 +21,31 @@ __decorate([
     __metadata("design:type", Number)
 ], Address.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Address.prototype, "placeId", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Customer_1.Customer, c => c.addresses),
     (0, typeorm_1.JoinColumn)({ name: "customerID" }),
     __metadata("design:type", Customer_1.Customer)
 ], Address.prototype, "customer", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Branch_1.Branch, b => b.address),
+    (0, typeorm_1.OneToOne)(() => Branch_1.Branch, b => b.address, { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: "branchID" }),
     __metadata("design:type", Branch_1.Branch)
 ], Address.prototype, "branch", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "char", length: 15 }),
-    __metadata("design:type", String)
-], Address.prototype, "addressNumber", void 0);
-__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Address.prototype, "street", void 0);
+], Address.prototype, "fullAddress", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Address.prototype, "ward", void 0);
+    (0, typeorm_1.Column)("decimal", { precision: 10, scale: 7 }),
+    __metadata("design:type", Number)
+], Address.prototype, "lat", void 0);
+__decorate([
+    (0, typeorm_1.Column)("decimal", { precision: 10, scale: 7 }),
+    __metadata("design:type", Number)
+], Address.prototype, "lng", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: true }),
     __metadata("design:type", Boolean)

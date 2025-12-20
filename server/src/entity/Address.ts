@@ -5,7 +5,7 @@ import { Branch } from "./Branch";
 @Entity("address")
 export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id?: Number;
+  id?: number;
 
   @Column()
   placeId!: string;
@@ -26,10 +26,7 @@ export class Address extends BaseEntity {
 
   @Column("decimal", { precision: 10, scale: 7 })
   lng?: number;
-<<<<<<< HEAD
-  
-}
-=======
 
+  @Column({ default: true })
+  isDefault?: boolean;
 }
->>>>>>> origin/feature/for_merge

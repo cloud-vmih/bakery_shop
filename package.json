@@ -2,6 +2,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@react-google-maps/api": "^2.18.1",
-    "lucide-react": "^0.556.0"
+    "lucide-react": "^0.556.0",
+    "node-cron": "^4.2.1"
   }
 }
