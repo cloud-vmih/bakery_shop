@@ -90,19 +90,17 @@ export default function OrderStatus() {
 
   // Văn bản và class cho nút hủy
   const getCancelButtonText = () => {
-    if (cancelStatus === "REQUESTED") return "Đang chờ duyệt yêu cầu hủy";
+    if (cancelStatus === "REQUESTED") return "Đơn hàng đang được xử lý yêu cầu hủy";
     if (cancelStatus === "APPROVED") return "Đơn hàng đã được hủy";
     if (cancelStatus === "REJECTED") return "Yêu cầu hủy bị từ chối";
-    return isPaid ? "Yêu cầu hủy đơn (cần duyệt)" : "Hủy đơn hàng";
+    return isPaid ? "Hủy đơn hàng" : "Hủy đơn hàng";
   };
-
-  const getCancelButtonClass = () => {
-    if (cancelStatus === "REQUESTED") return "bg-orange-600 cursor-not-allowed";
-    if (cancelStatus === "APPROVED") return "bg-green-600";
-    if (cancelStatus === "REJECTED") return "bg-red-600";
-    return isPaid ? "bg-orange-600 hover:bg-orange-700" : "bg-red-600 hover:bg-red-700";
-  };
-
+const getCancelButtonClass = () => {
+  if (cancelStatus === "REQUESTED") return "bg-orange-500 cursor-not-allowed opacity-90";
+  if (cancelStatus === "APPROVED") return "bg-green-600";
+  if (cancelStatus === "REJECTED") return "bg-red-600";
+  return isPaid ? "bg-red-600 hover:bg-red-700" : "bg-red-600 hover:bg-red-700";
+};
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -148,16 +146,21 @@ export default function OrderStatus() {
         )}
 
         {/* Thông báo trạng thái hủy (nếu có) - nổi bật trên đầu */}
+        {/* Thông báo trạng thái hủy - NỔI BẬT KHI CÓ YÊU CẦU HỦY */}
         {cancelStatus !== "NONE" && (
-          <div className="mb-8 p-6 bg-yellow-50 border-2 border-yellow-400 rounded-3xl text-center">
-            <p className="text-xl font-bold text-yellow-800">
-              {cancelStatus === "REQUESTED" && "Đơn hàng đang được xử lý yêu cầu hủy. Chúng tôi sẽ phản hồi sớm nhất!"}
-              {cancelStatus === "APPROVED" && "Đơn hàng đã được hủy và sẽ được hoàn tiền (nếu đã thanh toán)."}
-              {cancelStatus === "REJECTED" && "Yêu cầu hủy đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý bình thường."}
+          <div className="mb-8 p-8 bg-gradient-to-r from-orange-100 to-yellow-100 border-4 border-orange-400 rounded-3xl text-center shadow-xl">
+            <p className="text-2xl font-extrabold text-orange-800 leading-relaxed">
+              {cancelStatus === "REQUESTED" && "Đơn hàng đang được xử lý yêu cầu hủy"}
+              {cancelStatus === "APPROVED" && "Đơn hàng đã được hủy thành công và đang được hoàn tiền"}
+              {cancelStatus === "REJECTED" && "Yêu cầu hủy đơn hàng đã bị từ chối. Đơn hàng sẽ tiếp tục được xử lý bình thường"}
+            </p>
+            <p className="text-lg text-gray-700 mt-4">
+              {cancelStatus === "REQUESTED" && "Chúng tôi sẽ phản hồi và xử lý hoàn tiền (nếu được chấp thuận) sớm nhất có thể."}
+              {cancelStatus === "APPROVED" && "Số tiền sẽ được hoàn về tài khoản của bạn trong vòng 3-7 ngày làm việc."}
+              {cancelStatus === "REJECTED" && "Bạn có thể theo dõi tiến trình đơn hàng bên dưới."}
             </p>
           </div>
         )}
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* CỘT TRÁI */}
           <div className="space-y-8">
@@ -178,44 +181,67 @@ export default function OrderStatus() {
               </p>
             </div>
 
-            {/* Tiến trình */}
-            <div className="bg-white rounded-3xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Tiến trình làm bánh
-              </h2>
-              <div className="space-y-8">
-                {data.timeline.map((step: any, idx: number) => (
-                  <div key={idx} className="flex items-center">
-                    <div className="relative flex flex-col items-center mr-6">
-                      <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md z-10
-                          ${step.completed ? "bg-pink-500" : "bg-gray-300"}
-                        `}
-                      >
-                        {step.completed ? "✓" : idx + 1}
-                      </div>
+{/* TIẾN TRÌNH LÀM BÁNH - ĐÃ SỬA HOÀN CHỈNH, ĐẸP VÀ ĐÚNG YÊU CẦU */}
+<div className="bg-white rounded-3xl shadow-lg p-8">
+  <h2 className="text-2xl font-bold text-gray-800 mb-8">Tiến trình làm bánh</h2>
 
-                      {idx < data.timeline.length - 1 && (
-                        <div
-                          className={`absolute top-12 w-0.5 h-16 -z-10
-                            ${step.completed ? "bg-pink-500" : "bg-gray-300"}
-                          `}
-                        />
-                      )}
-                    </div>
-
-                    <p
-                      className={`text-xl
-                        ${step.completed ? "text-pink-700 font-bold" : "text-gray-500"}
-                      `}
-                    >
-                      {step.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+  {/* Trường hợp đơn hàng đã bị hủy (APPROVED hoặc CANCELED) */}
+  {(cancelStatus === "APPROVED" || data.status === "CANCELED") ? (
+    <div className="flex items-center py-6">
+      <div className="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center mr-6 flex-shrink-0">
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <p className="text-2xl font-bold text-pink-600">
+        Đơn hàng đã bị hủy
+      </p>
+    </div>
+  ) : (
+    /* Timeline bình thường - vertical với đường nối */
+    <div className="space-y-8">
+      {data.timeline.map((step: any, idx: number) => (
+        <div key={idx} className="flex items-center">
+          {/* Vòng tròn + đường nối dọc */}
+          <div className="relative flex flex-col items-center mr-6">
+            {/* Vòng tròn */}
+            <div
+              className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md z-10
+                ${step.completed ? "bg-pink-500" : "bg-gray-300"}
+              `}
+            >
+              {step.completed ? (
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                idx + 1
+              )}
             </div>
 
+            {/* Đường nối dọc xuống bước tiếp theo */}
+            {idx < data.timeline.length - 1 && (
+              <div
+                className={`absolute top-12 left-1/2 transform -translate-x-1/2 w-0.5 h-20
+                  ${step.completed ? "bg-pink-500" : "bg-gray-300"}
+                `}
+              />
+            )}
+          </div>
+
+          {/* Nhãn bước */}
+          <p
+            className={`text-xl
+              ${step.completed ? "text-pink-700 font-bold" : "text-gray-500"}
+            `}
+          >
+            {step.label}
+          </p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
             {/* Ngày giao dự kiến */}
             <div className="bg-white rounded-3xl shadow-lg p-8">
               <p className="text-xl font-bold text-gray-800 mb-4">

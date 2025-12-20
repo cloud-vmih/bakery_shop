@@ -22,7 +22,7 @@ const tabs = [
   { key: "canceled" as TabKey, label: "Đã hủy" },
 ];
 
-const ITEMS_PER_PAGE = 6; // Mỗi trang 6 đơn hàng
+const ITEMS_PER_PAGE = 6;
 
 export default function MyOrders() {
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -43,41 +43,49 @@ export default function MyOrders() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Lọc đơn hàng theo tab
-  const filteredOrders = orders.filter((order) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "pending") return order.status === "PENDING";
-    if (activeTab === "confirmed") return order.status === "CONFIRMED";
-    if (activeTab === "preparing") return order.status === "PREPARING";
-    if (activeTab === "delivering") return order.status === "DELIVERING";
-    if (activeTab === "completed") return order.status === "COMPLETED";
-    if (activeTab === "canceled") return order.status === "CANCELED";
-    return false;
-  });
-
-  // Tính toán phân trang
-  const totalItems = filteredOrders.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
-
-  // Khi chuyển tab, reset về trang 1
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab]);
-
-  const getStatusText = (status: string): string => {
+  // Ưu tiên hiển thị "Đã hủy" nếu cancelStatus = APPROVED hoặc status = CANCELED
+  const getDisplayStatus = (order: OrderItem): string => {
+    if (order.cancelStatus === "APPROVED" || order.status === "CANCELED") {
+      return "Đã hủy";
+    }
     const map: Record<string, string> = {
       PENDING: "Chờ xác nhận",
       CONFIRMED: "Đã xác nhận",
       PREPARING: "Đang làm bánh",
       DELIVERING: "Đang giao",
       COMPLETED: "Đã giao thành công",
-      CANCELED: "Đã hủy",
     };
-    return map[status] || status;
+    return map[order.status] || order.status;
   };
+
+  // Kiểm tra đơn hàng có bị hủy không (dùng để lọc tab "Đã hủy")
+  const isOrderCanceled = (order: OrderItem): boolean => {
+    return order.status === "CANCELED" || order.cancelStatus === "APPROVED";
+  };
+
+  // Lọc đơn hàng theo tab
+  const filteredOrders = orders.filter((order) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "pending") return order.status === "PENDING" && !isOrderCanceled(order);
+    if (activeTab === "confirmed") return order.status === "CONFIRMED" && !isOrderCanceled(order);
+    if (activeTab === "preparing") return order.status === "PREPARING";
+    if (activeTab === "delivering") return order.status === "DELIVERING";
+    if (activeTab === "completed") return order.status === "COMPLETED";
+    if (activeTab === "canceled") return isOrderCanceled(order);
+    return false;
+  });
+
+  // Phân trang
+  const totalItems = filteredOrders.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+
+  // Reset trang khi đổi tab
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
 
   if (loading) {
     return (
@@ -105,7 +113,7 @@ export default function MyOrders() {
               className={`px-6 py-3 rounded-full font-bold transition-all
                 ${activeTab === tab.key
                   ? "bg-pink-600 text-white"
-                  : "bg-white text-gray-700 border border-gray-300"
+                  : "bg-white text-gray-700 border border-gray-300 hover:border-pink-300"
                 }`}
             >
               {tab.label}
@@ -129,12 +137,12 @@ export default function MyOrders() {
           </div>
         ) : (
           <>
-            {/* Danh sách đơn hàng (đã phân trang) */}
+            {/* Danh sách đơn hàng */}
             <div className="space-y-8">
               {paginatedOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="bg-white rounded-3xl shadow-2xl overflow-hidden"
+                  className="bg-white rounded-3xl shadow-2xl overflow-hidden transition-transform hover:scale-[1.01]"
                 >
                   {/* Header đơn hàng */}
                   <div className="p-6 border-b border-gray-200">
@@ -154,13 +162,21 @@ export default function MyOrders() {
                           })}
                         </p>
                       </div>
-                      <span className="px-6 py-2 rounded-full bg-pink-100 text-pink-700 font-bold">
-                        {getStatusText(order.status)}
+
+                      {/* Tag trạng thái - màu hồng nhạt cho bình thường, đỏ cho hủy */}
+                      <span
+                        className={`px-6 py-3 rounded-full font-bold
+                          ${isOrderCanceled(order)
+                            ? "bg-red-500 text-white"
+                            : "bg-pink-100 text-pink-700"
+                          }`}
+                      >
+                        {getDisplayStatus(order)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Danh sách bánh */}
+                  {/* Danh sách sản phẩm */}
                   <div className="p-6 space-y-6">
                     {order.orderDetails && order.orderDetails.length > 0 ? (
                       order.orderDetails.map((detail, idx) => {
@@ -183,7 +199,7 @@ export default function MyOrders() {
                                 {info.name || "Bánh ngọt"}
                               </h4>
                               {detail.note && (
-                                <p className="text-pink-600 mt-1">
+                                <p className="text-pink-600 mt-1 italic">
                                   Ghi chú: {detail.note}
                                 </p>
                               )}
@@ -196,7 +212,7 @@ export default function MyOrders() {
                       })
                     ) : (
                       <p className="text-gray-500 text-center py-4">
-                        Chưa có thông tin bánh
+                        Chưa có thông tin sản phẩm
                       </p>
                     )}
                   </div>
@@ -224,60 +240,56 @@ export default function MyOrders() {
               ))}
             </div>
 
-            {/* Phân trang - luôn hiển thị, kể cả khi chỉ có 1 trang */}
-            <div className="mt-12 flex justify-center items-center gap-2">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  currentPage === 1
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    : "bg-pink-600 text-white hover:bg-pink-700"
-                }`}
-              >
-                Trước
-              </button>
+            {/* Phân trang */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center gap-3">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-5 py-3 rounded-lg font-medium transition ${
+                    currentPage === 1
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-pink-600 text-white hover:bg-pink-700"
+                  }`}
+                >
+                  Trước
+                </button>
 
-              {/* Hiển thị các số trang */}
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                let pageNum: number;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let pageNum: number;
+                  if (totalPages <= 5) pageNum = i + 1;
+                  else if (currentPage <= 3) pageNum = i + 1;
+                  else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
+                  else pageNum = currentPage - 2 + i;
 
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-10 h-10 rounded-lg font-medium transition ${
-                      currentPage === pageNum
-                        ? "bg-pink-600 text-white"
-                        : "bg-white border border-gray-300 text-gray-700 hover:bg-pink-50"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-12 h-12 rounded-lg font-bold transition ${
+                        currentPage === pageNum
+                          ? "bg-pink-600 text-white"
+                          : "bg-white border border-gray-300 text-gray-700 hover:bg-pink-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
 
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  currentPage === totalPages
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    : "bg-pink-600 text-white hover:bg-pink-700"
-                }`}
-              >
-                Sau
-              </button>
-            </div>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`px-5 py-3 rounded-lg font-medium transition ${
+                    currentPage === totalPages
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-pink-600 text-white hover:bg-pink-700"
+                  }`}
+                >
+                  Sau
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
