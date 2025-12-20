@@ -12,6 +12,7 @@ import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
 import ChangePassword from "./pages/ChangePassword";
 import User from "./pages/User";
+import ManageBranch from "./pages/ManageBranch";
 
 export default function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AppRoutes() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
+        <Route path="/branch" element={<ManageBranch />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>
