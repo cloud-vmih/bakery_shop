@@ -17,13 +17,9 @@ let Rating = class Rating extends typeorm_1.BaseEntity {
 };
 exports.Rating = Rating;
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({ name: "itemID", type: "bigint" }),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Rating.prototype, "itemID", void 0);
-__decorate([
-    (0, typeorm_1.PrimaryColumn)({ name: "customerID", type: "bigint" }),
-    __metadata("design:type", Number)
-], Rating.prototype, "customerID", void 0);
+], Rating.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Item_1.Item, (i) => i.ratings),
     (0, typeorm_1.JoinColumn)({ name: "itemID" }),
@@ -43,6 +39,5 @@ __decorate([
     __metadata("design:type", Date)
 ], Rating.prototype, "createAt", void 0);
 exports.Rating = Rating = __decorate([
-    (0, typeorm_1.Entity)("rating"),
-    (0, typeorm_1.Unique)(["itemID", "customerID"])
+    (0, typeorm_1.Entity)("rating")
 ], Rating);

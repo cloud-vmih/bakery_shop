@@ -15,7 +15,7 @@ export default function MenuPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
-  const itemsPerPage = 12;
+  const itemsPerPage = 9;
   const { user, setUser } = useUser()
   const navigate = useNavigate();
 
@@ -104,187 +104,192 @@ export default function MenuPage() {
 
   return (
     <>
-    <Header/>
-    <div className="menuPage">
-      <section className="menuSection">
-        <div className="sectionHeader">
-          <h2 className="titleGreen">MENU</h2>
-        </div>
+      <Header />
+      <div className="menuPage">
+        <section className="menuSection">
+          <div className="sectionHeader">
+            <h2 className="titleGreen">MENU</h2>
+          </div>
 
-        <div className="menuLayout">
-          {/* Left Sidebar - Categories */}
-          <aside className="categorySidebar">
-            <div className="sidebarHeader">
-              <h3 className="sidebarTitle">Danh mục</h3>
-            </div>
+          <div className="menuLayout">
+            <aside className="categorySidebar">
+              <div className="sidebarHeader">
+                <h3 className="sidebarTitle">Danh mục</h3>
+              </div>
 
-            <div className="categoryList">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`categoryItem ${selectedCategory === null ? 'active' : ''}`}
-              >
-                <span className="categoryIndicator"></span>
-                <span className="categoryLabel">Tất cả</span>
-              </button>
-              {categories.map((cat) => (
+              <div className="categoryList">
                 <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value)}
-                  className={`categoryItem ${selectedCategory === cat.value ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(null)}
+                  className={`categoryItem ${selectedCategory === null ? 'active' : ''}`}
                 >
                   <span className="categoryIndicator"></span>
-                  <span className="categoryLabel">{cat.label}</span>
+                  <span className="categoryLabel">Tất cả</span>
                 </button>
-              ))}
-            </div>
-
-            {/* Price Sort in Sidebar */}
-            <div className="priceSortSection">
-              <h3 className="sidebarTitle">Sắp xếp giá</h3>
-              <div className="priceSortOptions">
-                <button
-                  onClick={() => setPriceSort("none")}
-                  className={`priceSortButton ${priceSort === "none" ? 'active' : ''}`}
-                >
-                  <span className="priceSortIndicator"></span>
-                  <span>Mặc định</span>
-                </button>
-                <button
-                  onClick={() => setPriceSort("low-to-high")}
-                  className={`priceSortButton ${priceSort === "low-to-high" ? 'active' : ''}`}
-                >
-                  <span className="priceSortIndicator"></span>
-                  <span>Thấp → Cao</span>
-                </button>
-                <button
-                  onClick={() => setPriceSort("high-to-low")}
-                  className={`priceSortButton ${priceSort === "high-to-low" ? 'active' : ''}`}
-                >
-                  <span className="priceSortIndicator"></span>
-                  <span>Cao → Thấp</span>
-                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setSelectedCategory(cat.value)}
+                    className={`categoryItem ${selectedCategory === cat.value ? 'active' : ''}`}
+                  >
+                    <span className="categoryIndicator"></span>
+                    <span className="categoryLabel">{cat.label}</span>
+                  </button>
+                ))}
               </div>
-            </div>
-          </aside>
 
-          {/* Main Content Area */}
-          <div className="menuContentArea">
-            {/* Search Bar */}
-            <div className="searchBar">
-              <MagnifyingGlassIcon className="searchIcon" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="searchInput"
-              />
-            </div>
+              <div className="priceSortSection">
+                <h3 className="sidebarTitle">Sắp xếp giá</h3>
+                <div className="priceSortOptions">
+                  <button
+                    onClick={() => setPriceSort("none")}
+                    className={`priceSortButton ${priceSort === "none" ? 'active' : ''}`}
+                  >
+                    <span className="priceSortIndicator"></span>
+                    <span>Mặc định</span>
+                  </button>
+                  <button
+                    onClick={() => setPriceSort("low-to-high")}
+                    className={`priceSortButton ${priceSort === "low-to-high" ? 'active' : ''}`}
+                  >
+                    <span className="priceSortIndicator"></span>
+                    <span>Thấp → Cao</span>
+                  </button>
+                  <button
+                    onClick={() => setPriceSort("high-to-low")}
+                    className={`priceSortButton ${priceSort === "high-to-low" ? 'active' : ''}`}
+                  >
+                    <span className="priceSortIndicator"></span>
+                    <span>Cao → Thấp</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
 
-            {loading ? (
-              <p className="text-center text-green-700 text-lg">Đang tải...</p>
-            ) : (
-              <>
-                {filteredAndSortedItems.length === 0 ? (
-                  <p className="text-center text-gray-600 text-lg py-8">
-                    Không tìm thấy sản phẩm nào
-                  </p>
-                ) : (
-                  <>
-                    <div className="menuGrid">
-                      {currentItems?.map((item: any) => (
-                        <div
-                          key={item.id}
-                          className="menuCard cursor-pointer"
-                          onClick={() => navigate(`/product/${item.id}`)}  // Click vào card → chuyển sang trang chi tiết
-                        >
-                          <div className="menuImageWrapper">
-                            {item.imageURL ? (
-                              <img
-                                src={item.imageURL}
-                                alt={item.name}
-                                className="menuImage"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                <span className="text-gray-400 text-sm">No image</span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="menuCardContent">
-                            <h3 className="menuTitle">{item.name}</h3>
-                            <p className="menuPrice">
-                              {item.price ? formatPrice(item.price) : "Liên hệ"}
-                            </p>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation(); // Quan trọng: ngăn sự kiện click lan ra card cha
-                                handleAddToCart(item.id);
-                              }}
-                              className="menuButton"
-                            >
-                              Thêm vào giỏ
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+            <div className="menuContentArea">
+              <div className="searchBar">
+                <MagnifyingGlassIcon className="searchIcon" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm sản phẩm..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="searchInput"
+                />
+              </div>
 
-                    {/* Phân trang */}
-                    {totalPages > 1 && (
-                      <div className="paginationContainer">
-                        <button
-                          onClick={() => handlePageChange(currentPage - 1)}
-                          disabled={currentPage === 1}
-                          className={`paginationButton ${currentPage === 1 ? 'disabled' : 'inactive'}`}
-                        >
-                          <ChevronLeftIcon className="w-5 h-5" />
-                        </button>
-
-                        {[...Array(totalPages)].map((_, index) => {
-                          const page = index + 1;
-                          // Hiển thị trang đầu, cuối, trang hiện tại và các trang xung quanh
-                          if (
-                            page === 1 ||
-                            page === totalPages ||
-                            (page >= currentPage - 1 && page <= currentPage + 1)
-                          ) {
-                            return (
+              {loading ? (
+                <p className="text-center text-green-700 text-lg">Đang tải...</p>
+              ) : (
+                <>
+                  {filteredAndSortedItems.length === 0 ? (
+                    <p className="text-center text-gray-600 text-lg py-8">
+                      Không tìm thấy sản phẩm nào
+                    </p>
+                  ) : (
+                    <>
+                      <div className="menuGrid">
+                        {currentItems?.map((item: any) => (
+                          <div
+                            key={item.id}
+                            className="menuCard"
+                            onClick={() => navigate(`/product/${item.id}`)}
+                          >
+                            <div className="menuImageWrapper">
+                              {item.imageURL ? (
+                                <img
+                                  src={item.imageURL}
+                                  alt={item.name}
+                                  className="menuImage"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                  <span className="text-gray-400 text-sm">No image</span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="menuCardContent">
+                              <h3 className="menuTitle">{item.name}</h3>
+                              <p className="menuPrice">
+                                {item.price ? formatPrice(item.price) : "Liên hệ"}
+                              </p>
                               <button
-                                key={page}
-                                onClick={() => handlePageChange(page)}
-                                className={`paginationButton ${currentPage === page ? 'active' : 'inactive'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddToCart(item.id);
+                                }}
+                                className="menuButton"
                               >
-                                {page}
+                                <span className="menuButton-content">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="menuButton-icon"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                  </svg>
+                                  Thêm vào giỏ
+                                </span>
                               </button>
-                            );
-                          } else if (page === currentPage - 2 || page === currentPage + 2) {
-                            return <span key={page} className="text-gray-400">...</span>;
-                          }
-                          return null;
-                        })}
-
-                        <button
-                          onClick={() => handlePageChange(currentPage + 1)}
-                          disabled={currentPage === totalPages}
-                          className={`paginationButton ${currentPage === totalPages ? 'disabled' : 'inactive'}`}
-                        >
-                          <ChevronRightIcon className="w-5 h-5" />
-                        </button>
-
-                        <span className="paginationInfo">
-                          Trang {currentPage} / {totalPages}
-                        </span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </>
-                )}
-              </>
-            )}
+
+                      {totalPages > 1 && (
+                        <div className="paginationContainer">
+                          <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`paginationButton ${currentPage === 1 ? 'disabled' : 'inactive'}`}
+                          >
+                            <ChevronLeftIcon className="w-5 h-5" />
+                          </button>
+
+                          {[...Array(totalPages)].map((_, index) => {
+                            const page = index + 1;
+                            if (
+                              page === 1 ||
+                              page === totalPages ||
+                              (page >= currentPage - 1 && page <= currentPage + 1)
+                            ) {
+                              return (
+                                <button
+                                  key={page}
+                                  onClick={() => handlePageChange(page)}
+                                  className={`paginationButton ${currentPage === page ? 'active' : 'inactive'}`}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            } else if (page === currentPage - 2 || page === currentPage + 2) {
+                              return <span key={page} className="text-gray-400">...</span>;
+                            }
+                            return null;
+                          })}
+
+                          <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`paginationButton ${currentPage === totalPages ? 'disabled' : 'inactive'}`}
+                          >
+                            <ChevronRightIcon className="w-5 h-5" />
+                          </button>
+
+                          <span className="paginationInfo">
+                            Trang {currentPage} / {totalPages}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </>
   );
 }

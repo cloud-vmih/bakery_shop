@@ -32,6 +32,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], OrderDetail.prototype, "note", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], OrderDetail.prototype, "quantity", void 0);
 exports.OrderDetail = OrderDetail = __decorate([
     (0, typeorm_1.Entity)("orderDetail")
 ], OrderDetail);

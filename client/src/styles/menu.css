@@ -1,7 +1,7 @@
 /* Menu Page Styles */
 .menuPage {
   @apply min-h-screen;
-  background-color: #f0fdf4;
+  background-color: #f0fdf4; /* Giữ nguyên màu xanh nhạt */
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
@@ -27,89 +27,71 @@
   @apply flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4;
 }
 
-/* Category Sidebar - Pastel Theme */
+/* Category Sidebar - Enhanced Theme */
 .categorySidebar {
-  @apply w-full lg:w-56 bg-gradient-to-b from-green-50 via-amber-50 to-amber-50
-         rounded-xl shadow-md p-4 h-fit lg:sticky lg:top-4
-         border-2 border-green-100;
+  @apply w-full lg:w-64 bg-gradient-to-b from-green-50 to-green-100 rounded-xl shadow-lg p-5 h-fit lg:sticky lg:top-4 border-2 border-green-200;
 }
 
 .sidebarHeader {
-  @apply mb-4 pb-3 border-b-2 border-amber-200;
+  @apply mb-5 pb-4 border-b-2 border-green-300;
 }
 
 .sidebarTitle {
-  @apply text-sm font-bold text-green-700;
+  @apply text-base font-bold text-green-800;
 }
 
 .categoryList {
-  @apply space-y-1.5 mb-6;
+  @apply space-y-2 mb-6;
 }
 
 .categoryItem {
-  @apply w-full flex items-center gap-2 px-3 py-2 rounded-lg
-         transition-all duration-300 ease-in-out
-         bg-white/80 border-2 border-green-100
-         hover:border-green-300 hover:bg-green-50/90
-         hover:shadow-sm hover:translate-x-0.5
-         text-left backdrop-blur-sm;
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-in-out bg-white/90 border border-green-200 hover:border-green-300 hover:bg-green-50/90 hover:shadow-md hover:-translate-y-0.5 text-left backdrop-blur-sm;
 }
 
 .categoryItem.active {
-  @apply bg-gradient-to-r from-green-300 to-green-400 
-         border-green-400 text-green-900 shadow-md
-         transform translate-x-1;
+  @apply bg-gradient-to-r from-green-300 to-green-400 border-green-400 text-green-900 shadow-lg translate-y-0;
 }
 
 .categoryIndicator {
-  @apply w-2 h-2 rounded-full bg-amber-200 
-         transition-all duration-300;
+  @apply w-2.5 h-2.5 rounded-full bg-green-300 transition-all duration-300;
 }
 
 .categoryItem.active .categoryIndicator {
-  @apply bg-white w-2 h-2 ring-1 ring-white ring-offset-1 ring-offset-green-400;
+  @apply bg-white w-2.5 h-2.5 ring-2 ring-white ring-offset-2 ring-offset-green-400;
   animation: pulse-indicator 2s ease-in-out infinite;
 }
 
 .categoryLabel {
-  @apply font-medium text-green-800 text-xs flex-1;
+  @apply font-medium text-sm text-green-800;
 }
 
 .categoryItem.active .categoryLabel {
   @apply text-green-900 font-semibold;
 }
 
-/* Price Sort Section */
+/* Price Sort Section - Enhanced */
 .priceSortSection {
-  @apply mt-4 pt-4 border-t-2 border-amber-200;
+  @apply mt-6 pt-4 border-t-2 border-green-300;
 }
 
 .priceSortOptions {
-  @apply space-y-1.5 mt-3;
+  @apply space-y-2 mt-3;
 }
 
 .priceSortButton {
-  @apply w-full flex items-center gap-2 px-3 py-2 rounded-lg
-         transition-all duration-300 ease-in-out
-         bg-white/80 border-2 border-amber-100
-         hover:border-amber-300 hover:bg-amber-50/90
-         hover:shadow-sm hover:translate-x-0.5
-         text-left text-xs font-medium text-amber-800 backdrop-blur-sm;
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-in-out bg-white/90 border border-amber-200 hover:border-amber-300 hover:bg-amber-50/90 hover:shadow-md hover:-translate-y-0.5 text-left text-sm font-medium text-amber-800 backdrop-blur-sm;
 }
 
 .priceSortButton.active {
-  @apply bg-gradient-to-r from-amber-300 to-amber-400 
-         border-amber-400 text-amber-900 shadow-md
-         transform translate-x-1;
+  @apply bg-gradient-to-r from-amber-300 to-amber-400 border-amber-400 text-amber-900 shadow-lg translate-y-0;
 }
 
 .priceSortIndicator {
-  @apply w-2 h-2 rounded-full bg-amber-200 
-         transition-all duration-300;
+  @apply w-2.5 h-2.5 rounded-full bg-amber-300 transition-all duration-300;
 }
 
 .priceSortButton.active .priceSortIndicator {
-  @apply bg-white w-2 h-2 ring-1 ring-white ring-offset-1 ring-offset-amber-400;
+  @apply bg-white w-2.5 h-2.5 ring-2 ring-white ring-offset-2 ring-offset-amber-400;
   animation: pulse-indicator 2s ease-in-out infinite;
 }
 
@@ -127,15 +109,11 @@
 }
 
 .menuGrid {
-  @apply grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 
-         lg:grid-cols-4 xl:grid-cols-4 
-         gap-5 md:gap-6 lg:gap-7;
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5 md:gap-6 lg:gap-7; /* Đổi thành 3 cột */
 }
 
 .menuCard {
-  @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
-         transition-all duration-300 relative border-2 border-amber-100
-         flex flex-col h-full;
+  @apply bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 relative border border-amber-100 flex flex-col h-full;
 }
 
 .menuImageWrapper {
@@ -149,73 +127,75 @@
 }
 
 .menuCard:hover .menuImage {
-  @apply scale-110;
+  @apply scale-105;
 }
 
 .menuCardContent {
-  @apply p-3 flex flex-col gap-1 relative z-10 bg-white;
+  @apply p-4 flex flex-col gap-2 relative z-10 bg-white;
   min-height: auto;
   transition: filter 0.3s ease-in-out;
 }
 
-
-/* Giá luôn hiển thị, không bị ẩn */
 .menuTitle {
-  @apply text-sm font-semibold text-amber-900 line-clamp-2 leading-tight;
+  @apply text-base font-semibold text-amber-900 line-clamp-2 leading-tight;
   transition: opacity 0.3s ease-in-out;
 }
 
 .menuPrice {
-  @apply text-sm text-green-600;
-  font-weight: normal;
+  @apply text-base text-green-600 font-medium;
   transition: opacity 0.3s ease-in-out;
 }
 
-/* Nút Thêm vào giỏ - chỉ che phần tên và giá khi hover với hiệu ứng fade và scale */
+/* Nút Thêm vào giỏ - Thiết kế mới đẹp hơn */
 .menuButton {
-  @apply absolute inset-0 flex items-center justify-center
-         bg-green-500/90 text-white font-semibold
-         shadow-lg rounded-none
-         opacity-0 pointer-events-none
-         backdrop-blur-md transition-all duration-300;
-  transform: translateY(8px) scale(0.95);
-  filter: blur(3px);
+  @apply absolute inset-0 flex items-center justify-center 
+         bg-green-600 text-white font-bold rounded-2xl opacity-0 pointer-events-none
+         backdrop-blur-md transition-all duration-300 ease-in-out;
+  transform: translateY(10px) scale(0.95);
 }
 
 .menuCard:hover .menuButton {
   @apply opacity-100 pointer-events-auto;
   transform: translateY(0) scale(1);
-  filter: blur(0);
 }
 
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.menuButton:hover {
+  @apply bg-green-700 shadow-xl scale-105;
 }
 
+.menuButton:active {
+  @apply scale-95;
+}
 
-/* Search Bar */
+.menuButton::after {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-white/30 opacity-0;
+  animation: ripple 0.6s ease-out;
+}
+
+.menuButton:active::after {
+  @apply opacity-100;
+}
+
+.menuButton-content {
+  @apply flex items-center gap-2;
+}
+
+.menuButton-icon {
+  @apply w-5 h-5;
+}
+
+/* Search Bar - Enhanced */
 .searchBar {
-  @apply relative max-w-md mb-6;
+  @apply relative max-w-xl mb-8;
 }
 
 .searchIcon {
-  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400
-         transition-colors duration-300;
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 transition-colors duration-300;
 }
 
 .searchInput {
-  @apply w-full pl-10 pr-4 py-2.5 rounded-full border-2 border-green-200 
-         focus:border-green-500 focus:outline-none text-sm
-         bg-white shadow-sm transition-all duration-300
-         hover:border-green-300 hover:shadow-md;
+  @apply w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-green-200 focus:border-green-500 focus:outline-none text-sm bg-white shadow-sm transition-all duration-300 hover:border-green-300 hover:shadow-md;
 }
 
 .searchBar:focus-within .searchIcon {
@@ -224,11 +204,11 @@
 
 /* Pagination Styles */
 .paginationContainer {
-  @apply flex justify-center items-center gap-2 mt-8;
+  @apply flex justify-center items-center gap-3 mt-10;
 }
 
 .paginationButton {
-  @apply px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 border-2;
+  @apply px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 border-2;
 }
 
 .paginationButton.active {
@@ -236,8 +216,7 @@
 }
 
 .paginationButton.inactive {
-  @apply bg-white text-green-600 border-green-600 hover:bg-green-50 
-         hover:shadow-md hover:scale-105;
+  @apply bg-white text-green-600 border-green-600 hover:bg-green-50 hover:shadow-md hover:scale-105;
 }
 
 .paginationButton.disabled {
@@ -245,7 +224,7 @@
 }
 
 .paginationInfo {
-  @apply text-gray-600 text-xs mx-4;
+  @apply text-gray-600 text-sm mx-4;
 }
 
 /* Animations */
@@ -271,17 +250,6 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .categorySidebar {
-    @apply w-full;
-  }
-  
-  .menuLayout {
-    @apply flex-col;
-  }
-}
-
 @keyframes ripple {
   to {
     transform: scale(4);
@@ -291,6 +259,27 @@
 
 .menuButton:active::after {
   content: '';
-  @apply absolute inset-0 rounded-full bg-white/30;
+  @apply absolute inset-0 rounded-xl bg-white/30;
   animation: ripple 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .categorySidebar {
+    @apply w-full;
+  }
+  
+  .menuLayout {
+    @apply flex-col;
+  }
+
+  .menuGrid {
+    @apply grid-cols-2 md:grid-cols-3; /* Đảm bảo 3 cột trên tablet */
+  }
+}
+
+@media (max-width: 640px) {
+  .menuGrid {
+    @apply grid-cols-1; /* 1 cột trên mobile */
+  }
 }
