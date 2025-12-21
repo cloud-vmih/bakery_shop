@@ -5,7 +5,7 @@ import {
   editAddress,
   setDefaultAddress,
   removeAddress,
-} from "../servies/address.service";
+} from "../services/address.service";
 
 /**
  * GET /addresses

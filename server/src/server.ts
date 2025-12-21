@@ -9,6 +9,9 @@ import profileRoutes from "./routes/user.routes";
 import itemRoutes from "./routes/item.routes";
 import inventoryRoutes from "./routes/inventory.routes";
 import addressRoutes from "./routes/address.routes";
+import orderRoutes from "./routes/order.routes"
+
+
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -26,4 +29,6 @@ app.use("/api/items", itemRoutes);
 app.use("/api", inventoryRoutes);
 app.use("/api", addressRoutes);
 app.use('/api', profileRoutes);
+app.use("/api", orderRoutes);
+
 export default app;

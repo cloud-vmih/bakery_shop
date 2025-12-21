@@ -12,8 +12,9 @@ import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
 import User from "./pages/User";
 import ManageBranch from "./pages/ManageBranch";
-import ProfilePage from "./pages/User";
 import MenuManagement from "./pages/MenuManagement";
+import MyOrders from "./pages/MyOrders";
+import OrderStatus from "./pages/OrderStatus";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,6 +43,8 @@ export default function App() {
         <Route path="/admin/branch" element={<ManageBranch />} />
         {/*<Route path="/profile" element={<ProfilePage />} />*/}
           <Route path="/admin/menu" element={<MenuManagement />} />
+        <Route path="/order" element={<MyOrders />} />
+        <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
       </Routes>
     </BrowserRouter>
         </InventoryProvider>
