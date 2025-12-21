@@ -1,6 +1,6 @@
 // controllers/branch.controller.ts
 import { Request, Response } from "express";
-import * as branchService from "../servies/branch.service";
+import * as branchService from "../services/branch.service";
 
 export const createBranchWithAddres = async (req: Request, res: Response) => {
   try {

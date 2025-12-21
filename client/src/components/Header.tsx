@@ -122,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                 <button className="flex items-center gap-3 p-2 rounded-xl hover:bg-emerald-50 transition-all duration-300 group">
                                     <div className="relative">
                                         <img
-                                            src={user.avatar || "https://via.placeholder.com/40"}
+                                            src={user.avatarURL || "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?cs=srgb&dl=pexels-pixabay-104827.jpg&fm=jpg"}
                                             alt={user.fullName}
                                             className="w-10 h-10 rounded-full border-2 border-emerald-200 object-cover shadow-sm"
                                             onError={(e) => {

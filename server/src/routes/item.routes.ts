@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { ItemController } from "../controller/item.controller";
+import { verifyToken } from "../middleware/verifyToken";
+import  { verifyAdmin} from "../middleware/verifyToken";
 
 const router = Router();
 
 router.get("/", ItemController.getAll);
-router.post("/", ItemController.create);
-router.put("/:id", ItemController.update);
-router.delete("/:id", ItemController.delete);
+router.post("/", verifyToken, verifyAdmin, ItemController.create);
+router.put("/:id", verifyToken, verifyAdmin,ItemController.update);
+router.delete("/:id",verifyToken, verifyAdmin, ItemController.delete);
 
 export default router;

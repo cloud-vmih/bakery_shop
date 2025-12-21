@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import Home from "./pages/Home";
 import { AuthProvider } from "./context/authContext";
+import { InventoryProvider} from "./context/inventoryContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
 import MenuPage from "./pages/MenuPage";
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
     <AuthProvider>
+        <InventoryProvider>
     <BrowserRouter>
         <ToastContainer
             position="bottom-right"
@@ -36,9 +38,11 @@ export default function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
         <Route path="/admin/branch" element={<ManageBranch />} />
-        <Route path="/profile" element={<ProfilePage />} /><Route path="/M-menu" element={<MenuManagement />} />
+        <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/admin/menu" element={<MenuManagement />} />
       </Routes>
     </BrowserRouter>
+        </InventoryProvider>
     </AuthProvider>
     </GoogleOAuthProvider>
   );

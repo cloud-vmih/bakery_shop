@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerUser, loginUser, getUser, googleService, changePassword } from "../servies/account.service";
+import { registerUser, loginUser, getUser, googleService, changePassword } from "../services/account.service";
 import cron from "node-cron";
 import { deletedUserNotVerified } from "../db/db.account";
 import { AppDataSource } from "../config/database";

@@ -7,6 +7,7 @@ import cartRoutes from "./routes/cart.routes";
 import branchRoutes from "./routes/branch.routes"
 import profileRoutes from "./routes/user.routes";
 import itemRoutes from "./routes/item.routes";
+import inventoryRoutes from "./routes/inventory.routes";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,8 +22,8 @@ app.use("/api", categoryRoutes);
 app.use("/api", cartRoutes);  // Thêm dòng này
 app.use("/api", userRoutes);
 app.use("/api/branchs", branchRoutes);
-app.use("/items", itemRoutes);
-
+app.use("/api/items", itemRoutes);
+app.use("/api", inventoryRoutes);
 app.use('/api', profileRoutes);
 export default app;
 

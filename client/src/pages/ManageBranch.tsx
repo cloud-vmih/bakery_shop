@@ -6,11 +6,14 @@ import { useUser } from "../context/authContext";
 import { Header } from "../components/Header";
 import GooglePlaceInput from "../components/AddressAutocomplete";
 import MapProvider from "../components/MapProvider";
+import InventoryPopup from "./ManageQuantity";
 
 export default function BranchPage() {
   const [branches, setBranches] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState<any>(null);
+  const [inventoryModalOpen, setInventoryModalOpen] = useState(false);
+  const [selectedBranchForInventory, setSelectedBranchForInventory] = useState<number | null>(null);
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -226,6 +229,15 @@ export default function BranchPage() {
                   >
                     Delete
                   </button>
+                    <button
+                        onClick={() => {
+                            setInventoryModalOpen(true)
+                            setSelectedBranchForInventory(b.id)
+                        }}
+                        className="bg-green-600 text-white px-3 py-1 rounded"
+                    >
+                        Manage Menu
+                    </button>
                 </div>
               </div>
             ))}
@@ -241,6 +253,15 @@ export default function BranchPage() {
           onSubmit={selectedBranch ? handleUpdate : handleCreate}
           initialData={selectedBranch}
         />
+          {/* Inventory Popup */}
+          <InventoryPopup
+              branchId={selectedBranchForInventory || 0}
+              open={inventoryModalOpen}
+              onClose={() => {
+                  setInventoryModalOpen(false);
+                  setSelectedBranchForInventory(null);
+              }}
+          />
       </div>
     </>
   );
