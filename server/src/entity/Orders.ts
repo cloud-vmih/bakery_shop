@@ -25,13 +25,6 @@ export class Order extends BaseEntity {
     default: EOrderStatus.PENDING,
   })
   status?: EOrderStatus;
-  
-  @Column({
-    type: "enum",
-    enum: EPayStatus,
-    default: EPayStatus.PENDING,
-  })
-  payStatus?: EPayStatus;
 
   @Column({
     type: "enum",

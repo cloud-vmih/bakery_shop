@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { orderService } from "../services/order.service";
+import { Header } from "../components/Header";
 
 export default function OrderStatus() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -128,6 +129,8 @@ const getCancelButtonClass = () => {
   };
 
   return (
+      <>
+          <Header />
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-800 mb-8">
@@ -470,5 +473,6 @@ const getCancelButtonClass = () => {
         </div>
       )}
     </div>
+      </>
   );
 }

@@ -80,7 +80,7 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     statusText: getStatusText(status),
     createdAt: order.createAt,
     deliveryAt: order.deliveryAt || null,
-    payStatus: order.payStatus ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
+    payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,
     payment: order.payment ? {
@@ -118,7 +118,7 @@ export const cancelOrder = async (
   }
 
   const currentStatus = order.status ?? EOrderStatus.PENDING;
-  const payStatus = order.payStatus ?? EPayStatus.PENDING;
+  const payStatus = order.payment?.status ?? EPayStatus.PENDING;
   const cancelStatus = order.cancelStatus ?? ECancelStatus.NONE;
 
   // 2. Kiểm tra trạng thái đơn hàng có được phép hủy không

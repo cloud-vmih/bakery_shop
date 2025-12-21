@@ -163,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                         </Link>
 
                                         <Link
-                                            to="/orders"
+                                            to="/order"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
                                         >
                                             <span className="fas fa-box text-lg"></span>

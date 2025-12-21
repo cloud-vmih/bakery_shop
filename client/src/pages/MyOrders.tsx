@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { orderService, OrderItem } from "../services/order.service";
 import { Link } from "react-router-dom";
+import { Header } from "../components/Header";
 
 type TabKey =
   | "all"
@@ -89,15 +90,20 @@ export default function MyOrders() {
 
   if (loading) {
     return (
+        <>
+        <Header />
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-2xl text-pink-600 font-medium animate-pulse">
           Đang tải đơn hàng...
         </div>
       </div>
+        </>
     );
   }
 
   return (
+      <>
+          <Header />
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-8 px-4 sm:py-12">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-pink-700 mb-8 sm:mb-12">
@@ -294,5 +300,6 @@ export default function MyOrders() {
         )}
       </div>
     </div>
+      </>
   );
 }
