@@ -11,6 +11,7 @@ import inventoryRoutes from "./routes/inventory.routes";
 import addressRoutes from "./routes/address.routes";
 import orderRoutes from "./routes/order.routes"
 
+import wishlistRoutes from "./routes/wishlist.routes";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -30,5 +31,6 @@ app.use("/api", inventoryRoutes);
 app.use("/api", addressRoutes);
 app.use('/api', profileRoutes);
 app.use("/api", orderRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 export default app;

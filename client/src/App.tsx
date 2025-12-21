@@ -15,6 +15,7 @@ import ManageBranch from "./pages/ManageBranch";
 import MenuManagement from "./pages/MenuManagement";
 import MyOrders from "./pages/MyOrders";
 import OrderStatus from "./pages/OrderStatus";
+import WishlistPage from "./pages/Wishlist";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/admin/menu" element={<MenuManagement />} />
         <Route path="/order" element={<MyOrders />} />
         <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
       </Routes>
     </BrowserRouter>
         </InventoryProvider>

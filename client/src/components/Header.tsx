@@ -6,33 +6,33 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from "react-router-dom";
 
 type User = {
-  fullName: string;
-  avatar: string;
+    fullName: string;
+    avatar: string;
 };
 
 type HeaderProps = {
-  viewProfile?: () => void;
-  onLogin?: () => void;
-  onLogout?: () => void;
+    viewProfile?: () => void;
+    onLogin?: () => void;
+    onLogout?: () => void;
 };
 
 export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }) => {
-  const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate();
-  const { user } = useUser();
+    const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate();
+    const { user } = useUser();
 
-  // Default onLogin nếu cha không truyền vào
-  const handleLogin = onLogin ?? (() => navigate("/login"));
+    // Default onLogin nếu cha không truyền vào
+    const handleLogin = onLogin ?? (() => navigate("/login"));
 
-  const handleLogout = onLogout ?? (() => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  });
+    const handleLogout = onLogout ?? (() => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    });
 
 
-  const handleViewProfile = viewProfile ?? (() => {
-    navigate("/profile");
-  });
+    const handleViewProfile = viewProfile ?? (() => {
+        navigate("/profile");
+    });
 
     return (
         <header className="w-full bg-gradient-to-r from-white to-emerald-50/30 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-emerald-100/50">
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                         {user.fullName || user.username}
                                       </span>
                                         <span className="text-xs text-emerald-600">
-                                            {user.type === 'ADMIN' ? 'Administrator' : 'Member'}
+                                            {user.type === 'Admin' ? 'Administrator' : 'Member'}
                                           </span>
                                     </div>
                                     <svg className="w-4 h-4 text-emerald-500 transform group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +153,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <p className="text-xs text-emerald-600 mt-1">{user.email}</p>
                                         </div>
 
-                                        {/* Menu Items */}
                                         <Link
                                             to="/profile"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
@@ -170,7 +169,15 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <span>My Orders</span>
                                         </Link>
 
-                                        {user.type === 'ADMIN' && (
+                                        <Link
+                                            to="/wishlist"
+                                            className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
+                                        >
+                                            <span className="fas fa-heart text-lg"></span>
+                                            <span>My Wishlist</span>
+                                        </Link>
+
+                                        {user.type === 'Admin' && (
                                             <Link
                                                 to="/admin"
                                                 className="flex items-center gap-3 px-4 py-3 text-sm text-amber-700 hover:bg-amber-50 transition-colors group/item"
@@ -327,4 +334,4 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
             )}
         </header>
     );
-    }
+}

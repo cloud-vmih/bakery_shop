@@ -6,6 +6,7 @@ import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
 import { Header } from "../components/Header";
+import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function MenuPage() {
@@ -16,7 +17,8 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
   const itemsPerPage = 9;
-  const { user, setUser } = useUser()
+  const { user, setUser } = useUser();
+  const [wishlist, setWishlist] = useState<number[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +35,16 @@ export default function MenuPage() {
     loadMenu();
   }, []);
 
+    useEffect(() => {
+        if (!user) return;
+
+        getWishlist().then(data => {
+            setWishlist(
+                data.map(i => i.id!).filter(Boolean)
+            );
+        });
+    }, [user]);
+
   const handleAddToCart = async (itemId: number) => {
     try {
       await addToCart(itemId);
@@ -47,6 +59,28 @@ export default function MenuPage() {
       console.error("Lỗi thêm giỏ:", err);
     }
   };
+    const handleToggleWishlist = async (itemId?: number) => {
+        if (!itemId) return;
+        if (!user) {
+            toast.error("Vui lòng đăng nhập để sử dụng wishlist");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            if (wishlist.includes(itemId)) {
+                await removeFromWishlist(itemId);
+                setWishlist(prev => prev.filter(id => id !== itemId));
+                toast.success("Đã xóa khỏi wishlist");
+            } else {
+                await addToWishlist(itemId);
+                setWishlist(prev => [...prev, itemId]);
+                toast.success("Đã thêm vào wishlist");
+            }
+        } catch (err: any) {
+            toast.error(err.message || "Có lỗi xảy ra");
+        }
+    };
 
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
@@ -189,11 +223,28 @@ export default function MenuPage() {
                     <>
                       <div className="menuGrid">
                         {currentItems?.map((item: any) => (
+
                           <div
                             key={item.id}
                             className="menuCard"
                             onClick={() => navigate(`/product/${item.id}`)}
                           >
+                              {/* Nút wishlist */}
+                              <div className="absolute top-2 right-2 z-20">
+                                  <button
+                                      onClick={(e) => {
+                                          e.stopPropagation(); //Ngăn gọi onClick vào product details
+                                          handleToggleWishlist(item.id);
+                                      }}
+                                      className="text-2xl"
+                                  >
+                                      {item.id && wishlist.includes(item.id) ? (
+                                          <span className="text-red-500">❤️</span>
+                                      ) : (
+                                          <span className="text-gray-400">🤍</span>
+                                      )}
+                                  </button>
+                              </div>
                             <div className="menuImageWrapper">
                               {item.imageURL ? (
                                 <img

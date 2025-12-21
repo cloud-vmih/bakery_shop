@@ -31,8 +31,8 @@ export class Item extends BaseEntity {
   @Column({ type: "json", nullable: true })
   itemDetail?: any;
 
-  @ManyToMany(() => Wishlist, w => w.item)
-  wishlist?: Wishlist[];
+  @OneToMany(() => Wishlist, w => w.item)
+  wishlists!: Wishlist[];
 
   @OneToMany(() => Rating, r => r.item)
   ratings?: Rating[];

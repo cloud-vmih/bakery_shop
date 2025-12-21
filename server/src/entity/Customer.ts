@@ -14,8 +14,8 @@ export class Customer extends User {
   @OneToMany(() => Address, (ad : Address) => ad.customer)
   addresses?: Address[];
 
-  @OneToOne(() => Wishlist, (w: Wishlist) => w.customer)
-  wishlist?: Wishlist;
+  @OneToMany(() => Wishlist, w => w.customer)
+  wishlists!: Wishlist[];
 
   @OneToMany(() => Rating, (r: Rating) => r.customer)
   ratings?: Rating[];
