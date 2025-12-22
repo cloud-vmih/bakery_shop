@@ -12,8 +12,8 @@
 .checkout-section {
   display: flex;
   flex-direction: column;
-  gap: 18px; /* ↑ tăng spacing */
-  margin-bottom: 40px;
+  gap: 10px; /* ↑ tăng spacing */
+  margin-bottom: 30px;
 }
 
 .checkout-title {
@@ -21,6 +21,16 @@
   font-weight: 700;
   margin-bottom: 8px;
   color: #111;
+}
+
+/* chỉ áp dụng cho note */
+.checkout-note .checkout-title {
+  margin-bottom: 0px; /* giảm khoảng cách title → textarea */
+}
+
+/* kéo note gần delivery hơn một chút */
+.checkout-note {
+  margin-top: 5px;
 }
 
 /* ================================
@@ -65,12 +75,14 @@
 
   padding: 12px 16px;
 
-  font-size: 14px;
-  line-height: 1.5; /* FIX đọc dễ */
+  font-size: 15px;
+  line-height: 1.5;
 
   outline: none;
   resize: none;
   background: #fff;
+
+  color: #111827;
 }
 
 /* PLACEHOLDER */

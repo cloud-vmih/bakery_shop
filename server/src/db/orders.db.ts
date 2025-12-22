@@ -3,9 +3,9 @@ import { Order } from "../entity/Orders";
 import { OrderInfo } from "../entity/OrderInfo";
 import { OrderDetail } from "../entity/OrderDetails";
 import { EOrderStatus } from "../entity/enum/enum";
+import { User } from "../entity/User";
 import { Address } from "../entity/Address";
 import { Item } from "../entity/Item";
-import { User } from "../entity/User";
 
 type CreateOrderPayload = {
   customerId: number;
@@ -21,10 +21,10 @@ type CreateOrderPayload = {
   items: Array<{ itemId: number; quantity: number }>;
 };
 
-export const createFullOrderDB = async (payload: CreateOrderPayload) => {
-  return await AppDataSource.transaction(async (manager) => {
-    /** 1️⃣ CREATE ORDER */
+export const createOrderDB = async (payload: CreateOrderPayload) => {
+  return AppDataSource.transaction(async (manager) => {
     const orderRepo = manager.getRepository(Order);
+
     const order = orderRepo.create({
       customer: { id: payload.customerId } as User,
       status: EOrderStatus.PENDING,
@@ -32,34 +32,30 @@ export const createFullOrderDB = async (payload: CreateOrderPayload) => {
     });
     const savedOrder = await orderRepo.save(order);
 
-    /** 2️⃣ CREATE ORDER INFO */
-    const orderInfoRepo = manager.getRepository(OrderInfo);
-    const orderInfo = orderInfoRepo.create({
-      orderID: savedOrder.id!,
-      order: savedOrder,
-      cusName: payload.info.cusName,
-      cusPhone: payload.info.cusPhone,
-      cusGmail: payload.info.cusGmail,
-      address: { id: payload.info.addressId } as Address,
-      deliveryDate: payload.info.deliveryDate,
-      timeFrame: payload.info.timeFrame,
-      note: payload.info.note,
-    });
-    await orderInfoRepo.save(orderInfo);
-
-    /** 3️⃣ CREATE ORDER DETAILS */
-    const orderDetailRepo = manager.getRepository(OrderDetail);
-
-    for (const it of payload.items) {
-      const od = orderDetailRepo.create({
-        orderID: savedOrder.id!,
-        itemID: it.itemId,
+    const infoRepo = manager.getRepository(OrderInfo);
+    await infoRepo.save(
+      infoRepo.create({
         order: savedOrder,
-        item: { id: it.itemId } as Item,
-        quantity: it.quantity,
-      });
-      await orderDetailRepo.save(od);
-    }
+        cusName: payload.info.cusName,
+        cusPhone: payload.info.cusPhone,
+        cusGmail: payload.info.cusGmail,
+        address: { id: payload.info.addressId } as Address,
+        deliveryDate: payload.info.deliveryDate,
+        timeFrame: payload.info.timeFrame,
+        note: payload.info.note,
+      })
+    );
+
+    const detailRepo = manager.getRepository(OrderDetail);
+    await detailRepo.save(
+      payload.items.map((i) =>
+        detailRepo.create({
+          order: savedOrder,
+          item: { id: i.itemId } as Item,
+          quantity: i.quantity,
+        })
+      )
+    );
 
     return savedOrder;
   });
@@ -70,17 +66,13 @@ export const updateOrderStatusDB = async (
   status: EOrderStatus
 ) => {
   const repo = AppDataSource.getRepository(Order);
-  const order = await repo.findOne({ where: { id: orderId } });
-
-  if (!order) throw new Error("Đơn hàng không tồn tại");
-
-  order.status = status;
-  return await repo.save(order);
+  const result = await repo.update({ id: orderId }, { status });
+  if (!result.affected) throw new Error("Order not found");
+  return repo.findOneBy({ id: orderId });
 };
 
-export const findOrderByIdDB = async (orderId: number) => {
-  const repo = AppDataSource.getRepository(Order);
-  return await repo.findOne({
+export const findOrderFullByIdDB = async (orderId: number) => {
+  return AppDataSource.getRepository(Order).findOne({
     where: { id: orderId },
     relations: {
       orderDetails: { item: true },

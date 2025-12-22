@@ -1,16 +1,17 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+
 import OrderSummary from "../components/checkout/OrderSummary";
 import "../styles/checkoutConfirm.css";
 
 import { createOrder } from "../services/orders.service";
+import { createVNPayUrl } from "../services/payment.service";
 import { clearCart } from "../services/cart.service";
 import { useCart } from "../context/CartContext";
 
 function formatDateVN(isoDate: string) {
   if (!isoDate) return "";
-
-  const date = new Date(isoDate + "T00:00:00"); // tránh lệch timezone
-
+  const date = new Date(isoDate + "T00:00:00");
   const days = [
     "Chủ nhật",
     "Thứ Hai",
@@ -20,51 +21,81 @@ function formatDateVN(isoDate: string) {
     "Thứ Sáu",
     "Thứ Bảy",
   ];
-
-  const dayName = days[date.getDay()];
-  const d = String(date.getDate()).padStart(2, "0");
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const y = date.getFullYear();
-
-  return `${dayName}, ${d}/${m}/${y}`;
+  return `${days[date.getDay()]}, ${String(date.getDate()).padStart(
+    2,
+    "0"
+  )}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
 }
 
 export default function CheckoutConfirm() {
   const { resetCart } = useCart();
-
   const navigate = useNavigate();
   const location = useLocation();
 
   const payload = (location.state as any)?.payload;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const totalAmount = useMemo(() => {
+    if (!payload?.items) return 0;
+    return payload.items.reduce(
+      (sum: number, i: any) => sum + i.item.price * i.quantity,
+      0
+    );
+  }, [payload]);
 
   if (!payload) {
     return (
       <div className="confirm-container">
         <div className="confirm-card">
-          <h3 className="confirm-title">Xác nhận đơn hàng</h3>
-          <p className="confirm-empty">
-            Không tìm thấy dữ liệu đơn hàng (có thể bạn vừa tải lại trang).
-          </p>
-          <button
-            type="button"
-            className="confirm-btn primary"
-            onClick={() => navigate("/checkout")}
-          >
-            Quay lại trang Checkout
+          <h3>Xác nhận đơn hàng</h3>
+          <p>Không tìm thấy dữ liệu đơn hàng</p>
+          <button onClick={() => navigate("/checkout")}>
+            Quay lại Checkout
           </button>
         </div>
       </div>
     );
   }
 
+  const handleConfirm = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      const paymentMethod = payload.paymentMethod;
+
+      // 1️⃣ CREATE ORDER
+      const order = await createOrder(payload);
+
+      // 2️⃣ COD → CONFIRMED → success
+      if (paymentMethod === "COD") {
+        await clearCart();
+        resetCart();
+
+        navigate(`/order-success/${order.orderId}`, { replace: true });
+        return;
+      }
+
+      // 3️⃣ VNPAY → redirect
+      if (paymentMethod === "VNPAY") {
+        const { vnpayUrl } = await createVNPayUrl(order.orderId, totalAmount);
+        window.location.href = vnpayUrl;
+        return;
+      }
+
+      throw new Error("Unsupported payment method");
+    } catch (err: any) {
+      alert(err.message || "Không thể tạo đơn hàng");
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="confirm-container">
       <h2 className="confirm-title">Xác nhận đơn hàng</h2>
 
-      {/* ===== CUSTOMER INFO ===== */}
       <div className="confirm-card">
-        <h4 className="confirm-section-title">Thông tin khách hàng</h4>
-
+        <h4>Thông tin khách hàng</h4>
         <div className="confirm-info">
           <div>
             <span>Khách hàng</span>
@@ -72,22 +103,14 @@ export default function CheckoutConfirm() {
               {payload.customer.fullName} – {payload.customer.phone}
             </strong>
           </div>
-
           <div>
             <span>Email</span>
             <strong>{payload.customer.email || "(không có)"}</strong>
           </div>
-
           <div>
-            <span>Địa chỉ giao hàng</span>
-            <strong>
-              {payload.address.formattedAddress ||
-                (payload.address.addressId
-                  ? `Địa chỉ đã lưu (ID: ${payload.address.addressId})`
-                  : "(không có địa chỉ)")}
-            </strong>
+            <span>Địa chỉ</span>
+            <strong>{payload.address.formattedAddress}</strong>
           </div>
-
           <div>
             <span>Thời gian giao</span>
             <strong>
@@ -95,60 +118,36 @@ export default function CheckoutConfirm() {
               {payload.delivery.timeFrame}
             </strong>
           </div>
-
           <div>
             <span>Thanh toán</span>
-            <strong className="payment-badge">{payload.paymentMethod}</strong>
+            <strong>{payload.paymentMethod}</strong>
           </div>
         </div>
       </div>
 
-      {/* ===== ORDER SUMMARY ===== */}
       <div className="confirm-card">
-        {/* <h4 className="confirm-section-title">Đơn hàng của bạn</h4> */}
         <OrderSummary items={payload.items} />
       </div>
 
-      {/* ===== ACTIONS ===== */}
       <div className="confirm-actions">
         <button
-          type="button"
+          className="confirm-btn primary"
+          onClick={handleConfirm}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Đang xử lý..." : "Xác nhận đặt hàng"}
+        </button>
+
+        <button
           className="confirm-btn ghost"
           onClick={() => navigate("/checkout")}
+          disabled={isSubmitting}
         >
           Quay lại chỉnh sửa
         </button>
 
-        <button
-          type="button"
-          className="confirm-btn primary"
-          onClick={async () => {
-            try {
-              const result = await createOrder(payload);
-
-              // clear cart
-              await clearCart();
-              resetCart();
-
-              // COD → đi success luôn
-              navigate("/order-success", {
-                replace: true, // 🔥 QUAN TRỌNG
-                state: {
-                  orderId: result.orderId,
-                  orderStatus: result.orderStatus,
-                  paymentMethod: result.paymentMethod,
-                },
-              });
-            } catch (err: any) {
-              alert(err.message || "Không thể tạo đơn hàng");
-            }
-          }}
-        >
-          Xác nhận đặt hàng
-        </button>
-
         <Link to="/cart" className="confirm-back">
-          Quay lại giỏ hàng
+          ← Quay lại giỏ hàng
         </Link>
       </div>
     </div>

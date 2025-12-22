@@ -21,7 +21,7 @@ export enum ECakeType {
 
 export enum EPayment {
   COD = "COD",
-  BANKING = "BANKING",
+  VNPAY = "VNPAY",
 }
 
 export enum EPayStatus {

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
 import { createEmailVerification, isAccountVerified } from "../db/verify.db";
-import { sendVerifyEmail } from "../helper/sendEmail";
+import { sendVerifyEmail } from "../helpers/sendEmail";
 
 import {
   createAccount,

@@ -1,21 +1,35 @@
-// src/services/orders.services.ts
+// src/services/orders.service.ts
 import API from "../api/axois.config";
 
+/** ================= TYPES ================= */
 export type CreateOrderResponse = {
   orderId: number;
-  orderStatus: string;
-  paymentMethod: string;
+  orderStatus: "PENDING" | "CONFIRMED";
+  paymentMethod: "COD" | "VNPAY";
 };
 
+/**
+ * ================= CREATE ORDER =================
+ * POST /api/orders
+ *
+ * - COD   → order CONFIRMED
+ * - VNPAY → order PENDING
+ */
 export const createOrder = async (
   payload: any
 ): Promise<CreateOrderResponse> => {
-  try {
-    const res = await API.post("/orders", payload);
-    return res.data;
-  } catch (err: any) {
-    console.error("CREATE ORDER ERROR >>>", err.response?.data);
+  const res = await API.post("/orders", payload);
+  return res.data;
+};
 
-    throw new Error(err.response?.data?.message || "CREATE_ORDER_FAILED");
-  }
+/**
+ * ================= GET ORDER BY ID =================
+ * GET /api/orders/:orderId
+ *
+ * - Dùng cho Success page
+ * - Source of truth từ DB
+ */
+export const getOrderById = async (orderId: number) => {
+  const res = await API.get(`/orders/${orderId}`);
+  return res.data;
 };

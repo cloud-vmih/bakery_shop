@@ -8,6 +8,8 @@ import addressRoutes from "./routes/address.route";
 import orderRoutes from "./routes/orders.route";
 import paymentRoutes from "./routes/payment.route";
 
+import paymentVNPayRoutes from "./routes/payment.vnpay.route";
+
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
@@ -25,5 +27,6 @@ app.use("/api", userRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/payment/vnpay", paymentVNPayRoutes);
 
 export default app;

@@ -1,50 +1,59 @@
-import { EPayment, EOrderStatus } from "../entity/enum/enum";
-import { createFullOrderDB, updateOrderStatusDB } from "../db/orders.db";
-import { createPaymentDB } from "../db/payment.db";
+import {
+  createOrderDB,
+  updateOrderStatusDB,
+  findOrderFullByIdDB,
+} from "../db/orders.db";
+import { EOrderStatus } from "../entity/enum/enum";
 
 export class OrdersService {
+  /**
+   * CREATE ORDER
+   * - luôn tạo PENDING
+   */
   async createOrder(userId: number, payload: any) {
-    const { customer, address, delivery, items, paymentMethod } = payload;
-
-    if (!customer?.fullName) throw new Error("Thiếu tên khách hàng");
-    if (!customer?.phone) throw new Error("Thiếu số điện thoại");
-    if (!address?.addressId) throw new Error("Thiếu địa chỉ giao hàng");
-    if (!delivery?.deliveryDate) throw new Error("Thiếu ngày giao");
-    if (!delivery?.timeFrame) throw new Error("Thiếu khung giờ giao");
-    if (!items || items.length === 0) throw new Error("Đơn hàng trống");
-    if (!paymentMethod) throw new Error("Thiếu phương thức thanh toán");
-
-    /** 1️⃣ CREATE ORDER + INFO + DETAILS */
-    const order = await createFullOrderDB({
+    return createOrderDB({
       customerId: userId,
       info: {
-        cusName: customer.fullName,
-        cusPhone: customer.phone,
-        cusGmail: customer.email || "",
-        addressId: address.addressId,
-        deliveryDate: delivery.deliveryDate,
-        timeFrame: delivery.timeFrame,
+        cusName: payload.customer.fullName,
+        cusPhone: payload.customer.phone,
+        cusGmail: payload.customer.email || "",
+        addressId: payload.address.addressId,
+        deliveryDate: payload.delivery.deliveryDate,
+        timeFrame: payload.delivery.timeFrame,
         note: payload.note,
       },
-      items: items.map((i: any) => ({
+      items: payload.items.map((i: any) => ({
         itemId: i.item.id,
         quantity: i.quantity,
       })),
     });
+  }
 
-    /** 2️⃣ CREATE PAYMENT */
-    await createPaymentDB(order, paymentMethod as EPayment);
+  /**
+   * CONFIRM ORDER
+   * - COD hoặc VNPAY success
+   */
+  async confirmOrder(orderId: number) {
+    return updateOrderStatusDB(orderId, EOrderStatus.CONFIRMED);
+  }
 
-    /** 3️⃣ COD AUTO CONFIRM */
-    if (paymentMethod === EPayment.COD) {
-      await updateOrderStatusDB(order.id!, EOrderStatus.CONFIRMED);
-      order.status = EOrderStatus.CONFIRMED;
+  /**
+   * CANCEL ORDER
+   * - VNPAY failed / canceled
+   */
+  async cancelOrder(orderId: number) {
+    return updateOrderStatusDB(orderId, EOrderStatus.CANCELED);
+  }
+
+  /**
+   * GET FULL ORDER
+   * - Success page
+   */
+  async getOrderFull(orderId: number) {
+    const order = await findOrderFullByIdDB(orderId);
+    if (!order) {
+      throw new Error("Order not found");
     }
-
-    return {
-      orderId: order.id,
-      orderStatus: order.status,
-      paymentMethod,
-    };
+    return order;
   }
 }

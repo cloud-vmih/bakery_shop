@@ -79,16 +79,19 @@
 }
 
 /* ================================
-   ACTIONS
+   ACTIONS (FIXED)
 ================================ */
 .confirm-actions {
   display: flex;
   flex-direction: column;
+  align-items: stretch; /* ✅ tất cả nút cùng width */
   gap: 14px;
-  margin-top: 10px;
+  margin-top: 24px;
 }
 
+/* BUTTON BASE */
 .confirm-btn {
+  width: 100%; /* ✅ full width */
   height: 52px;
   border-radius: 12px;
   font-size: 15px;
@@ -121,6 +124,7 @@
 
 /* BACK LINK */
 .confirm-back {
+  margin-top: 6px;
   text-align: center;
   font-size: 14px;
   color: #0e7490;
@@ -129,18 +133,4 @@
 
 .confirm-back:hover {
   text-decoration: underline;
-}
-
-/* ================================
-   RESPONSIVE
-================================ */
-@media (max-width: 640px) {
-  .confirm-info div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .confirm-info strong {
-    text-align: left;
-  }
 }

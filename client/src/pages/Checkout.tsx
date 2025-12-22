@@ -25,6 +25,7 @@ type Draft = {
   deliveryDate: string;
   timeFrame: string;
   paymentMethod: "COD" | "VNPAY";
+  note?: string;
 };
 
 function loadDraft(): Draft | null {
@@ -114,6 +115,9 @@ export default function Checkout() {
   const [deliveryDate, setDeliveryDate] = useState(draft?.deliveryDate ?? "");
   const [timeFrame, setTimeFrame] = useState(draft?.timeFrame ?? "");
 
+  /* ================= NOTE ================= */
+  const [note, setNote] = useState(draft?.note ?? "");
+
   /* ================= PAYMENT ================= */
   const [paymentMethod, setPaymentMethod] = useState<"COD" | "VNPAY">(
     draft?.paymentMethod ?? "COD"
@@ -183,6 +187,7 @@ export default function Checkout() {
       deliveryDate,
       timeFrame,
       paymentMethod,
+      note,
     });
   }, [
     customer,
@@ -193,6 +198,7 @@ export default function Checkout() {
     deliveryDate,
     timeFrame,
     paymentMethod,
+    note,
   ]);
 
   /* ================= SUBMIT ================= */
@@ -219,6 +225,7 @@ export default function Checkout() {
       delivery: { deliveryDate, timeFrame },
       paymentMethod,
       items: selectedItems,
+      note,
     };
 
     navigate("/checkout/confirm", { state: { payload } });
@@ -261,6 +268,18 @@ export default function Checkout() {
               setDeliveryDate={setDeliveryDate}
               timeFrame={timeFrame}
               setTimeFrame={setTimeFrame}
+            />
+          </div>
+
+          <div className="checkout-section checkout-note">
+            <h3 className="checkout-title">Yêu cầu khác (tuỳ chọn)</h3>
+
+            <textarea
+              className="checkout-textarea"
+              placeholder="Nhập yêu cầu của bạn (ví dụ: ít ngọt, giao trước 18h...)"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={3}
             />
           </div>
 
