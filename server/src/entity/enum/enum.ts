@@ -43,3 +43,10 @@ export enum ESender {
   USER = "USER",
   GUEST = "GUEST",
 }
+
+export enum ECancelStatus {
+  NONE = "NONE",           // Không có yêu cầu hủy nào
+  REQUESTED = "REQUESTED", // Khách hàng đã yêu cầu hủy
+  APPROVED = "APPROVED",   // Shop chấp thuận hủy
+  REJECTED = "REJECTED",   // Shop từ chối hủy
+}

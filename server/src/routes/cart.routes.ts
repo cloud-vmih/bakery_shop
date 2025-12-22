@@ -6,7 +6,7 @@ import { verifyToken } from "../middleware/verifyToken";
 const router = Router();
 
 // Yêu cầu đăng nhập để bảo đảm có userId cho logic giỏ hàng
-router.post("/", verifyToken, addToCart);
-router.get("/", verifyToken, getCart);
+router.post("/cart", verifyToken, addToCart);
+router.get("/cart", verifyToken, getCart);
 
 export default router;

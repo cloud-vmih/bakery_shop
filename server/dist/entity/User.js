@@ -40,7 +40,7 @@ __decorate([
 ], User.prototype, "dateOfBirth", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => Account_1.Account, a => a.user, {
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         onUpdate: "CASCADE",
     }),
     (0, typeorm_2.JoinColumn)({ name: "accountID" }),

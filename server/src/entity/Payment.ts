@@ -7,7 +7,7 @@ export class Payment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @OneToOne(() => Order)
+  @OneToOne(() => Order, (order) => order.payment)
   @JoinColumn({ name: "orderID" })
   order?: Order;
 

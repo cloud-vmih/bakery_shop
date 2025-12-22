@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, OneToOne, Index } from "typeorm";
 import { Customer } from "./Customer";
 import { Branch } from "./Branch";
 
@@ -7,21 +7,25 @@ export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column()
+  placeId!: string;
+
   @ManyToOne(() => Customer, c => c.addresses)
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
 
-  @OneToOne(() => Branch, b => b.address )
+  @OneToOne(() => Branch, b => b.address, { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
   @JoinColumn({name: "branchID"})
   branch?: Branch
 
-  @Column({ type: "char", length: 15 })
-  addressNumber?: string;
+  @Column()
+  fullAddress?: string;
 
-  @Column()
-  street?: string;  
-  @Column()
-  ward?: string;
+  @Column("decimal", { precision: 10, scale: 7 })
+  lat?: number;
+
+  @Column("decimal", { precision: 10, scale: 7 })
+  lng?: number;
 
   @Column({ default: true })
   isDefault?: boolean;

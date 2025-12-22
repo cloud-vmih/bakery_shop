@@ -24,7 +24,7 @@ export class User extends BaseEntity {
   dateOfBirth?: Date;
 
   @OneToOne(() => Account, a => a.user, {
-    onDelete: "SET NULL",
+    onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "accountID" })

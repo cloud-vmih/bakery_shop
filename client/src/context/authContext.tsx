@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return; // đỡ gọi API thừa
+      if (!token) return; 
 
       try {
         const data = await verifyToken();

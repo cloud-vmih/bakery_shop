@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, Column, BaseEntity } from "typeorm"
+import {Entity, PrimaryGeneratedColumn, OneToOne, Column, BaseEntity, OneToMany} from "typeorm"
 import { Address } from "./Address";
+import {Inventory} from "./Inventory";
 
 @Entity("branch")
 export class Branch extends BaseEntity {
@@ -9,6 +10,9 @@ export class Branch extends BaseEntity {
   @Column()
   name?: string; 
     
-  @OneToOne(() => Address, (a: Address) => a.id)
+  @OneToOne(() => Address, (a: Address) => a.branch)
   address?: Address;
+
+  @OneToMany(() => Inventory, (i: Inventory)=> i.branch)
+    inventory?: Inventory[]
 }

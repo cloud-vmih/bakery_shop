@@ -1,0 +1,285 @@
+/* Menu Page Styles */
+.menuPage {
+  @apply min-h-screen;
+  background-color: #f0fdf4; /* Giữ nguyên màu xanh nhạt */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuPage * {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuSection {
+  @apply py-8 md:py-12;
+  background-color: #f0fdf4;
+}
+
+.sectionHeader {
+  @apply text-center mb-6;
+}
+
+.titleGreen {
+  @apply text-3xl md:text-4xl font-bold text-green-700;
+}
+
+/* Layout with Sidebar */
+.menuLayout {
+  @apply flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4;
+}
+
+/* Category Sidebar - Enhanced Theme */
+.categorySidebar {
+  @apply w-full lg:w-64 bg-gradient-to-b from-green-50 to-green-100 rounded-xl shadow-lg p-5 h-fit lg:sticky lg:top-4 border-2 border-green-200;
+}
+
+.sidebarHeader {
+  @apply mb-5 pb-4 border-b-2 border-green-300;
+}
+
+.sidebarTitle {
+  @apply text-base font-bold text-green-800;
+}
+
+.categoryList {
+  @apply space-y-2 mb-6;
+}
+
+.categoryItem {
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-in-out bg-white/90 border border-green-200 hover:border-green-300 hover:bg-green-50/90 hover:shadow-md hover:-translate-y-0.5 text-left backdrop-blur-sm;
+}
+
+.categoryItem.active {
+  @apply bg-gradient-to-r from-green-300 to-green-400 border-green-400 text-green-900 shadow-lg translate-y-0;
+}
+
+.categoryIndicator {
+  @apply w-2.5 h-2.5 rounded-full bg-green-300 transition-all duration-300;
+}
+
+.categoryItem.active .categoryIndicator {
+  @apply bg-white w-2.5 h-2.5 ring-2 ring-white ring-offset-2 ring-offset-green-400;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+.categoryLabel {
+  @apply font-medium text-sm text-green-800;
+}
+
+.categoryItem.active .categoryLabel {
+  @apply text-green-900 font-semibold;
+}
+
+/* Price Sort Section - Enhanced */
+.priceSortSection {
+  @apply mt-6 pt-4 border-t-2 border-green-300;
+}
+
+.priceSortOptions {
+  @apply space-y-2 mt-3;
+}
+
+.priceSortButton {
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-in-out bg-white/90 border border-amber-200 hover:border-amber-300 hover:bg-amber-50/90 hover:shadow-md hover:-translate-y-0.5 text-left text-sm font-medium text-amber-800 backdrop-blur-sm;
+}
+
+.priceSortButton.active {
+  @apply bg-gradient-to-r from-amber-300 to-amber-400 border-amber-400 text-amber-900 shadow-lg translate-y-0;
+}
+
+.priceSortIndicator {
+  @apply w-2.5 h-2.5 rounded-full bg-amber-300 transition-all duration-300;
+}
+
+.priceSortButton.active .priceSortIndicator {
+  @apply bg-white w-2.5 h-2.5 ring-2 ring-white ring-offset-2 ring-offset-amber-400;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+.priceSortButton.active {
+  @apply text-amber-900;
+}
+
+.priceSortButton.active > span:not(.priceSortIndicator) {
+  @apply text-amber-900 font-semibold;
+}
+
+/* Main Content Area */
+.menuContentArea {
+  @apply flex-1;
+}
+
+.menuGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5 md:gap-6 lg:gap-7; /* Đổi thành 3 cột */
+}
+
+.menuCard {
+  @apply bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 relative border border-amber-100 flex flex-col h-full;
+}
+
+.menuImageWrapper {
+  @apply relative overflow-hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Hình vuông */
+}
+
+.menuImage {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
+
+.menuCard:hover .menuImage {
+  @apply scale-105;
+}
+
+.menuCardContent {
+  @apply p-4 flex flex-col gap-2 relative z-10 bg-white;
+  min-height: auto;
+  transition: filter 0.3s ease-in-out;
+}
+
+.menuTitle {
+  @apply text-base font-semibold text-amber-900 line-clamp-2 leading-tight;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.menuPrice {
+  @apply text-base text-green-600 font-medium;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Nút Thêm vào giỏ - Thiết kế mới đẹp hơn */
+.menuButton {
+  @apply absolute inset-0 flex items-center justify-center 
+         bg-green-600 text-white font-bold rounded-2xl opacity-0 pointer-events-none
+         backdrop-blur-md transition-all duration-300 ease-in-out;
+  transform: translateY(10px) scale(0.95);
+}
+
+.menuCard:hover .menuButton {
+  @apply opacity-100 pointer-events-auto;
+  transform: translateY(0) scale(1);
+}
+
+.menuButton:hover {
+  @apply bg-green-700 shadow-xl scale-105;
+}
+
+.menuButton:active {
+  @apply scale-95;
+}
+
+.menuButton::after {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-white/30 opacity-0;
+  animation: ripple 0.6s ease-out;
+}
+
+.menuButton:active::after {
+  @apply opacity-100;
+}
+
+.menuButton-content {
+  @apply flex items-center gap-2;
+}
+
+.menuButton-icon {
+  @apply w-5 h-5;
+}
+
+/* Search Bar - Enhanced */
+.searchBar {
+  @apply relative max-w-xl mb-8;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 transition-colors duration-300;
+}
+
+.searchInput {
+  @apply w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-green-200 focus:border-green-500 focus:outline-none text-sm bg-white shadow-sm transition-all duration-300 hover:border-green-300 hover:shadow-md;
+}
+
+.searchBar:focus-within .searchIcon {
+  @apply text-green-500;
+}
+
+/* Pagination Styles */
+.paginationContainer {
+  @apply flex justify-center items-center gap-3 mt-10;
+}
+
+.paginationButton {
+  @apply px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 border-2;
+}
+
+.paginationButton.active {
+  @apply bg-green-600 text-white border-green-600 shadow-md;
+}
+
+.paginationButton.inactive {
+  @apply bg-white text-green-600 border-green-600 hover:bg-green-50 hover:shadow-md hover:scale-105;
+}
+
+.paginationButton.disabled {
+  @apply bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed;
+}
+
+.paginationInfo {
+  @apply text-gray-600 text-sm mx-4;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-indicator {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.menuButton:active::after {
+  content: '';
+  @apply absolute inset-0 rounded-xl bg-white/30;
+  animation: ripple 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .categorySidebar {
+    @apply w-full;
+  }
+  
+  .menuLayout {
+    @apply flex-col;
+  }
+
+  .menuGrid {
+    @apply grid-cols-2 md:grid-cols-3; /* Đảm bảo 3 cột trên tablet */
+  }
+}
+
+@media (max-width: 640px) {
+  .menuGrid {
+    @apply grid-cols-1; /* 1 cột trên mobile */
+  }
+}

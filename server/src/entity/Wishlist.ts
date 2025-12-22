@@ -5,18 +5,19 @@ import { Customer } from "./Customer";
 @Entity("wishlist")
 @Unique(["customerID", "itemID"])
 export class Wishlist extends BaseEntity {
+
   @PrimaryColumn({ name: "customerID", type: "bigint" })
   customerID!: number;
 
   @PrimaryColumn({ name: "itemID", type: "bigint" })
-  itemID?: number;
+  itemID!: number;
 
-  @ManyToOne(() => Customer, c => c.wishlist)
+  @ManyToOne(() => Customer, customer => customer.wishlists, {onDelete: "CASCADE"})
   @JoinColumn({ name: "customerID" })
-  customer?: Customer;
+  customer!: Customer;
 
-  @ManyToMany(() => Item, i => i.wishlist)
+  @ManyToOne(() => Item, item => item.wishlists, {eager: true, onDelete: "CASCADE"})
   @JoinColumn({ name: "itemID" })
-  item?: Item[];
+  item!: Item;
 }
 

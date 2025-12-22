@@ -2,8 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMa
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
-import { CartItem } from "./CartItem"
-
+import {Inventory} from "./Inventory";
 
 @Entity("item")
 export class Item extends BaseEntity {
@@ -29,20 +28,15 @@ export class Item extends BaseEntity {
   })
   category?: ECategory;
 
-  @OneToMany(() => CartItem, (ci: CartItem) => ci.cart)
-    items?: CartItem[]
-
   @Column({ type: "json", nullable: true })
   itemDetail?: any;
 
-  @ManyToMany(() => Wishlist, w => w.item)
-  wishlist?: Wishlist[];
+  @OneToMany(() => Wishlist, w => w.item)
+  wishlists!: Wishlist[];
 
   @OneToMany(() => Rating, r => r.item)
   ratings?: Rating[];
 
-  @Column({ type: "int", comment: "Number of days the item can be used" })
-  shelfLifeDays?: number;
-
+  @OneToMany(() => Inventory, (i: Inventory)=> i.item)
+  inventory?: Inventory[];
 }
-
