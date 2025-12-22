@@ -9,9 +9,6 @@ const ProductDetails = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     
-    if (user) {
-      toast.success("Chào mừng " + user.fullName + " (" + user.type + ") trở lại trang chủ!");
-    }
   }, [user]);
 
   return (

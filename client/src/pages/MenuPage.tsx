@@ -7,19 +7,26 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
 import { Header } from "../components/Header";
 import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
-import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { getBranches } from "../services/branch.services";
+import { useInventory } from "../context/inventoryContext";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
+  const [branches, setBranches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingBranches, setLoadingBranches] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedBranchId, setSelectedBranchId] = useState<number | null>(null);
   const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
+
   const { user, setUser } = useUser();
   const [wishlist, setWishlist] = useState<number[]>([]);
   const navigate = useNavigate();
+  const { getItemQuantity } = useInventory();
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -35,15 +42,31 @@ export default function MenuPage() {
     loadMenu();
   }, []);
 
-    useEffect(() => {
-        if (!user) return;
+  useEffect(() => {
+    if (!user) return;
 
-        getWishlist().then(data => {
-            setWishlist(
-                data.map(i => i.id!).filter(Boolean)
-            );
-        });
-    }, [user]);
+    getWishlist().then(data => {
+      setWishlist(
+        data.map(i => i.id!).filter(Boolean)
+      );
+    });
+  }, [user]);
+
+  useEffect(() => {
+    const loadBranches = async () => {
+      try {
+        const data = await getBranches(); // ← Dùng đúng hàm có sẵn
+        setBranches(data);
+      } catch (err: any) {
+        console.error("Lỗi tải chi nhánh:", err);
+        toast.error("Không thể tải danh sách chi nhánh");
+        setBranches([]);
+      } finally {
+        setLoadingBranches(false);
+      }
+    };
+    loadBranches();
+  }, []);
 
   const handleAddToCart = async (itemId: number) => {
     try {
@@ -59,28 +82,28 @@ export default function MenuPage() {
       console.error("Lỗi thêm giỏ:", err);
     }
   };
-    const handleToggleWishlist = async (itemId?: number) => {
-        if (!itemId) return;
-        if (!user) {
-            toast.error("Vui lòng đăng nhập để sử dụng wishlist");
-            navigate("/login");
-            return;
-        }
+  const handleToggleWishlist = async (itemId?: number) => {
+    if (!itemId) return;
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để sử dụng wishlist");
+      navigate("/login");
+      return;
+    }
 
-        try {
-            if (wishlist.includes(itemId)) {
-                await removeFromWishlist(itemId);
-                setWishlist(prev => prev.filter(id => id !== itemId));
-                toast.success("Đã xóa khỏi wishlist");
-            } else {
-                await addToWishlist(itemId);
-                setWishlist(prev => [...prev, itemId]);
-                toast.success("Đã thêm vào wishlist");
-            }
-        } catch (err: any) {
-            toast.error(err.message || "Có lỗi xảy ra");
-        }
-    };
+    try {
+      if (wishlist.includes(itemId)) {
+        await removeFromWishlist(itemId);
+        setWishlist(prev => prev.filter(id => id !== itemId));
+        toast.success("Đã xóa khỏi wishlist");
+      } else {
+        await addToWishlist(itemId);
+        setWishlist(prev => [...prev, itemId]);
+        toast.success("Đã thêm vào wishlist");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Có lỗi xảy ra");
+    }
+  };
 
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
@@ -90,7 +113,7 @@ export default function MenuPage() {
   const filteredAndSortedItems = useMemo(() => {
     let filtered = [...items];
 
-    // Lọc theo tìm kiếm
+    // Lọc tìm kiếm
     if (searchQuery.trim()) {
       filtered = filtered.filter(item =>
         item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -98,12 +121,21 @@ export default function MenuPage() {
       );
     }
 
-    // Lọc theo danh mục
+    // Lọc danh mục
     if (selectedCategory) {
       filtered = filtered.filter(item => item.category === selectedCategory);
     }
 
-    // Sắp xếp theo giá
+    // Sắp xếp theo tồn kho nếu đã chọn chi nhánh
+    if (selectedBranchId !== null) {
+      filtered.sort((a, b) => {
+        const qtyA = getItemQuantity(a.id, selectedBranchId);
+        const qtyB = getItemQuantity(b.id, selectedBranchId);
+        return qtyB - qtyA; // Có hàng (qty > 0) lên trước, hết hàng xuống sau
+      });
+    }
+
+    // Sắp xếp giá
     if (priceSort === "low-to-high") {
       filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
     } else if (priceSort === "high-to-low") {
@@ -111,7 +143,7 @@ export default function MenuPage() {
     }
 
     return filtered;
-  }, [items, searchQuery, selectedCategory, priceSort]);
+  }, [items, searchQuery, selectedCategory, selectedBranchId, priceSort, getItemQuantity]);
 
   // Tính toán phân trang
   const totalPages = Math.ceil(filteredAndSortedItems.length / itemsPerPage);
@@ -141,16 +173,12 @@ export default function MenuPage() {
       <Header />
       <div className="menuPage">
         <section className="menuSection">
-          <div className="sectionHeader">
-            <h2 className="titleGreen">MENU</h2>
-          </div>
-
           <div className="menuLayout">
+            {/* Sidebar */}
             <aside className="categorySidebar">
               <div className="sidebarHeader">
                 <h3 className="sidebarTitle">Danh mục</h3>
               </div>
-
               <div className="categoryList">
                 <button
                   onClick={() => setSelectedCategory(null)}
@@ -199,141 +227,203 @@ export default function MenuPage() {
               </div>
             </aside>
 
+            {/* Phần nội dung chính */}
             <div className="menuContentArea">
-              <div className="searchBar">
-                <MagnifyingGlassIcon className="searchIcon" />
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm sản phẩm..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="searchInput"
-                />
+              {/* Title và Subtitle */}
+              <div className="mb-6">
+                <h2 className="menuPageTitle">Menu của chúng mình</h2>
+                <p className="menuPageSubtitle">Mời bạn ghé xem và chọn cho mình một chiếc bánh thật ngon nhé!</p>
               </div>
 
-              {loading ? (
+              {/* Thanh search + dropdown chi nhánh */}
+              <div className="flex flex-col lg:flex-row gap-4 mb-8 items-stretch">
+                {/* Search bar giữ nguyên style của bạn */}
+                <div className="relative flex-[4]">
+                  <MagnifyingGlassIcon className="searchIcon" />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="searchInput w-full"
+                  />
+                </div>
+
+                {/* Dropdown chi nhánh - chỉ hiển thị tên, tooltip địa chỉ */}
+                <div className="relative flex-[1] min-w-[240px]">
+                  <select
+                    value={selectedBranchId ?? ""}
+                    onChange={(e) => setSelectedBranchId(e.target.value ? Number(e.target.value) : null)}
+                    className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
+                  >
+                    <option value="">Không lọc theo chi nhánh</option>
+                    {branches.map((branch: any) => (
+                      <option key={branch.id} value={branch.id}>
+                        {branch.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Icon dropdown đẹp hơn */}
+                  <ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none transition-transform duration-200" />
+                </div>
+              </div>
+
+              {/* Hiển thị thông tin chi nhánh đã chọn - kéo dài từ search tới cuối dropdown */}
+              {selectedBranchId && (
+                <div className="branchInfoDisplay mb-8">
+                  <div className="branchInfoContent">
+                    <MapPinIcon className="branchInfoIcon" />
+                    <div className="branchInfoText">
+                      <span className="branchInfoName">
+                        {branches.find(b => b.id === selectedBranchId)?.name}
+                      </span>
+                      <span className="branchInfoAddress">
+                        {branches.find(b => b.id === selectedBranchId)?.address?.fullAddress || "Chưa có địa chỉ"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Loading & danh sách sản phẩm */}
+              {(loading || loadingBranches) ? (
                 <p className="text-center text-green-700 text-lg">Đang tải...</p>
+              ) : filteredAndSortedItems.length === 0 ? (
+                <p className="text-center text-gray-600 text-lg py-8">
+                  Không tìm thấy sản phẩm nào
+                </p>
               ) : (
                 <>
-                  {filteredAndSortedItems.length === 0 ? (
-                    <p className="text-center text-gray-600 text-lg py-8">
-                      Không tìm thấy sản phẩm nào
-                    </p>
-                  ) : (
-                    <>
-                      <div className="menuGrid">
-                        {currentItems?.map((item: any) => (
+                  <div className="menuGrid">
+                    {currentItems.map((item: any) => {
+                      // Kiểm tra tồn kho chỉ khi đã chọn chi nhánh
+                      const quantity = selectedBranchId !== null
+                        ? getItemQuantity(item.id, selectedBranchId)
+                        : Infinity; // Không chọn chi nhánh → coi như luôn có hàng
 
-                          <div
-                            key={item.id}
-                            className="menuCard"
-                            onClick={() => navigate(`/product/${item.id}`)}
-                          >
-                              {/* Nút wishlist */}
-                              <div className="absolute top-2 right-2 z-20">
-                                  <button
-                                      onClick={(e) => {
-                                          e.stopPropagation(); //Ngăn gọi onClick vào product details
-                                          handleToggleWishlist(item.id);
-                                      }}
-                                      className="text-2xl"
-                                  >
-                                      {item.id && wishlist.includes(item.id) ? (
-                                          <span className="text-red-500">❤️</span>
-                                      ) : (
-                                          <span className="text-gray-400">🤍</span>
-                                      )}
-                                  </button>
+                      const isOutOfStock = quantity === 0;
+                      const isDisabled = selectedBranchId !== null && isOutOfStock;
+
+                      return (
+                        <div
+                          key={item.id}
+                          className={`menuCard relative ${isOutOfStock ? 'out-of-stock opacity-80' : 'hover:-translate-y-1'}`}
+                          onClick={() => !isDisabled && navigate(`/product/${item.id}`)}
+                        >
+                          {/* Wishlist button - giữ nguyên */}
+                          <div className="absolute top-3 right-3 z-20">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isDisabled) handleToggleWishlist(item.id);
+                              }}
+                              disabled={isDisabled}
+                              className={`
+                                wishlistButton relative overflow-hidden
+                                ${wishlist.includes(item.id) ? 'liked' : ''}
+                                ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
+                              `}
+                            >
+                              {/* Icon tim */}
+                              <span className="text-2xl block transition-all duration-300">
+                                {wishlist.includes(item.id) ? '❤️' : '🤍'}
+                              </span>
+
+                              {/* Hiệu ứng khi đang thêm (chúng ta sẽ trigger bằng state tạm) */}
+                              {/* Ở đây mình dùng trick đơn giản: khi click, thêm class tạm thời nếu chưa liked */}
+                            </button>
+                          </div>
+                          {/* Hình ảnh */}
+                          <div className="menuImageWrapper">
+                            {item.imageURL ? (
+                              <img src={item.imageURL} alt={item.name} className="menuImage" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span className="text-gray-400 text-sm">No image</span>
                               </div>
-                            <div className="menuImageWrapper">
-                              {item.imageURL ? (
-                                <img
-                                  src={item.imageURL}
-                                  alt={item.name}
-                                  className="menuImage"
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                  <span className="text-gray-400 text-sm">No image</span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="menuCardContent">
+                            )}
+                          </div>
+
+                          {/* Nội dung */}
+                          <div className="menuCardContent">
+                            <div>
                               <h3 className="menuTitle">{item.name}</h3>
-                              <p className="menuPrice">
+                              <p className="menuPrice mt-3">
                                 {item.price ? formatPrice(item.price) : "Liên hệ"}
                               </p>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddToCart(item.id);
-                                }}
-                                className="menuButton"
-                              >
-                                <span className="menuButton-content">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="menuButton-icon"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                  </svg>
-                                  Thêm vào giỏ
-                                </span>
-                              </button>
                             </div>
-                          </div>
-                        ))}
-                      </div>
 
-                      {totalPages > 1 && (
-                        <div className="paginationContainer">
-                          <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className={`paginationButton ${currentPage === 1 ? 'disabled' : 'inactive'}`}
-                          >
-                            <ChevronLeftIcon className="w-5 h-5" />
-                          </button>
-
-                          {[...Array(totalPages)].map((_, index) => {
-                            const page = index + 1;
-                            if (
-                              page === 1 ||
-                              page === totalPages ||
-                              (page >= currentPage - 1 && page <= currentPage + 1)
-                            ) {
-                              return (
-                                <button
-                                  key={page}
-                                  onClick={() => handlePageChange(page)}
-                                  className={`paginationButton ${currentPage === page ? 'active' : 'inactive'}`}
+                            {/* Nút Add to Cart - luôn hiển thị */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isOutOfStock) handleAddToCart(item.id);
+                              }}
+                              disabled={isOutOfStock}
+                              className="menuButton group"
+                            >
+                              <span className="flex items-center gap-2.5">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="menuButton-icon w-5 h-5 transition-transform duration-300"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
                                 >
-                                  {page}
-                                </button>
-                              );
-                            } else if (page === currentPage - 2 || page === currentPage + 2) {
-                              return <span key={page} className="text-gray-400">...</span>;
-                            }
-                            return null;
-                          })}
-
-                          <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className={`paginationButton ${currentPage === totalPages ? 'disabled' : 'inactive'}`}
-                          >
-                            <ChevronRightIcon className="w-5 h-5" />
-                          </button>
-
-                          <span className="paginationInfo">
-                            Trang {currentPage} / {totalPages}
-                          </span>
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                {isOutOfStock ? "Hết hàng" : "Thêm vào giỏ hàng"}
+                              </span>
+                            </button>
+                          </div>
                         </div>
-                      )}
-                    </>
+                      );
+                    })}
+                  </div>
+
+                  {/* Pagination giữ nguyên */}
+                  {totalPages > 1 && (
+                    <div className="paginationContainer">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`paginationButton ${currentPage === 1 ? 'disabled' : 'inactive'}`}
+                      >
+                        <ChevronLeftIcon className="w-5 h-5" />
+                      </button>
+                      {[...Array(totalPages)].map((_, index) => {
+                        const page = index + 1;
+                        if (
+                          page === 1 ||
+                          page === totalPages ||
+                          (page >= currentPage - 1 && page <= currentPage + 1)
+                        ) {
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => handlePageChange(page)}
+                              className={`paginationButton ${currentPage === page ? 'active' : 'inactive'}`}
+                            >
+                              {page}
+                            </button>
+                          );
+                        } else if (page === currentPage - 2 || page === currentPage + 2) {
+                          return <span key={page} className="text-gray-400">...</span>;
+                        }
+                        return null;
+                      })}
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`paginationButton ${currentPage === totalPages ? 'disabled' : 'inactive'}`}
+                      >
+                        <ChevronRightIcon className="w-5 h-5" />
+                      </button>
+                      <span className="paginationInfo">
+                        Trang {currentPage} / {totalPages}
+                      </span>
+                    </div>
                   )}
                 </>
               )}
