@@ -120,7 +120,7 @@ export default function InventoryPopup({
                             onClick={handleSaveInventory}
                             className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg hover:shadow-lg transition-all"
                         >
-                            💾 Lưu thay đổi
+                            Lưu thay đổi
                         </button>
                         <button
                             onClick={onClose}
@@ -144,7 +144,7 @@ export default function InventoryPopup({
                                         : 'bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-100'
                                 }`}
                             >
-                                📦 Tất cả
+                                Tất cả
                             </button>
                             {categories.map(category => (
                                 <button

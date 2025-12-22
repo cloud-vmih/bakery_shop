@@ -177,16 +177,16 @@ const Home = () => {
     },
   ];
 
-  // Toast chào mừng khi đăng nhập
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || !user) return;
-
-    toast.success(`Chào mừng ${user.fullName} (${user.type}) trở lại trang chủ!`, {
-      duration: 8000,
-      icon: "Welcome",
-    });
-  }, [user]);
+  // // Toast chào mừng khi đăng nhập
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token || !user) return;
+  //
+  //   toast.success(`Chào mừng ${user.fullName} (${user.type}) trở lại trang chủ!`, {
+  //     duration: 8000,
+  //     icon: "Welcome",
+  //   });
+  // }, [user]);
 
   // Tự động chuyển banner mỗi 5 giây
   useEffect(() => {

@@ -3,9 +3,9 @@ import API from "../api/axois.config";
 interface CreateResponse {
     name: string;
     placeId: string;
-    formattedAddress: string;
-    latitude: number;
-    longitude: number;
+    fullAddress: string;
+    lat: number;
+    lng: number;
 }
 // CREATE
 export const createBranch = async (data: CreateResponse) => {

@@ -69,6 +69,8 @@ export const updateBranchWithAddress = async (
 
     if (!branch) throw new Error("Branch not found");
 
+    console.log("address 1: ", payload.address)
+      console.log("address 2: ", branch.address)
     if (payload.address && branch.address) {
       addressRepo.merge(branch.address, payload.address);
       await addressRepo.save(branch.address);

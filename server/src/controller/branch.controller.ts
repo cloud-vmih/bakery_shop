@@ -4,9 +4,9 @@ import * as branchService from "../services/branch.service";
 
 export const createBranchWithAddres = async (req: Request, res: Response) => {
   try {
-    const { name, placeId, formattedAddress, latitude, longitude } = req.body;
+    const { name, placeId, fullAddress, lat, lng } = req.body;
 
-    await branchService.createBranch(name, placeId, formattedAddress, latitude, longitude);
+    await branchService.createBranch(name, placeId,fullAddress, lat, lng);
 
     res.status(201).json({message: "Create successfully!"});
   } catch (err: any) {
@@ -32,6 +32,7 @@ export const updateBranchWithAddres = async (req: Request, res: Response) => {
   try {
     const branchId = Number(req.params.id);
     const payload = req.body;
+
     await branchService.updateBranch(branchId, payload)
 
     res.status(201).json({message: "Update successfully!"});

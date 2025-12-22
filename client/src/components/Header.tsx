@@ -62,42 +62,40 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                 {/* Desktop Navigation */}
                 <nav className="hidden lg:flex items-center gap-8">
                     {/* Navigation Links */}
+                    {/* Navigation Links */}
                     <div className="flex items-center gap-6">
-                        <Link
-                            to="/"
-                            className="relative group px-3 py-2 text-emerald-800 font-medium text-sm transition-all duration-300 hover:text-emerald-600"
-                        >
-                            <span className="relative z-10">Home</span>
-                            <span className="absolute inset-0 bg-emerald-100 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                        </Link>
+                        {[
+                            // Link cho Admin/Staff
+                            { to: "/admin", label: "Dashboard", types: ['Admin', 'Staff'] },
+                            { to: "/admin/menu", label: "Menu", types: ['Admin'] },
+                            { to: "/admin/branch", label: "Branch", types: ['Admin', 'Staff'] },
+                            { to: "/admin/promotion", label: "Promotion", types: ['Admin', 'Staff'] },
 
-                        <Link
-                            to="/menu"
-                            className="relative group px-3 py-2 text-emerald-800 font-medium text-sm transition-all duration-300 hover:text-emerald-600"
-                        >
-                            <span className="relative z-10">Menu</span>
-                            <span className="absolute inset-0 bg-emerald-100 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                        </Link>
+                            // Link chỉ cho Admin
+                            { to: "/admin/staff", label: "Staff", types: ['Admin'] },
 
-                        <Link
-                            to="/about"
-                            className="relative group px-3 py-2 text-emerald-800 font-medium text-sm transition-all duration-300 hover:text-emerald-600"
-                        >
-                            <span className="relative z-10">About Us</span>
-                            <span className="absolute inset-0 bg-emerald-100 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                        </Link>
-
-                        <Link
-                            to="/contact"
-                            className="relative group px-3 py-2 text-emerald-800 font-medium text-sm transition-all duration-300 hover:text-emerald-600"
-                        >
-                            <span className="relative z-10">Contact</span>
-                            <span className="absolute inset-0 bg-emerald-100 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                        </Link>
+                            // Link chỉ cho customer
+                            { to: "/", label: "Home", types: ['Customer'] },
+                            { to: "/menu", label: "Menu", types: ['Customer', 'Staff'] },
+                            { to: "/about", label: "About Us", types: ['Customer'] },
+                            { to: "/contact", label: "Contact", types: ['Customer'] },
+                        ]
+                            .filter(link => link.types.includes(user?.type || ''))
+                            .map((link, index) => (
+                                <Link
+                                    key={index}
+                                    to={link.to}
+                                    className="relative group px-3 py-2 text-emerald-800 font-medium text-sm transition-all duration-300 hover:text-emerald-600"
+                                >
+                                    <span className="relative z-10">{link.label}</span>
+                                    <span className="absolute inset-0 bg-emerald-100 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                                </Link>
+                            ))}
                     </div>
 
                     {/* User Section */}
                     <div className="flex items-center gap-4">
+                        {user?.type === 'Customer' && (
                         <Link
                             to="/cart"
                             className="relative p-2 rounded-full hover:bg-emerald-50 transition-colors inline-block"
@@ -107,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
     3
   </span>
                         </Link>
-
+                        )}
                         {/* User Profile / Login */}
                         {!user ? (
                             <Link
@@ -119,6 +117,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                             </Link>
                         ) : (
                             <div className="relative group">
+
                                 <button className="flex items-center gap-3 p-2 rounded-xl hover:bg-emerald-50 transition-all duration-300 group">
                                     <div className="relative">
                                         <img
@@ -160,7 +159,8 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <span className="fas fa-user text-lg"></span>
                                             <span>My Profile</span>
                                         </Link>
-
+                                        {user.type === 'Customer' && (
+                                            <>
                                         <Link
                                             to="/order"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
@@ -176,20 +176,8 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <span className="fas fa-heart text-lg"></span>
                                             <span>My Wishlist</span>
                                         </Link>
-
-                                        {user.type === 'Admin' && (
-                                            <Link
-                                                to="/admin"
-                                                className="flex items-center gap-3 px-4 py-3 text-sm text-amber-700 hover:bg-amber-50 transition-colors group/item"
-                                            >
-                                                <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <span>Admin Dashboard</span>
-                                            </Link>
-                                        )}
-
+                                            </>
+                                            )}
                                         <div className="border-t border-emerald-100 mt-2 pt-2">
                                             <button
                                                 onClick={handleLogout}
@@ -229,49 +217,44 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                 <div className="lg:hidden bg-white/95 backdrop-blur-xl border-b border-emerald-100 animate-slideDown">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
                         <nav className="flex flex-col gap-1">
-                            <Link
-                                to="/"
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-emerald-800 font-medium transition-colors group"
-                                onClick={() => setOpen(false)}
-                            >
-                                <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                </svg>
-                                <span>Home</span>
-                            </Link>
+                            {[
+                                // Link luôn hiển thị (Menu)
+                                { to: user?.type === 'Admin' ? "/admin/menu" : "/menu", label: "Menu", icon: "fa-utensils" },
 
-                            <Link
-                                to="/menu"
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-emerald-800 font-medium transition-colors group"
-                                onClick={() => setOpen(false)}
-                            >
-                                <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                </svg>
-                                <span>Menu</span>
-                            </Link>
+                                // Link cho Admin/Staff
+                                ...(user?.type === 'Admin' || user?.type === 'Staff' ? [
+                                    { to: "/admin", label: "Dashboard", icon: "fa-chart-line" },
+                                    { to: "/admin/branch", label: "Branch", icon: "fa-store" },
+                                    { to: "/admin/promotion", label: "Promotion", icon: "fa-tag" },
+                                ] : []),
 
-                            <Link
-                                to="/about"
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-emerald-800 font-medium transition-colors group"
-                                onClick={() => setOpen(false)}
-                            >
-                                <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span>About Us</span>
-                            </Link>
+                                // Link chỉ cho Admin
+                                ...(user?.type === 'Admin' ? [
+                                    { to: "/admin/staff", label: "Staff", icon: "fa-users" },
+                                ] : []),
 
-                            <Link
-                                to="/contact"
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-emerald-800 font-medium transition-colors group"
-                                onClick={() => setOpen(false)}
-                            >
-                                <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                <span>Contact</span>
-                            </Link>
+                                // Link chỉ cho Customer
+                                ...(user?.type === 'Customer' ? [
+                                    { to: "/", label: "Home", icon: "fa-home" },
+                                    { to: "/about", label: "About Us", icon: "fa-info-circle" },
+                                    { to: "/contact", label: "Contact", icon: "fa-envelope" },
+                                ] : []),
+
+                                // Cart chỉ cho Customer
+                                ...(user?.type === 'Customer' ? [
+                                    { to: "/cart", label: "Cart (3)", icon: "fa-shopping-cart" },
+                                ] : []),
+                            ].map((link, index) => (
+                                <Link
+                                    key={index}
+                                    to={link.to}
+                                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-emerald-800 font-medium transition-colors group"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    <span className={`${link.icon} text-emerald-500 w-5 text-center`}></span>
+                                    <span>{link.label}</span>
+                                </Link>
+                            ))}
 
                             {/* Mobile User Section */}
                             <div className="border-t border-emerald-100 mt-3 pt-4">
@@ -281,19 +264,15 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                         className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg hover:shadow-md transition-all"
                                         onClick={() => setOpen(false)}
                                     >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                        </svg>
+                                        <span className="fas fa-key"></span>
                                         <span>Login / Register</span>
                                     </Link>
                                 ) : (
                                     <>
                                         <div className="flex items-center gap-3 px-4 py-3 bg-emerald-50 rounded-lg mb-3">
-                                            <img
-                                                src={user.avatar || "https://via.placeholder.com/40"}
-                                                alt={user.fullName}
-                                                className="w-12 h-12 rounded-full border-2 border-emerald-200 object-cover"
-                                            />
+                                            <div className="w-12 h-12 rounded-full border-2 border-emerald-200 bg-emerald-100 flex items-center justify-center">
+                                                <span className="fas fa-user text-xl text-emerald-600"></span>
+                                            </div>
                                             <div className="flex-1">
                                                 <p className="font-semibold text-emerald-900">{user.fullName}</p>
                                                 <p className="text-xs text-emerald-600">{user.email}</p>
@@ -306,11 +285,31 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                                 className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
                                                 onClick={() => setOpen(false)}
                                             >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
+                                                <span className="fas fa-user"></span>
                                                 Profile
                                             </Link>
+
+                                            {/* Customer specific links trên mobile */}
+                                            {user.type === 'Customer' && (
+                                                <>
+                                                    <Link
+                                                        to="/order"
+                                                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <span className="fas fa-box"></span>
+                                                        Orders
+                                                    </Link>
+                                                    <Link
+                                                        to="/wishlist"
+                                                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <span className="fas fa-heart"></span>
+                                                        Wishlist
+                                                    </Link>
+                                                </>
+                                            )}
 
                                             <button
                                                 onClick={() => {
@@ -319,9 +318,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                                 }}
                                                 className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
                                             >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                                </svg>
+                                                <span className="fas fa-sign-out-alt"></span>
                                                 Logout
                                             </button>
                                         </div>
