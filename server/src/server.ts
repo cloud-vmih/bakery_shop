@@ -10,11 +10,14 @@ import itemRoutes from "./routes/item.routes";
 import inventoryRoutes from "./routes/inventory.routes";
 import addressRoutes from "./routes/address.routes";
 import orderRoutes from "./routes/order.routes"
-
 import wishlistRoutes from "./routes/wishlist.routes";
-
+import itemsDiscountRoutes from "./routes/itemsDiscount.routes";
+import staffRoutes from "./routes/staff.routes";
 import dotenv from "dotenv";
 dotenv.config();
+
+
+
 const app = express();
 app.use(cookieParser());
 app.use(cors({
@@ -32,5 +35,9 @@ app.use("/api", addressRoutes);
 app.use('/api', profileRoutes);
 app.use("/api", orderRoutes);
 app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/items-discount", itemsDiscountRoutes);
+app.use("/api/staff", staffRoutes);
 
 export default app;
+
+

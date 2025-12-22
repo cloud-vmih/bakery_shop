@@ -16,6 +16,11 @@ import MenuManagement from "./pages/MenuManagement";
 import MyOrders from "./pages/MyOrders";
 import OrderStatus from "./pages/OrderStatus";
 import WishlistPage from "./pages/Wishlist";
+import ItemsDiscountPage from "./pages/ItemsDiscountPage";
+import StaffPage from "./pages/Staff";
+
+
+
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -47,6 +52,9 @@ export default function App() {
         <Route path="/order" element={<MyOrders />} />
         <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
         <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/admin/promotion" element={<ItemsDiscountPage />} />
+        <Route path="/admin/staff" element={<StaffPage />} />
+
       </Routes>
     </BrowserRouter>
         </InventoryProvider>
