@@ -36,7 +36,7 @@ export class User extends BaseEntity {
   @CreateDateColumn({ name: "joinAt" })
   joinAt?: Date;
 
-  @OneToMany(() => Message, msg => msg.sender)
+  @OneToMany(() => Message, msg => msg.senderUser)
   messages?: Message[];
 
   @ManyToMany(() => Notification, noti => noti.users)

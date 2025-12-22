@@ -26,3 +26,4 @@ export class Address extends BaseEntity {
   @Column({ default: true })
   isDefault?: boolean;
 }
+

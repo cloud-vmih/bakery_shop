@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { io, type Socket } from "socket.io-client";
-import { SocketState, getSocketAuth } from "../services/socket.services";
-
+import { getSocketAuth } from "../services/socket.services";
+import { SocketState } from "../types/store.type";
+import toast from "react-hot-toast";
 const baseURL = "http://localhost:5000";
 
 
@@ -9,41 +10,33 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket: null,
     
     connectSocket: () => {        
-        const existingSocket = get().socket;
-
-        if(existingSocket) return;
-
-        const socketAuth = getSocketAuth();
-        console.log("Socket Auth:", socketAuth);
+        if (get().socket) return;
 
         const socket: Socket = io(baseURL, {
-            auth: socketAuth,
+            auth: getSocketAuth(),
             transports: ['websocket'],
         });
-
-        set({ socket });
 
         socket.on("connect", () => {
             console.log("Socket connected: ", socket.id);
         });
+
+        set({ socket });
     },
 
     disconnectSocket: () => {
         const socket = get().socket;
         if (socket) {
             socket.disconnect();
+            socket.removeAllListeners();
             set({ socket: null });
             console.log("Socket disconnected");
         }
     },
     reconnectSocket: () => {
-        const socket = get().socket;
-
-        if (socket) {
-            socket.disconnect();
-        }
-
+        get().disconnectSocket();
         get().connectSocket();
     }
+
 
 }))

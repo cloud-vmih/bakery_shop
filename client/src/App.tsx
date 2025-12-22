@@ -8,13 +8,15 @@ import VerifyEmail from "./pages/verifyEmail";
 import MenuPage from "./pages/MenuPage";
 import { Header } from "./components/Header";
 import { SocketProvider } from "./context/socketContext";
+import ChatBox from "./components/chat/ChatBox";
 
 export default function AppRoutes() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
-    <AuthProvider>  
-    <SocketProvider>
+    <AuthProvider>
+      <SocketProvider>
     <BrowserRouter>
+      <ChatBox />
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />

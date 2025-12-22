@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { useUser } from "../context/authContext";
 import { useEffect } from "react";
 import { Header } from "../components/Header";
+import ChatBox from "../components/chat/ChatBox";
 
 const HomePage = () => {
   const { user } = useUser();

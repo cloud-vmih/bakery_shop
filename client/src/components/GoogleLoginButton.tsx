@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { googleLoginService } from "../services/auth.services";
 import { useUser } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+import { useSocketStore } from "../stores/socket.store";
 
 export default function GoogleLoginButton() {
   const { user, setUser } = useUser();
@@ -21,6 +22,7 @@ export default function GoogleLoginButton() {
           if (data.token) {
             // Interceptor JSON.parse => phải lưu dưới dạng JSON string
             localStorage.setItem("token", data.token);
+            useSocketStore.getState().reconnectSocket();
           }
 
           toast.success("Đăng nhập Google thành công!");

@@ -40,5 +40,9 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => Rating, r => r.item)
   ratings?: Rating[];
+
+  @Column({ type: "int", comment: "Number of days the item can be used" })
+  shelfLifeDays?: number;
+
 }
 

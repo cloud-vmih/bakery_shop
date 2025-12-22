@@ -3,9 +3,9 @@ import cors from "cors";
 import userRoutes from "./routes/account.routes";
 import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
+import messageRouters from "./routes/chat.routes";
 
 
-import messageRouters from "./routes/message.routes";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();

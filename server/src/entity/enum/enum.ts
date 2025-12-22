@@ -38,3 +38,8 @@ export enum ECategory {
   COOKIE = "COOKIE",
   OTHER = "OTHER",
 }
+
+export enum ESender {
+  USER = "USER",
+  GUEST = "GUEST",
+}
