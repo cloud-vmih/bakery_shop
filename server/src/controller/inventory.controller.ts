@@ -1,5 +1,7 @@
 import {Request, Response} from "express";
 import { getAll, updateQuanities} from "../services/inventory.service";
+import cron from 'node-cron';
+import { deletedInventory } from "../db/db.inventory"
 
 export const getAllItems = async (req: Request, res: Response) => {
     try {
@@ -29,3 +31,13 @@ export const updateBranchInventory = async (req: Request, res: Response) => {
         });
     }
 };
+
+cron.schedule("*/1 * * * *", async () => {
+    console.log('Running daily inventory cleanup...');
+    try {
+        await deletedInventory();
+        console.log('Daily inventory cleanup completed');
+    } catch (error) {
+        console.error('Error in daily cleanup:', error);
+    }
+});

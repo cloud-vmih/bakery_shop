@@ -2,6 +2,7 @@ import { AppDataSource } from "../config/database";
 import { Item } from "../entity/Item";
 import { Branch} from "../entity/Branch";
 import  { Inventory} from "../entity/Inventory";
+import { LessThan, MoreThanOrEqual} from 'typeorm';
 
 export const getInventory = async () => {
     const repo = AppDataSource.getRepository(Inventory);
@@ -12,17 +13,6 @@ export const getInventory = async () => {
         }}
     );
     return inventory
-}
-
-export const updateQuantity = async (itemId: number, branchId: number, quantity: number) => {
-    const repo = AppDataSource.getRepository(Inventory);
-    const inventory = await repo.findOne({
-        where: { item: {id: itemId}, branch: {id: branchId}},
-        relations: ["item", "branch"]
-    })
-
-    inventory!.stockQuantity = quantity;
-    return await repo.save(inventory!);
 }
 
 export const updateMultipleQuantities = async (
@@ -90,4 +80,31 @@ export const updateMultipleQuantities = async (
         // Release query runner
         await queryRunner.release();
     }
+};
+
+export const deletedInventory = async () => {
+    const repo = AppDataSource.getRepository(Inventory);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterdayStart = new Date(today);
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+    console.log(yesterdayStart);
+    console.log(today);
+    // Xóa cho tất cả branches
+    const inventories = await repo.createQueryBuilder('inventory')
+        .where('inventory.updatedAt >= :yesterdayStart', { yesterdayStart })
+        .andWhere('inventory.updatedAt < :today', { today })
+        .getMany();
+
+    console.log(inventories)
+    if (inventories.length === 0) {
+        return { message: "No yesterday's inventory found for any branch" };
+    }
+
+    const result = await repo.remove(inventories);
+    return {
+        message: `Deleted ${result.length} inventory items from yesterday across all branches`,
+    };
 };

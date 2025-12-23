@@ -2,19 +2,6 @@ import { Branch } from "../entity/Branch";
 import { Address } from "../entity/Address";
 import { AppDataSource } from "../config/database";
 
-// export const createAddress = async (address: Address) => {
-//   const repoAddress = AppDataSource.getRepository(Address);
-//   const add = await repoAddress.create(address);
-//   await repoAddress.save(add)
-//   return add
-// }
-
-// export const createBranch = async (branch: Branch) => {
-//   const repoBranch = AppDataSource.getRepository(Branch);
-//   const b = await repoBranch.create(branch);
-//   await repoBranch.save(b)
-//   return b
-// }
 
 export const createBranchWithAddress = async (
   branchData: Partial<Branch>,
@@ -40,14 +27,13 @@ export const createBranchWithAddress = async (
 };
 
 export const getAllBranch = async () => {
-  console.log("DB")
   const repoBranch = AppDataSource.getRepository(Branch);
   const branches = await repoBranch.find({
     relations: {
       address: true
     }}
   );
-  console.log(branches)
+
   return branches
 }
 
@@ -69,8 +55,6 @@ export const updateBranchWithAddress = async (
 
     if (!branch) throw new Error("Branch not found");
 
-    console.log("address 1: ", payload.address)
-      console.log("address 2: ", branch.address)
     if (payload.address && branch.address) {
       addressRepo.merge(branch.address, payload.address);
       await addressRepo.save(branch.address);

@@ -24,6 +24,7 @@ export default function InventoryPopup({
     useEffect(() => {
         if (open && branchId) {
             loadInventoryData();
+            refreshInventory();
         }
     }, [open, branchId]);
 
