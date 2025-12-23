@@ -318,11 +318,13 @@ export default function MenuPage() {
                       const isOutOfStock = quantity === 0;
                       const isDisabled = selectedBranchId !== null && isOutOfStock;
 
+                      const branchQuery = selectedBranchId ? `?branch=${selectedBranchId}` : "";
+
                       return (
                         <div
                           key={item.id}
                           className={`menuCard relative ${isOutOfStock ? 'out-of-stock opacity-80' : 'hover:-translate-y-1'}`}
-                          onClick={() => !isDisabled && navigate(`/product/${item.id}`)}
+                          onClick={() => !isDisabled && navigate(`/product/${item.id}${branchQuery}`)}
                         >
                           {/* Wishlist button - giữ nguyên */}
                           <div className="absolute top-3 right-3 z-20">
