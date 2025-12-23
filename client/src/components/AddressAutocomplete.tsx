@@ -34,7 +34,14 @@ export default function AddressAutocomplete({ onSelect, placeholder, disabled = 
             onLoad={(ac) => (autocompleteRef.current = ac)}
             onPlaceChanged={handlePlaceChanged}
             options={{
-                componentRestrictions: { country: "vn" },
+                componentRestrictions: { country: "vn"},
+                bounds: {
+                    north: 10.95,
+                    south: 10.70,
+                    east: 106.85,
+                    west: 106.55,
+                },
+                strictBounds: true,
                 fields: ["formatted_address", "geometry", "place_id"]
             }}
         >
