@@ -13,7 +13,7 @@ const ProductDetails = () => {
 
   return (
     <>
-      <div>Chi tiết sản phẩm</div>;
+      <div>Chi tiết sản phẩm</div>
     </>
   )
 };

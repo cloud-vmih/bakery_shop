@@ -68,6 +68,12 @@ export default function MenuPage() {
     loadBranches();
   }, []);
 
+  useEffect(() => {
+    if (branches.length > 0 && selectedBranchId === null) {
+      setSelectedBranchId(branches[0].id);
+    }
+  }, [branches, selectedBranchId]);
+
   const handleAddToCart = async (itemId: number) => {
     try {
       await addToCart(itemId);
@@ -249,14 +255,16 @@ export default function MenuPage() {
                   />
                 </div>
 
+
                 {/* Dropdown chi nhánh - chỉ hiển thị tên, tooltip địa chỉ */}
                 <div className="relative flex-[1] min-w-[240px]">
+
                   <select
                     value={selectedBranchId ?? ""}
                     onChange={(e) => setSelectedBranchId(e.target.value ? Number(e.target.value) : null)}
                     className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
                   >
-                    <option value="">Không lọc theo chi nhánh</option>
+
                     {branches.map((branch: any) => (
                       <option key={branch.id} value={branch.id}>
                         {branch.name}
@@ -281,10 +289,15 @@ export default function MenuPage() {
                       <span className="branchInfoAddress">
                         {branches.find(b => b.id === selectedBranchId)?.address?.fullAddress || "Chưa có địa chỉ"}
                       </span>
+                      <p className="mt-2 text-sm text-gray-500 italic">
+                        Vui lòng chọn chi nhánh gần bạn nhất để hệ thống tính phí giao hàng phù hợp.
+                        Nếu chưa biết mình gần chi nhánh nào, bạn có thể sử dụng tiện ích "<strong>Tìm chi nhánh gần nhất</strong>" của tiệm để tham khảo nhé!
+                      </p>
                     </div>
                   </div>
                 </div>
               )}
+
 
               {/* Loading & danh sách sản phẩm */}
               {(loading || loadingBranches) ? (
