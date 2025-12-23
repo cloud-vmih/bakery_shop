@@ -3,15 +3,10 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import itemService, { Item } from "../services/items.service";
 import { addToCart } from "../services/cart.services";
-import { getBranches } from "../services/branch.services";
 import { Header } from "../components/Header";
 import { useInventory } from "../context/inventoryContext";
-
-type Branch = {
-  id: number;
-  name: string;
-  address?: { fullAddress?: string };
-};
+import "../styles/productDetails.css";
+import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
 
 const formatPrice = (price?: number) => {
   if (price === undefined || price === null) return "Liên hệ";
@@ -20,29 +15,21 @@ const formatPrice = (price?: number) => {
 
 const formatCategoryLabel = (category?: string) => {
   switch (category) {
-    case "CAKE":
-      return "Bánh ngọt";
-    case "BREAD":
-      return "Bánh mì";
-    case "COOKIE":
-      return "Bánh quy";
-    default:
-      return "Khác";
+    case "CAKE": return "Bánh ngọt";
+    case "BREAD": return "Bánh mì";
+    case "COOKIE": return "Bánh quy";
+    default: return "Khác";
   }
 };
 
-const formatCakeSubtype = (subType?: string) => {
-  switch (subType) {
-    case "CHEESECAKE":
-      return "Cheesecake";
-    case "MOUSSE":
-      return "Mousse";
-    case "BIRTHDAYCAKE":
-      return "Bánh kem";
-    default:
-      return undefined;
-  }
-};
+// const formatCakeSubtype = (subType?: string) => {
+//   switch (subType) {
+//     case "CHEESECAKE": return "Cheesecake";
+//     case "MOUSSE": return "Mousse";
+//     case "BIRTHDAYCAKE": return "Bánh sinh nhật";
+//     default: return undefined;
+//   }
+// };
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,10 +42,7 @@ const ProductDetails = () => {
   }, [searchParams]);
 
   const [item, setItem] = useState<Item | null>(null);
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [selectedBranchId, setSelectedBranchId] = useState<number | null>(branchFromQuery);
   const [loadingItem, setLoadingItem] = useState<boolean>(true);
-  const [loadingBranches, setLoadingBranches] = useState<boolean>(true);
   const { getItemQuantity, loadInventory } = useInventory();
   const navigate = useNavigate();
 
@@ -83,73 +67,67 @@ const ProductDetails = () => {
     fetchItem();
   }, [id]);
 
-  useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        setLoadingBranches(true);
-        const data = await getBranches();
-        setBranches(data || []);
-        if (branchFromQuery && data?.some((branch: Branch) => branch.id === branchFromQuery)) {
-          setSelectedBranchId(branchFromQuery);
-        } else if (data?.length) {
-          setSelectedBranchId(data[0].id);
-        } else {
-          setSelectedBranchId(null);
-        }
-      } catch (error) {
-        toast.error("Không tải được danh sách chi nhánh");
-      } finally {
-        setLoadingBranches(false);
-      }
-    };
-    fetchBranches();
-  }, [branchFromQuery]);
-
   const tags = useMemo(() => {
     if (!item) return [];
     const detail = item.itemDetail || {};
     const computedTags: string[] = [];
 
-    // Nhóm chính theo category
+    // Tag chính: category tiếng Việt
     computedTags.push(formatCategoryLabel(item.category));
 
-    // Tag phụ cho bánh ngọt
+    // Tag phụ cho CAKE - đọc đúng key "cakeType"
     if (item.category === "CAKE") {
-      const subType = formatCakeSubtype(detail.cakeSubType || (item as any).cakeSubType);
-      if (subType) computedTags.push(subType);
+      const cakeType = detail.cakeType || (item as any).cakeType;
+      if (cakeType) {
+        switch (cakeType) {
+          case "CHEESECAKE":
+            computedTags.push("Cheesecake");
+            break;
+          case "BIRTHDAYCAKE":
+            computedTags.push("Bánh sinh nhật");
+            break;
+          case "MOUSE": // có thể là typo trong DB, nếu có thì map
+            computedTags.push("Mousse");
+            break;
+          default:
+            computedTags.push(cakeType);
+        }
+      }
     }
 
-    // Cookie: hiển thị trọng lượng
-    if (item.category === "COOKIE") {
-      const weight = detail.weight || (item as any).weight;
-      if (weight) computedTags.push(`Trọng lượng: ${weight}g`);
-    }
-
-    // Bánh mì: tag loại bột
+    // Tag cho BREAD - flourType tiếng Việt
     if (item.category === "BREAD") {
       const flourType = detail.flourType || (item as any).flourType;
-      if (flourType) computedTags.push(`Loại bột: ${flourType}`);
+      if (flourType) {
+        switch (flourType) {
+          case "wheat":
+            computedTags.push("Bột mì");
+            break;
+          case "whole_wheat":
+            computedTags.push("Bột mì nguyên cám");
+            break;
+          default:
+            computedTags.push(flourType);
+        }
+      }
+    }
+
+    // Tag cho COOKIE - trọng lượng
+    if (item.category === "COOKIE") {
+      const weight = detail.weight || (item as any).weight;
+      if (weight) computedTags.push(`${weight}g`);
     }
 
     return computedTags;
   }, [item]);
 
-  const currentBranchQty = useMemo(() => {
-    if (!item?.id || !selectedBranchId) return null;
-    return getItemQuantity(item.id, selectedBranchId);
-  }, [getItemQuantity, item?.id, selectedBranchId]);
-
-  const selectedBranch = useMemo(
-    () => branches.find((branch) => branch.id === selectedBranchId) ?? null,
-    [branches, selectedBranchId]
-  );
+  const currentQuantity = useMemo(() => {
+    if (!item?.id || !branchFromQuery) return null;
+    return getItemQuantity(item.id, branchFromQuery);
+  }, [getItemQuantity, item?.id, branchFromQuery]);
 
   const handleAddToCart = async () => {
     if (!item?.id) return;
-    if (!selectedBranchId) {
-      toast.error("Vui lòng chọn chi nhánh từ trang menu trước khi đặt hàng.");
-      return;
-    }
     try {
       await addToCart(item.id);
       toast.success("Đã thêm vào giỏ hàng!");
@@ -163,17 +141,17 @@ const ProductDetails = () => {
     }
   };
 
-  const isOutOfStock = selectedBranchId ? (currentBranchQty ?? 0) === 0 : true;
-
   if (loadingItem) {
     return (
       <>
         <Header />
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 w-64 bg-gray-200 rounded" />
-            <div className="h-64 bg-gray-200 rounded-xl" />
-            <div className="h-24 bg-gray-200 rounded-xl" />
+            <div className="h-96 bg-gray-200 rounded-2xl" />
+            <div className="space-y-4">
+              <div className="h-12 bg-gray-200 rounded-xl" />
+              <div className="h-32 bg-gray-200 rounded-2xl" />
+            </div>
           </div>
         </div>
       </>
@@ -194,93 +172,57 @@ const ProductDetails = () => {
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Hình ảnh */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-            <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-50 flex items-center justify-center">
+      <div className="productDetailsPage">
+        <div className="productDetailsContainer">
+          <div className="productDetailsGrid">
+            {/* Hình ảnh */}
+            <div className="productImageWrapper">
               {item.imageURL ? (
-                <img
-                  src={item.imageURL}
-                  alt={item.name}
-                  className="w-full h-full object-cover"
-                />
+                <img src={item.imageURL} alt={item.name} className="productImage" />
               ) : (
-                <span className="text-gray-400">Chưa có hình ảnh</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200/60 backdrop-blur-sm rounded-3xl">
+                  <span className="text-gray-600 text-xl font-medium">Chưa có hình ảnh</span>
+                </div>
               )}
             </div>
-          </div>
 
-          {/* Nội dung */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="space-y-3">
-              <h1 className="text-3xl font-semibold text-gray-900">{item.name}</h1>
-              <p className="text-2xl text-green-700 font-semibold">{formatPrice(item.price)}</p>
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isOutOfStock}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium shadow-sm transition ${
-                    isOutOfStock
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-green-600 hover:bg-green-700"
-                  }`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  {isOutOfStock ? "Hết hàng" : "Thêm vào giỏ hàng"}
+            {/* Thông tin */}
+            <div className="productInfoSection">
+              <div className="space-y-5">
+                <h1 className="productTitle">{item.name}</h1>
+                <p className="productPrice">{formatPrice(item.price)}</p>
+
+                {/* Tags loại bánh - nằm trên */}
+                {tags.length > 0 && (
+                  <div className="productTags">
+                    {tags.map((tag) => (
+                      <span key={tag} className="productTag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tag số lượng - vàng ấm, nằm riêng dưới giá */}
+                <div className="stockAvailabilityTag">
+                  Còn {currentQuantity ?? "-"} sản phẩm
+                </div>
+              </div>
+
+              {/* Mô tả */}
+              <div className="descriptionCard">
+                <h2 className="descriptionTitle">Mô tả sản phẩm</h2>
+                <p className="descriptionText">
+                  {item.description || "Sản phẩm chưa có mô tả chi tiết."}
+                </p>
+              </div>
+
+              {/* Nút thêm giỏ hàng */}
+              <div className="addToCartWrapper">
+                <button onClick={handleAddToCart} className="addToCartButton">
+                  <ShoppingCartIcon className="w-6 h-6 icon" />
+                  Thêm vào giỏ hàng
                 </button>
-                {isOutOfStock && (
-                  <span className="text-sm text-gray-500">
-                    {!selectedBranchId
-                      ? "Chọn chi nhánh ở trang menu để xem tồn kho."
-                      : "Sản phẩm tạm hết tại chi nhánh này."}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 rounded-full bg-green-50 text-green-700 text-sm border border-green-100"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">Mô tả sản phẩm</h2>
-              <p className="text-gray-700 leading-relaxed">
-                {item.description || "Sản phẩm chưa có mô tả."}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Tồn kho tại chi nhánh</h3>
-              <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
-                {loadingBranches ? (
-                  <p className="text-gray-600">Đang tải chi nhánh...</p>
-                ) : selectedBranchId ? (
-                  <p className="text-base font-semibold text-green-700">
-                    Số lượng sản phẩm tại chi nhánh: {currentBranchQty ?? 0}
-                  </p>
-                ) : (
-                  <p className="text-gray-600">Không lấy được chi nhánh. Vui lòng thử lại sau.</p>
-                )}
               </div>
             </div>
           </div>
