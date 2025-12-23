@@ -26,7 +26,7 @@ export default function MenuPage() {
   const { user, setUser } = useUser();
   const [wishlist, setWishlist] = useState<number[]>([]);
   const navigate = useNavigate();
-  const { getItemQuantity } = useInventory();
+  const { getItemQuantity, branchId, setBranchId } = useInventory(); //gọi brandId để lưu brandId
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -253,7 +253,10 @@ export default function MenuPage() {
                 <div className="relative flex-[1] min-w-[240px]">
                   <select
                     value={selectedBranchId ?? ""}
-                    onChange={(e) => setSelectedBranchId(e.target.value ? Number(e.target.value) : null)}
+                    onChange={(e) => {
+                        setSelectedBranchId(e.target.value ? Number(e.target.value) : null);
+                        setBranchId(e.target.value ? Number(e.target.value) : null)
+                    }}
                     className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
                   >
                     <option value="">Không lọc theo chi nhánh</option>

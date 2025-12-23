@@ -21,8 +21,8 @@ interface InventorySummary {
 }
 
 interface InventoryContextType {
-    shipment: InventoryItem | null;
-    setShipment: (shipment: InventoryItem) => void;
+    branchId: number | null;
+    setBranchId: (branchId: number | null) => void;
     inventory: InventoryItem[];
     summary: InventorySummary;
     loadInventory: () => Promise<void>;
@@ -36,7 +36,7 @@ const InventoryContext = createContext<InventoryContextType | undefined>(undefin
 export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [shipment, setShipment ] = useState<InventoryItem | null>(null);
+    const [branchId, setBranchId ] = useState<number | null>(null);
 
     // Calculate summary statistics
     const summary: InventorySummary = {
@@ -99,8 +99,8 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     }, [loadInventory]);
 
     const value: InventoryContextType = {
-        shipment,
-        setShipment,
+        branchId,
+        setBranchId,
         inventory,
         summary,
         loadInventory,
