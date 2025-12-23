@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getReviews, replyReview, deleteReview, Review } from '../services/review.services';
 import '../styles/review.css';
+import toast from 'react-hot-toast';
 
 const ManageReviews: React.FC = () => {
   const [fullReviews, setFullReviews] = useState<Review[]>([]);
@@ -12,6 +13,7 @@ const ManageReviews: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showConfirm, setShowConfirm] = useState(false);
   const pageSize = 5; // Số lượng đánh giá mỗi trang, có thể điều chỉnh
 
   const filter = { productName, dateFrom, unhandled };
@@ -31,7 +33,7 @@ const ManageReviews: React.FC = () => {
       setFullReviews(data);
       setError('');
     } catch (err) {
-      setError('Lỗi tải danh sách đánh giá!');
+      toast.error('Lỗi tải danh sách đánh giá!');
     } finally {
       setLoading(false);
     }
@@ -43,7 +45,7 @@ const ManageReviews: React.FC = () => {
 
   const handleReply = async () => {
     if (!selectedReview || !replyContent.trim()) {
-      setError('Nội dung phản hồi không hợp lệ!');
+      toast.error('Nội dung phản hồi không hợp lệ!');
       return;
     }
     try {
@@ -51,21 +53,23 @@ const ManageReviews: React.FC = () => {
       setReplyContent('');
       setSelectedReview(null);
       fetchReviews(); // Refresh
-      alert('Phản hồi thành công!');
+      toast.success('Phản hồi thành công!');
     } catch (err) {
-      setError('Lỗi gửi phản hồi!');
+      toast.error('Lỗi gửi phản hồi!');
     }
   };
 
-  const handleDelete = async () => {
+  const handleConfirmDelete = async () => {
     if (!selectedReview) return;
     try {
       await deleteReview(selectedReview.id);
       setSelectedReview(null);
       fetchReviews();
-      alert('Xóa thành công!');
+      toast.success('Xóa thành công!');
     } catch (err) {
-      setError('Lỗi xóa đánh giá!');
+      toast.error('Lỗi xóa đánh giá!');
+    } finally {
+      setShowConfirm(false);
     }
   };
 
@@ -198,10 +202,21 @@ const ManageReviews: React.FC = () => {
               placeholder="Nhập phản hồi..."
             />
             <button onClick={handleReply}>Gửi</button>
-            <button onClick={handleDelete}>Xóa</button>
+            <button onClick={() => setShowConfirm(true)}>Xóa</button>
             <button onClick={() => setSelectedReview(null)}>Đóng</button>
           </div>
           {error && <p className="error">{error}</p>}
+        </div>
+      )}
+      {/* Confirm Delete Modal */}
+      {showConfirm && (
+        <div className="modal">
+          <div>
+            <h3>Xác nhận xóa</h3>
+            <p>Bạn có chắc chắn muốn xóa không?</p>
+            <button onClick={handleConfirmDelete}>Có</button>
+            <button onClick={() => setShowConfirm(false)}>Hủy</button>
+          </div>
         </div>
       )}
     </div>
