@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/verifyToken";
-import * as wishlistController from "../controller/wishlist.controller";
+import * as wishlistController from "../controllers/wishlist.controller";
 
 const router = Router();
 
