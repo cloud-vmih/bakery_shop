@@ -95,7 +95,7 @@ export default function CheckoutConfirm() {
       <h2 className="confirm-title">Xác nhận đơn hàng</h2>
 
       <div className="confirm-card">
-        <h4>Thông tin khách hàng</h4>
+        <h3 className="confirm-section-title">Thông tin khách hàng</h3>{" "}
         <div className="confirm-info">
           <div>
             <span>Khách hàng</span>
@@ -109,18 +109,20 @@ export default function CheckoutConfirm() {
           </div>
           <div>
             <span>Địa chỉ</span>
-            <strong>{payload.address.formattedAddress}</strong>
+            <strong>{payload.address.fullAddress}</strong>
           </div>
-          <div>
+          {/* <div>
             <span>Thời gian giao</span>
             <strong>
               {formatDateVN(payload.delivery.deliveryDate)} –{" "}
               {payload.delivery.timeFrame}
             </strong>
-          </div>
+          </div> */}
           <div>
             <span>Thanh toán</span>
-            <strong>{payload.paymentMethod}</strong>
+            <strong>
+              <span className="payment-badge">{payload.paymentMethod}</span>
+            </strong>{" "}
           </div>
         </div>
       </div>

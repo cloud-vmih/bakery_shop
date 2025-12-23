@@ -1,4 +1,21 @@
 /* ================================
+   DESIGN TOKENS – DÙNG CHUNG CHECKOUT
+================================ */
+:root {
+  --primary: #22c55e; /* emerald-500 */
+  --primary-hover: #16a34a; /* emerald-600 */
+
+  --mint: #20bb87;
+  --mint-soft: #cbeede;
+  --mint-border: #40f19e;
+
+  --text-main: #111827;
+  --text-sub: #6b7280;
+
+  --card-bg: #ffffff;
+}
+
+/* ================================
    LAYOUT
 ================================ */
 .confirm-container {
@@ -12,25 +29,25 @@
   font-weight: 700;
   margin-bottom: 24px;
   text-align: center;
-  color: #111;
+  color: var(--text-main);
 }
 
 /* ================================
    CARD
 ================================ */
 .confirm-card {
-  background: #ffffff;
-  border-radius: 14px;
+  background: var(--card-bg);
+  border-radius: 18px;
   padding: 22px 24px;
   margin-bottom: 24px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--mint-border);
 }
 
 .confirm-section-title {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #111;
+  color: var(--text-main);
 }
 
 /* ================================
@@ -50,23 +67,26 @@
 }
 
 .confirm-info span {
-  color: #6b7280;
+  color: var(--text-sub);
 }
 
 .confirm-info strong {
   font-weight: 600;
-  color: #111;
+  color: var(--text-main);
   text-align: right;
 }
 
-/* PAYMENT BADGE */
+/* ================================
+   PAYMENT BADGE
+================================ */
 .payment-badge {
-  background: #ecfeff;
-  color: #0e7490;
-  padding: 4px 10px;
+  background: var(--mint-soft);
+  color: var(--mint);
+  padding: 5px 14px; /* to hơn chút */
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 650;
+  letter-spacing: 0.3px; /* chữ thoáng hơn */
 }
 
 /* ================================
@@ -74,26 +94,28 @@
 ================================ */
 .confirm-empty {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-sub);
   margin-bottom: 16px;
 }
 
 /* ================================
-   ACTIONS (FIXED)
+   ACTIONS
 ================================ */
 .confirm-actions {
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* ✅ tất cả nút cùng width */
+  align-items: stretch;
   gap: 14px;
   margin-top: 24px;
 }
 
-/* BUTTON BASE */
+/* ================================
+   BUTTON BASE
+================================ */
 .confirm-btn {
-  width: 100%; /* ✅ full width */
+  width: 100%;
   height: 52px;
-  border-radius: 12px;
+  border-radius: 16px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -101,33 +123,39 @@
   transition: all 0.2s ease;
 }
 
-/* PRIMARY */
+/* ================================
+   PRIMARY BUTTON
+================================ */
 .confirm-btn.primary {
-  background: #2b8dbd;
-  color: #fff;
+  background: var(--primary);
+  color: #ffffff;
 }
 
 .confirm-btn.primary:hover {
-  background: #247aa5;
+  background: var(--primary-hover);
 }
 
-/* GHOST */
+/* ================================
+   GHOST BUTTON
+================================ */
 .confirm-btn.ghost {
   background: #f9fafb;
-  color: #111;
-  border: 1px solid #e5e7eb;
+  color: var(--text-main);
+  border: 1px solid var(--mint-border);
 }
 
 .confirm-btn.ghost:hover {
-  background: #f3f4f6;
+  background: #f0fdf4;
 }
 
-/* BACK LINK */
+/* ================================
+   BACK LINK
+================================ */
 .confirm-back {
   margin-top: 6px;
   text-align: center;
   font-size: 14px;
-  color: #0e7490;
+  color: var(--mint);
   text-decoration: none;
 }
 

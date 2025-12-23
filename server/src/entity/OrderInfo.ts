@@ -32,11 +32,11 @@ export class OrderInfo extends BaseEntity {
   @JoinColumn({ name: "addressID" })
   address!: Address;
 
-  @Column({ type: "date" })
-  deliveryDate!: string;
+  // @Column({ type: "date" })
+  // deliveryDate!: string;
 
-  @Column({ length: 50 })
-  timeFrame!: string;
+  // @Column({ length: 50 })
+  // timeFrame!: string;
 
   @Column({ type: "text", nullable: true })
   note?: string;

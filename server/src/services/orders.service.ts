@@ -18,8 +18,8 @@ export class OrdersService {
         cusPhone: payload.customer.phone,
         cusGmail: payload.customer.email || "",
         addressId: payload.address.addressId,
-        deliveryDate: payload.delivery.deliveryDate,
-        timeFrame: payload.delivery.timeFrame,
+        // deliveryDate: payload.delivery.deliveryDate,
+        // timeFrame: payload.delivery.timeFrame,
         note: payload.note,
       },
       items: payload.items.map((i: any) => ({

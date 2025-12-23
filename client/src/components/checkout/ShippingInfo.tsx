@@ -1,18 +1,64 @@
+import AddressAutocomplete, { AddressResult } from "../AddressAutocomplete";
+
 type Props = {
   addresses: any[];
   selectedAddressId: number | null;
   onSelectAddress: (id: number | null) => void;
+
   newAddress: string;
   onNewAddressChange: (v: string) => void;
+
   saveAddress: boolean;
   setSaveAddress: (v: boolean) => void;
+
   setDefault: boolean;
   setSetDefault: (v: boolean) => void;
+
+  // 🔥 THÊM: nhận full object từ autocomplete
+  onSelectNewAddress: (addr: AddressResult) => void;
 };
 
-export default function ShippingInfo(props: Props) {
+export default function ShippingInfo({
+  addresses,
+  selectedAddressId,
+  onSelectAddress,
+  newAddress,
+  onNewAddressChange,
+  saveAddress,
+  setSaveAddress,
+  setDefault,
+  setSetDefault,
+  onSelectNewAddress,
+}: Props) {
   const usingNewAddress =
-    !props.selectedAddressId && props.newAddress.trim() !== "";
+    selectedAddressId === null && newAddress.trim() !== "";
+
+  /* ================= HANDLERS ================= */
+
+  const handleSelectExistingAddress = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const value = e.target.value ? Number(e.target.value) : null;
+    onSelectAddress(value);
+
+    if (value !== null) {
+      onNewAddressChange("");
+      setSaveAddress(false);
+      setSetDefault(false);
+    }
+  };
+
+  const handleSaveToggle = (checked: boolean) => {
+    setSaveAddress(checked);
+    if (!checked) setSetDefault(false);
+  };
+
+  const handleDefaultToggle = (checked: boolean) => {
+    setSetDefault(checked);
+    if (checked) setSaveAddress(true);
+  };
+
+  /* ================= RENDER ================= */
 
   return (
     <section>
@@ -21,69 +67,49 @@ export default function ShippingInfo(props: Props) {
       {/* ===== ADDRESS BOOK ===== */}
       <select
         className="checkout-select"
-        value={props.selectedAddressId ?? ""}
-        onChange={(e) => {
-          const val = e.target.value ? Number(e.target.value) : null;
-          props.onSelectAddress(val);
-
-          // nếu chọn address có sẵn → reset new address + option
-          if (val) {
-            props.onNewAddressChange("");
-            props.setSaveAddress(false);
-            props.setSetDefault(false);
-          }
-        }}
+        value={selectedAddressId ?? ""}
+        onChange={handleSelectExistingAddress}
       >
         <option value="">Chọn địa chỉ từ sổ địa chỉ</option>
-        {props.addresses.map((a) => (
+        {addresses.map((a) => (
           <option key={a.id} value={a.id}>
-            {a.formattedAddress} {a.isDefault ? "(Mặc định)" : ""}
+            {a.fullAddress} {a.isDefault ? "(Mặc định)" : ""}
           </option>
         ))}
       </select>
 
-      {/* ===== NEW ADDRESS ===== */}
-      <input
-        className="checkout-input mt-3"
-        placeholder="Hoặc nhập / tìm địa chỉ của bạn"
-        value={props.newAddress}
-        onChange={(e) => {
-          props.onSelectAddress(null);
-          props.onNewAddressChange(e.target.value);
-        }}
-      />
+      {/* ===== NEW ADDRESS (GOOGLE AUTOCOMPLETE) ===== */}
+      <div className="mt-3">
+        <AddressAutocomplete
+          placeholder="Hoặc nhập / tìm địa chỉ của bạn"
+          disabled={selectedAddressId !== null}
+          onSelect={(addr) => {
+            onSelectAddress(null); // bỏ chọn address cũ
+            onNewAddressChange(addr.fullAddress);
+            onSelectNewAddress(addr);
+          }}
+        />
+      </div>
 
       {/* ===== OPTIONS ===== */}
       <div className="checkout-row">
-        {/* SAVE ADDRESS */}
         <label className={`toggle ${!usingNewAddress ? "disabled" : ""}`}>
           <input
             type="checkbox"
-            checked={props.saveAddress}
+            checked={saveAddress}
             disabled={!usingNewAddress}
-            onChange={(e) => {
-              props.setSaveAddress(e.target.checked);
-              if (!e.target.checked) {
-                props.setSetDefault(false);
-              }
-            }}
+            onChange={(e) => handleSaveToggle(e.target.checked)}
           />
           <span className="slider" />
           <span className="toggle-label">Lưu địa chỉ cho lần mua kế tiếp</span>
         </label>
 
-        {/* DEFAULT */}
         <label className={`toggle ${!usingNewAddress ? "disabled" : ""}`}>
           <input
             type="checkbox"
-            checked={props.setDefault}
+            checked={setDefault}
             disabled={!usingNewAddress}
-            onChange={(e) => {
-              props.setSetDefault(e.target.checked);
-              if (e.target.checked) {
-                props.setSaveAddress(true); // 🔥 default ⇒ phải save
-              }
-            }}
+            onChange={(e) => handleDefaultToggle(e.target.checked)}
           />
           <span className="slider" />
           <span className="toggle-label">Địa chỉ mặc định</span>

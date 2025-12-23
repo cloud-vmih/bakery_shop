@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, TableInheritance, OneToOne, ManyToMany } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  TableInheritance,
+  OneToOne,
+  ManyToMany,
+} from "typeorm";
 import { ManyToOne, OneToMany, JoinColumn, CreateDateColumn } from "typeorm";
 import { Account } from "./Account";
 import { Conversation } from "./Conversation";
@@ -23,8 +31,8 @@ export class User extends BaseEntity {
   @Column({ type: "timestamp" })
   dateOfBirth?: Date;
 
-  @OneToOne(() => Account, a => a.user, {
-    onDelete: "SET NULL",
+  @OneToOne(() => Account, (a) => a.user, {
+    onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "accountID" })
@@ -36,10 +44,10 @@ export class User extends BaseEntity {
   @CreateDateColumn({ name: "joinAt" })
   joinAt?: Date;
 
-  @OneToMany(() => Message, msg => msg.sender)
+  @OneToMany(() => Message, (msg) => msg.sender)
   messages?: Message[];
 
-  @ManyToMany(() => Notification, noti => noti.users)
+  @ManyToMany(() => Notification, (noti) => noti.users)
   notifications?: Notification[];
 
   @Column({ type: "varchar", default: "user" })

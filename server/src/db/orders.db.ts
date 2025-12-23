@@ -14,8 +14,8 @@ type CreateOrderPayload = {
     cusPhone: string;
     cusGmail: string;
     addressId: number;
-    deliveryDate: string;
-    timeFrame: string;
+    // deliveryDate: string;
+    // timeFrame: string;
     note?: string;
   };
   items: Array<{ itemId: number; quantity: number }>;
@@ -40,8 +40,8 @@ export const createOrderDB = async (payload: CreateOrderPayload) => {
         cusPhone: payload.info.cusPhone,
         cusGmail: payload.info.cusGmail,
         address: { id: payload.info.addressId } as Address,
-        deliveryDate: payload.info.deliveryDate,
-        timeFrame: payload.info.timeFrame,
+        // deliveryDate: payload.info.deliveryDate,
+        // timeFrame: payload.info.timeFrame,
         note: payload.info.note,
       })
     );
