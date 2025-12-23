@@ -1,0 +1,442 @@
+/* Menu Page Styles */
+.menuPage {
+  @apply min-h-screen;
+  background-color: #f0fdf4;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuPage * {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menuSection {
+  background-color: #f0fdf4;
+  min-height: calc(100vh - 80px);
+}
+
+.sectionHeader {
+  @apply text-center mb-6;
+}
+
+.titleGreen {
+  @apply text-3xl md:text-4xl font-bold text-green-700;
+}
+
+/* Layout with Sidebar */
+.menuLayout {
+  @apply flex flex-col lg:flex-row;
+  position: relative;
+}
+
+/* Category Sidebar */
+.categorySidebar {
+  @apply w-full lg:w-[calc(100%/7)] lg:fixed lg:left-0;
+  top: 80px; /* Below header */
+  height: calc(100vh - 80px);
+  background: linear-gradient(to bottom, #fffbeb 0%, #fef9c3 50%, #fef3c7 100%);
+  border-right: 1px solid #fde68a;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  z-index: 40;
+  box-shadow: 2px 0 8px rgba(251, 191, 36, 0.05);
+}
+
+/* Custom scrollbar for sidebar */
+.categorySidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.categorySidebar::-webkit-scrollbar-track {
+  background: rgba(254, 249, 195, 0.3);
+}
+
+.categorySidebar::-webkit-scrollbar-thumb {
+  background: #fde68a;
+  border-radius: 3px;
+}
+
+.categorySidebar::-webkit-scrollbar-thumb:hover {
+  background: #fcd34d;
+}
+
+.sidebarHeader {
+  @apply mb-6 pb-4;
+  border-bottom: 1px solid #fde68a;
+}
+
+.sidebarTitle {
+  @apply text-lg font-bold;
+  color: #92400e;
+}
+
+.categoryList {
+  @apply space-y-1 mb-6;
+}
+
+.categoryItem {
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 text-left bg-transparent;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(253, 230, 138, 0.4);
+}
+
+.categoryItem:hover {
+  background-color: rgba(254, 252, 232, 0.9);
+  border-color: #fde68a;
+}
+
+.categoryItem.active {
+  background: linear-gradient(to right, #dcfce7, #bbf7d0);
+  border-color: #86efac;
+  color: #166534;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+}
+
+.categoryIndicator {
+  @apply w-2 h-2 rounded-full transition-colors duration-200;
+  background-color: #fcd34d;
+}
+
+.categoryItem.active .categoryIndicator {
+  background-color: #16a34a;
+}
+
+.categoryLabel {
+  @apply font-medium text-sm;
+  color: #78350f;
+}
+
+.categoryItem.active .categoryLabel {
+  color: #166534;
+  @apply font-semibold;
+}
+
+/* Price Sort Section */
+.priceSortSection {
+  @apply mt-8 pt-6;
+  border-top: 1px solid #fde68a;
+}
+
+.priceSortOptions {
+  @apply space-y-1 mt-3;
+}
+
+.priceSortButton {
+  @apply w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 text-left text-sm font-medium bg-transparent;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(253, 230, 138, 0.4);
+  color: #854d0e;
+}
+
+.priceSortButton:hover {
+  background-color: rgba(254, 252, 232, 0.9);
+  border-color: #fde68a;
+}
+
+.priceSortButton.active {
+  background: linear-gradient(to right, #dcfce7, #bbf7d0);
+  border-color: #86efac;
+  color: #166534;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+}
+
+.priceSortIndicator {
+  @apply w-2 h-2 rounded-full transition-colors duration-200;
+  background-color: #fcd34d;
+}
+
+.priceSortButton.active .priceSortIndicator {
+  background-color: #16a34a;
+}
+
+/* Main Content Area */
+.menuContentArea {
+  @apply w-full lg:w-[calc(600%/7)];
+  margin-left: 0;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .menuContentArea {
+    margin-left: calc(100% / 7);
+  }
+}
+
+/* Menu Page Title and Subtitle */
+.menuPageTitle {
+  @apply text-4xl md:text-5xl font-bold text-gray-800 mb-3;
+  color: #92400e;
+}
+
+.menuPageSubtitle {
+  @apply text-lg md:text-xl text-green-600 font-medium;
+}
+
+.menuGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-5 md:gap-6 lg:gap-7;
+}
+
+/* Menu Card - Đã cải tiến */
+.menuCard {
+  @apply bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 ease-out relative border border-amber-100 flex flex-col h-full;
+}
+
+.menuImageWrapper {
+  @apply relative overflow-hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.menuImage {
+  @apply w-full h-full object-cover transition-transform duration-700 ease-out;
+}
+
+.menuCard:hover .menuImage {
+  @apply scale-110;
+}
+
+.menuCardContent {
+  @apply p-5 flex flex-col flex-1 justify-between gap-4 bg-white;
+}
+
+.menuTitle {
+  @apply text-lg font-semibold text-amber-900 line-clamp-2 leading-tight;
+}
+
+.menuPrice {
+  @apply text-xl font-bold text-green-700;
+}
+
+/* Nút Add to Cart - Hiển thị luôn */
+.menuButton {
+  @apply w-full py-3.5 px-5 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl 
+         shadow-md hover:shadow-lg hover:from-green-700 hover:to-green-800 
+         transition-all duration-300 ease-in-out flex items-center justify-center gap-2.5;
+}
+
+.menuButton:hover .menuButton-icon {
+  @apply translate-x-1;
+}
+
+/* Khi hết hàng */
+.menuCard.out-of-stock .menuButton {
+  @apply bg-gray-400 cursor-not-allowed;
+}
+
+.menuCard.out-of-stock .menuButton:hover {
+  @apply from-gray-400 to-gray-400 shadow-md;
+}
+
+/* Overlay "Hết hàng" đẹp hơn */
+.menuCard.out-of-stock .menuImageWrapper::before {
+  content: 'HẾT HÀNG';
+  @apply absolute inset-0 flex items-center justify-center text-white text-3xl font-bold tracking-wider z-10;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+  font-style: italic;
+}
+
+.menuCard.out-of-stock .menuImageWrapper::after {
+  content: '';
+  @apply absolute inset-0 bg-black/50 z-10;
+}
+
+/* Search Bar */
+.searchBar {
+  @apply relative max-w-xl mb-8;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 transition-colors duration-300;
+}
+
+.searchInput {
+  @apply w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-green-200 focus:border-green-500 focus:outline-none text-sm bg-white shadow-sm transition-all duration-300 hover:border-green-300 hover:shadow-md;
+}
+
+.searchBar:focus-within .searchIcon {
+  @apply text-green-500;
+}
+
+/* Pagination */
+.paginationContainer {
+  @apply flex justify-center items-center gap-3 mt-10;
+}
+
+.paginationButton {
+  @apply px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 border-2;
+}
+
+.paginationButton.active {
+  @apply bg-green-600 text-white border-green-600 shadow-md;
+}
+
+.paginationButton.inactive {
+  @apply bg-white text-green-600 border-green-600 hover:bg-green-50 hover:shadow-md hover:scale-105;
+}
+
+.paginationButton.disabled {
+  @apply bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed;
+}
+
+.paginationInfo {
+  @apply text-gray-600 text-sm mx-4;
+}
+
+/* Animations */
+@keyframes pulse-indicator {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .categorySidebar {
+    @apply w-full relative;
+    position: relative !important;
+    top: 0 !important;
+    height: auto !important;
+    margin-bottom: 1rem;
+  }
+  
+  .menuLayout {
+    @apply flex-col;
+  }
+
+  .menuContentArea {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .menuGrid {
+    @apply grid-cols-2 md:grid-cols-3;
+  }
+}
+
+@media (max-width: 640px) {
+  .menuGrid {
+    @apply grid-cols-1;
+  }
+}
+
+/* Wishlist Button - Hiệu ứng mượt mà & đẹp hơn */
+.wishlistButton {
+  @apply bg-white/90 backdrop-blur-md rounded-full p-3 shadow-lg 
+         transition-all duration-300 ease-out 
+         hover:scale-110 hover:shadow-xl 
+         active:scale-95;
+  /* Thêm ring nhẹ khi hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.wishlistButton:hover {
+  @apply ring-4 ring-pink-200;
+}
+
+/* Khi đang trong wishlist → heart beat nhẹ nhàng */
+.wishlistButton.liked {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* Hiệu ứng khi click thêm vào wishlist */
+.wishlistButton.adding {
+  animation: bounceIn 0.6s ease-out;
+}
+
+/* Particle effect khi thêm (dùng ::before và ::after) */
+.wishlistButton.adding::before {
+  content: '❤';
+  @apply absolute text-2xl pointer-events-none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: floatUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.wishlistButton.adding::after {
+  content: '';
+  @apply absolute inset-0 rounded-full pointer-events-none;
+  background: radial-gradient(circle, rgba(255,105,180,0.3) 0%, transparent 70%);
+  animation: rippleHeart 0.8s ease-out;
+}
+
+/* Keyframes */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -100px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes rippleHeart {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Branch Info Display - Styled like address display */
+.branchInfoDisplay {
+  @apply w-full px-4 py-3 rounded-xl;
+  background-color: #dcfce7; /* Light green background similar to image */
+  border: none;
+}
+
+.branchInfoContent {
+  @apply flex items-start gap-3;
+}
+
+.branchInfoIcon {
+  @apply w-5 h-5 text-green-600 flex-shrink-0;
+}
+
+.branchInfoText {
+  @apply flex flex-col gap-1;
+}
+
+.branchInfoName {
+  @apply font-medium text-sm;
+  color: #16a34a; /* Green color for branch name */
+}
+
+.branchInfoAddress {
+  @apply text-sm;
+  color: #4b5563; /* Darker gray for address */
+}

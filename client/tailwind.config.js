@@ -18,6 +18,9 @@ module.exports = {
       animation: {
         fadeIn: "fadeIn 0.6s ease-out",
       },
+      fontFamily: {
+        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+      },
     },
   },
   plugins: [],

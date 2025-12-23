@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -6,12 +7,22 @@ import {
   ManyToOne,
   JoinColumn,
   UpdateDateColumn,
+=======
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    BaseEntity,
+    ManyToOne,
+    JoinColumn,
+    UpdateDateColumn,
+>>>>>>> feature/updateQuantity-v2
 } from "typeorm";
 import { Item } from "./Item";
 import { Branch } from "./Branch";
 
 @Entity("inventory")
 export class Inventory extends BaseEntity {
+<<<<<<< HEAD
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -46,3 +57,31 @@ export class Inventory extends BaseEntity {
   @UpdateDateColumn()
   updatedAt!: Date;
 }
+=======
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @ManyToOne(() => Item, i => i.inventory, {
+        nullable: false,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "itemID" })
+    item!: Item;
+
+    @ManyToOne(() => Branch, b => b.inventory, {
+        nullable: true,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "branchID" })
+    branch?: Branch;
+
+    @Column({ type: "int", default: 0 })
+    stockQuantity!: number;
+
+    @Column({ type: "int", default: 0 })
+    reservedQuantity!: number;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
+}
+>>>>>>> feature/updateQuantity-v2

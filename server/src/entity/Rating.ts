@@ -1,16 +1,12 @@
-import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, Unique, PrimaryColumn } from "typeorm"
+import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, PrimaryGeneratedColumn } from "typeorm"
 import { Item } from "./Item"
 import { Customer } from "./Customer"
 
 @Entity("rating")
-@Unique(["itemID", "customerID"])
 export class Rating extends BaseEntity {
 
-  @PrimaryColumn({ name: "itemID", type: "bigint" })
-  itemID!: number;
-
-  @PrimaryColumn({ name: "customerID", type: "bigint" })
-  customerID!: number;
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ManyToOne(() => Item, (i) => i.ratings)
   @JoinColumn({ name: "itemID" })

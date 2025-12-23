@@ -31,7 +31,11 @@ export class User extends BaseEntity {
   @Column({ type: "timestamp" })
   dateOfBirth?: Date;
 
+<<<<<<< HEAD
   @OneToOne(() => Account, (a) => a.user, {
+=======
+  @OneToOne(() => Account, a => a.user, {
+>>>>>>> feature/updateQuantity-v2
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })

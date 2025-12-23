@@ -1,22 +1,40 @@
-import { Entity, Column, BaseEntity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
-import { Item } from "./Item";  
+// src/entity/ItemsDiscount.ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+    BaseEntity
+} from "typeorm";
+import { Item } from "./Item";
 
-@Entity("itemsDiscount")
-export class ItemsDiscount extends BaseEntity {
-  @OneToOne(() => Item)
-  @JoinColumn({ name: "itemID" })
-  @PrimaryColumn()
-  itemId?: number;
+@Entity("items_discount")
+export class ItemsDiscount extends BaseEntity{
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  @Column()
-  title?: string;
+  @ManyToOne(() => Item, { eager: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "item_id" })
+  item!: Item;
 
-  @Column()
-  dicountAmount?: number;
+  @Column({ type: "text", nullable: true })
+  title?: string | null;
 
-  @Column({ type: "timestamp", nullable: true})
-  startAt?: Date;
+  @Column({ type: "numeric", nullable: true })
+  discountAmount?: number | null;
 
   @Column({ type: "timestamp", nullable: true })
-  endAt?: Date;
+  startAt?: Date | null;
+
+  @Column({ type: "timestamp", nullable: true })
+  endAt?: Date | null;
+
+  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: "updated_at", type: "timestamp" })
+  updatedAt!: Date;
 }

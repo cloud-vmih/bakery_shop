@@ -1,0 +1,21 @@
+import toast from "react-hot-toast";
+import { useUser } from "../context/AuthContext";
+import { useEffect } from "react";
+
+const ProductDetails = () => {
+  const { user } = useUser();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    
+  }, [user]);
+
+  return (
+    <>
+      <div>Chi tiết sản phẩm</div>;
+    </>
+  )
+};
+
+export default ProductDetails;

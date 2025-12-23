@@ -5,9 +5,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { verifyToken } from "../services/auth.service";
-
-/* ================= TYPES ================= */
+import { verifyToken } from "../services/auth.service"; // FE gọi /token BE
 
 interface AuthContextType {
   user: any | null;
@@ -22,8 +20,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-/* ================= PROVIDER ================= */
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,16 +28,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+      if (!token) return;
 
       try {
         const data = await verifyToken(); // token auto attach
         setUser(data.user);
       } catch (err) {
-        console.log("Token lỗi → logout");
         localStorage.removeItem("token");
         setUser(null);
       } finally {

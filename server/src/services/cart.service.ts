@@ -1,4 +1,5 @@
 // src/services/cart.service.ts
+<<<<<<< HEAD
 import { AppDataSource } from "../config/database";
 import { CartItem } from "../entity/CartItem";
 import { Cart } from "../entity/Cart";
@@ -29,11 +30,26 @@ export class CartService {
     const totalItems =
       cart.items?.reduce((sum, ci) => sum + (ci.quantity ?? 0), 0) ?? 0;
 
+=======
+import { getCartByUserId, createOrUpdateCart } from "../db/db.cart";
+
+export class CartService {
+  async addItem(userId: number, itemId: number, quantity: number = 1) {
+    return await createOrUpdateCart(userId, itemId, quantity);
+  }
+
+  async getCart(userId: number) {
+    const cart = await getCartByUserId(userId);
+    if (!cart) return { items: [], totalItems: 0 };
+
+    const totalItems = cart.items?.reduce((sum, ci: any) => sum + ci.quantity, 0) || 0;
+>>>>>>> feature/updateQuantity-v2
     return {
       items: cart.items || [],
       totalItems,
     };
   }
+<<<<<<< HEAD
 
   /**
    * UPDATE QUANTITY (+ / -)
@@ -89,3 +105,6 @@ export class CartService {
     return await clearCartByUserId(userId);
   }
 }
+=======
+}
+>>>>>>> feature/updateQuantity-v2
