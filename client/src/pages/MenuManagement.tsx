@@ -559,7 +559,7 @@ export default function MenuManagement() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white p-8 rounded-xl shadow-xl text-center max-w-sm">
               <h3 className="text-xl font-bold text-red-600">Xóa món?</h3>
-              <p className="mt-3 text-gray-600">Hành động này không thể hoàn tác.</p>
+              <p className="mt-3 text-gray-600">Bạn có chắc chắn muốn xóa món này không?</p>
               <div className="flex justify-center gap-4 mt-6">
                 <button
                   onClick={confirmDelete}
