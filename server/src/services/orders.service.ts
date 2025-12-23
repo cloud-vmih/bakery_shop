@@ -1,8 +1,7 @@
 // server/src/services/order.service.ts
 
-import { orderRepo } from "../db/order.db";
+import { orderRepo } from "../db/orders.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
-
 
 interface CancelResult {
   success: boolean;
@@ -80,18 +79,21 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     statusText: getStatusText(status),
     createdAt: order.createAt,
     deliveryAt: order.deliveryAt || null,
-    payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
+    payStatus: order.payment?.status ?? EPayStatus.PENDING, // THÊM DÒNG NÀY
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,
-    payment: order.payment ? {
-      method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY", "MOMO"
-      status: order.payment.status,           // "PAID", "PENDING", "REFUNDED"
-    } : null,
-    items: order.orderDetails?.map((detail: any) => ({
-      itemInfo: detail.itemInfo || {},
-      note: detail.note || null,
-      quantity: detail.quantity ?? detail.itemInfo?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
-    })) || [],
+    payment: order.payment
+      ? {
+          method: order.payment.paymentMethod, // ví dụ: "COD", "VNPAY", "MOMO"
+          status: order.payment.status, // "PAID", "PENDING", "REFUNDED"
+        }
+      : null,
+    items:
+      order.orderDetails?.map((detail: any) => ({
+        itemInfo: detail.itemInfo || {},
+        note: detail.note || null,
+        quantity: detail.quantity ?? detail.itemInfo?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
+      })) || [],
   };
 };
 
@@ -134,7 +136,8 @@ export const cancelOrder = async (
     if (cancelStatus === ECancelStatus.REQUESTED) {
       return {
         success: false,
-        message: "Đơn hàng đang được xử lý yêu cầu hủy. Vui lòng chờ phản hồi từ cửa hàng.",
+        message:
+          "Đơn hàng đang được xử lý yêu cầu hủy. Vui lòng chờ phản hồi từ cửa hàng.",
       };
     }
     if (cancelStatus === ECancelStatus.APPROVED) {
@@ -177,7 +180,8 @@ export const cancelOrder = async (
 
     return {
       success: true,
-      message: "Yêu cầu hủy đơn hàng đã được gửi. Chúng tôi sẽ xử lý và hoàn tiền sớm nhất có thể.",
+      message:
+        "Yêu cầu hủy đơn hàng đã được gửi. Chúng tôi sẽ xử lý và hoàn tiền sớm nhất có thể.",
       action: "cancel_requested",
     };
   }

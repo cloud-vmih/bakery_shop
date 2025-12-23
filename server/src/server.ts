@@ -9,7 +9,7 @@ import profileRoutes from "./routes/user.route";
 import itemRoutes from "./routes/item.route";
 import inventoryRoutes from "./routes/inventory.route";
 import addressRoutes from "./routes/address.route";
-import orderRoutes from "./routes/order.route";
+import orderRoutes from "./routes/orders.route";
 import wishlistRoutes from "./routes/wishlist.route";
 import itemsDiscountRoutes from "./routes/itemsDiscount.route";
 import staffRoutes from "./routes/staff.route";
