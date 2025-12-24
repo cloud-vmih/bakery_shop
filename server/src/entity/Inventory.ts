@@ -15,33 +15,25 @@ export class Inventory extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  /* ===== RELATIONS ===== */
-
-  @ManyToOne(() => Item, {
+  @ManyToOne(() => Item, (i) => i.inventory, {
     nullable: false,
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "itemID" })
   item!: Item;
 
-  @ManyToOne(() => Branch, {
+  @ManyToOne(() => Branch, (b) => b.inventory, {
     nullable: true,
-    onDelete: "SET NULL",
+    onDelete: "CASCADE",
   })
   @JoinColumn({ name: "branchID" })
   branch?: Branch;
 
-  /* ===== STOCK ===== */
-
-  // Tổng số lượng tồn kho thực tế
   @Column({ type: "int", default: 0 })
   stockQuantity!: number;
 
-  // Số lượng đang được giữ cho checkout
   @Column({ type: "int", default: 0 })
   reservedQuantity!: number;
-
-  /* ===== META ===== */
 
   @UpdateDateColumn()
   updatedAt!: Date;

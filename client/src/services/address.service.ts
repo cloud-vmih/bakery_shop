@@ -4,7 +4,7 @@ import API from "../api/axois.config";
    TYPES
 ======================= */
 export interface Address {
-  id?: number;
+  id: number;
   placeId?: string;
   fullAddress: string;
   lat: number;
@@ -62,9 +62,8 @@ export const createAddressForCheckout = async (
   payload: CreateAddressPayload
 ): Promise<{ addressId: number; fullAddress: string }> => {
   const address = await createAddress(payload);
-
   return {
-    addressId: address.id!,
+    addressId: address.id,
     fullAddress: address.fullAddress,
   };
 };

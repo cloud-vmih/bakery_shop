@@ -5,7 +5,7 @@ import { useUser } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import {
   getMyAddresses,
-  createAddress,
+  createAddressForCheckout,
   Address,
 } from "../services/address.service";
 
@@ -17,6 +17,8 @@ import ConfirmOrderButton from "../components/checkout/ConfirmOrderButton";
 
 import MapProvider from "../components/MapProvider";
 import { AddressResult } from "../components/AddressAutocomplete";
+
+import { Header } from "../components/Header";
 
 import "../styles/checkout.css";
 
@@ -186,15 +188,14 @@ export default function Checkout() {
     // 🔥 CASE 1: user nhập địa chỉ mới
     if (!addressId && newAddressObj) {
       try {
-        const res = await createAddress({
+        const res = await createAddressForCheckout({
           fullAddress: newAddressObj.fullAddress,
           lat: newAddressObj.lat,
           lng: newAddressObj.lng,
           placeId: newAddressObj.placeId,
           isDefault: setDefault,
         });
-
-        addressId = res.id!;
+        addressId = res.addressId;
         fullAddress = res.fullAddress;
       } catch {
         setErrors(["Không thể lưu địa chỉ mới. Vui lòng thử lại."]);
@@ -224,74 +225,80 @@ export default function Checkout() {
 
   /* ================= RENDER ================= */
   return (
-    <div className="bg-white">
-      <div className="max-w-6xl mx-auto px-4 pt-6 text-sm">
-        <span className="text-green-500 font-medium">Giỏ hàng</span>
-        <span className="mx-2">›</span>
-        <span>Thanh toán và giao hàng</span>
-      </div>
+    <>
+      <Header />
+      <div
+        className="min-h-screen"
+        style={{ backgroundColor: "var(--page-bg)" }}
+      >
+        <div className="max-w-6xl mx-auto px-4 pt-6 text-sm">
+          <span className="text-green-500 font-medium">Giỏ hàng</span>
+          <span className="mx-2">›</span>
+          <span>Thanh toán và giao hàng</span>
+        </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2">
-          <div className="checkout-section">
-            <CustomerInfo value={customer} onChange={setCustomer} />
-          </div>
-
-          <MapProvider>
+        <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2">
             <div className="checkout-section">
-              <ShippingInfo
-                addresses={addresses}
-                selectedAddressId={selectedAddressId}
-                onSelectAddress={setSelectedAddressId}
-                newAddress={newAddress}
-                onNewAddressChange={setNewAddress}
-                saveAddress={saveAddressState}
-                setSaveAddress={setSaveAddressState}
-                setDefault={setDefault}
-                setSetDefault={setSetDefault}
-                onSelectNewAddress={setNewAddressObj}
+              <CustomerInfo value={customer} onChange={setCustomer} />
+            </div>
+
+            <MapProvider>
+              <div className="checkout-section">
+                <ShippingInfo
+                  addresses={addresses}
+                  selectedAddressId={selectedAddressId}
+                  onSelectAddress={setSelectedAddressId}
+                  newAddress={newAddress}
+                  onNewAddressChange={setNewAddress}
+                  saveAddress={saveAddressState}
+                  setSaveAddress={setSaveAddressState}
+                  setDefault={setDefault}
+                  setSetDefault={setSetDefault}
+                  onSelectNewAddress={setNewAddressObj}
+                />
+              </div>
+            </MapProvider>
+
+            <div className="checkout-section checkout-note">
+              <h3 className="checkout-title">Yêu cầu khác (tuỳ chọn)</h3>
+              <textarea
+                className="checkout-textarea"
+                placeholder="Nhập yêu cầu của bạn (ví dụ: ít ngọt, giao trước 18h...)"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={3}
               />
             </div>
-          </MapProvider>
 
-          <div className="checkout-section checkout-note">
-            <h3 className="checkout-title">Yêu cầu khác (tuỳ chọn)</h3>
-            <textarea
-              className="checkout-textarea"
-              placeholder="Nhập yêu cầu của bạn (ví dụ: ít ngọt, giao trước 18h...)"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={3}
-            />
-          </div>
-
-          <div className="checkout-section">
-            <PaymentMethodSelector
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <OrderSummary items={selectedItems} />
-          <ConfirmOrderButton onSubmit={handleSubmit} />
-
-          {errors.length > 0 && (
-            <div className="checkout-errors">
-              {errors.map((e, i) => (
-                <div key={i} className="checkout-error">
-                  • {e}
-                </div>
-              ))}
+            <div className="checkout-section">
+              <PaymentMethodSelector
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+              />
             </div>
-          )}
+          </div>
 
-          <Link to="/cart" className="checkout-back">
-            ← Quay lại giỏ hàng
-          </Link>
+          <div className="space-y-6">
+            <OrderSummary items={selectedItems} />
+            <ConfirmOrderButton onSubmit={handleSubmit} />
+
+            {errors.length > 0 && (
+              <div className="checkout-errors">
+                {errors.map((e, i) => (
+                  <div key={i} className="checkout-error">
+                    • {e}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Link to="/cart" className="checkout-back">
+              ← Quay lại giỏ hàng
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

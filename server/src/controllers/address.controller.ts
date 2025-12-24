@@ -51,7 +51,7 @@ export async function createAddressController(req: Request, res: Response) {
     return res.status(201).json({
       success: true,
       data: {
-        addressId: address.id,
+        id: address.id,
         fullAddress: address.fullAddress,
       },
       message: "Thêm địa chỉ thành công",

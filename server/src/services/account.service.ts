@@ -1,20 +1,26 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
-import { createEmailVerification, isAccountVerified } from "../db/verify.db";
-import { sendVerifyEmail } from "../helpers/sendEmail";
-
+import {
+  createEmailVerification,
+  isAccountVerified,
+  verify,
+  isEmailVerified,
+} from "../db/verify.db";
+import { sendEmail } from "../helpers/sendEmail";
 import {
   createAccount,
   findAccountByUsername,
   findUserByAccountId,
   createUser,
   socialAuthRepo,
-  isEmailTaken,
+  findUserByEmail,
   isPhoneNumberTaken,
+  updatePassword,
 } from "../db/account.db";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
+import { redis } from "../config/redis";
 
 export const registerUser = async (
   username: string,
@@ -29,7 +35,7 @@ export const registerUser = async (
     const existing = await findAccountByUsername(username);
     if (existing) throw new Error("Username already exists");
 
-    if (await isEmailTaken(email)) throw new Error("Email already used");
+    if (await findUserByEmail(email)) throw new Error("Email already used");
     if (await isPhoneNumberTaken(phoneNumber))
       throw new Error("Phone Number already used");
 
@@ -61,7 +67,7 @@ export const registerUser = async (
 
     const verifyLink = `${process.env.CLIENT_URL}/verify?token=${token}`;
 
-    await sendVerifyEmail(
+    await sendEmail(
       user.email!,
       "Verify your email",
       `
@@ -95,10 +101,19 @@ export const loginUser = async (username: string, password: string) => {
     { id: acc.id, user: userInfo },
     process.env.JWT_SECRET!,
     {
-      expiresIn: "1h",
+      expiresIn: "15m",
     }
   );
-  return { token, user: userInfo };
+
+  const refresh_token = jwt.sign(
+    { accountId: acc.id, user: userInfo },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "7d",
+    }
+  );
+
+  return { refresh_token, token, user: userInfo };
 };
 
 export const getUser = async (id: number) => {
@@ -130,40 +145,107 @@ export const googleService = {
 
       user = await findUserByAccountId(accountId);
     } else {
-      const username = `google_${providerUserId}`;
-      const account = new Account();
-      account.username = username;
-      account.password = "*";
-      const acc = await createAccount(account);
-      accountId = acc.id!;
+      user = await findUserByEmail(email);
 
-      const customer = new Customer();
-      customer.fullName = fullName;
-      customer.email = email;
-      customer.phoneNumber = "0123456789";
-      customer.dateOfBirth = new Date();
-      customer.account = acc;
-      customer.avatarURL = avatarURL || "";
-      user = await createUser(customer);
+      if (!user) {
+        const username = `google_${providerUserId}`;
+        const account = new Account();
+        account.username = username;
+        account.password = "*";
+        const acc = await createAccount(account);
+        accountId = acc.id!;
 
-      await socialAuthRepo.linkSocialAccount(providerUserId, email, acc.id!);
+        const customer = new Customer();
+        customer.fullName = fullName;
+        customer.email = email;
+        customer.phoneNumber = "0123456789";
+        customer.dateOfBirth = new Date();
+        customer.account = acc;
+        customer.avatarURL = avatarURL || "";
+        user = await createUser(customer);
+      } else {
+        if (await isAccountVerified(user.account.id))
+          accountId = user.account.id;
+        else throw new Error("Please verify email!");
+      }
+
+      await socialAuthRepo.linkSocialAccount(providerUserId, email, accountId!);
+      await createEmailVerification(accountId);
+      await verify(accountId);
     }
 
     const jwtPayload = {
       accountId,
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        phoneNumber: user.phoneNumber,
-        email: user.email,
-        avatarURL: user.avatarURL,
-        type: user.type,
-      },
+      user: user,
     };
 
     const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
+      expiresIn: 10,
     });
-    return { token, user: jwtPayload.user };
+    const refresh_token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
+    return { refresh_token, token, user: jwtPayload.user };
+  },
+};
+
+export const changePassword = {
+  sendOTP: async (email: string) => {
+    if (!(await isEmailVerified(email))) throw new Error("Email not verified");
+
+    const OTP_TTL = 300; // 5 phút
+    const COOLDOWN_TTL = 30; // 30 giây
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(otp);
+
+    try {
+      const cooldownKey = `otp_cooldown:${email}`;
+      if (await redis.exists(cooldownKey)) {
+        throw new Error("Vui lòng chờ 30s để gửi lại OTP");
+      }
+      await redis.set(`otp:${email}`, otp, { ex: OTP_TTL });
+      await redis.set(cooldownKey, "1", { ex: COOLDOWN_TTL });
+
+      const html = `
+      <h2>Verify your OTP</h2>
+      <p>Your OTP:</p>
+      <a>${otp}</a>
+    `;
+      sendEmail(email, "Verify your OTP", html);
+      return { message: "The OTP send successfully, please check it." };
+    } catch (err) {
+      throw err;
+    }
+  },
+  verifyOTP: async (email: string, otp: string) => {
+    const key = `otp:${email}`;
+    const savedOtp = await redis.get(key);
+
+    console.log(savedOtp);
+    console.log(otp);
+    if (!savedOtp) {
+      throw new Error("OTP đã hết hạn");
+    }
+
+    if (savedOtp.toString() !== otp.toString()) {
+      throw new Error("OTP không đúng");
+    }
+
+    await redis.del(key);
+    await redis.set(`otp_verified:${email}`, "true", { ex: 300 });
+
+    return true;
+  },
+  resetPassword: async (newPassword: string, email: string) => {
+    const verified = await redis.get(`otp_verified:${email}`);
+    if (!verified) throw new Error("OTP chưa được xác thực");
+    const user = await findUserByEmail(email);
+    try {
+      const hash = await bcrypt.hash(newPassword, 10);
+      await updatePassword(hash, user?.account?.id!);
+      return { message: "Password has changed succesfully!" };
+    } catch (err) {
+      throw new Error("Change password failed!");
+    }
   },
 };

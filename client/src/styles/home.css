@@ -1,0 +1,335 @@
+/* src/styles/home.css */
+
+.page {
+  @apply min-h-screen bg-gray-50;
+}
+
+/* ==================== BANNER QUẢNG CÁO ==================== */
+.banner {
+  @apply bg-gradient-to-br from-amber-50 via-white to-green-50 py-12 md:py-20 relative overflow-hidden;
+  min-height: 500px;
+}
+
+.bannerWrapper {
+  @apply max-w-7xl mx-auto px-4 relative;
+  height: 500px;
+}
+
+.bannerSlide {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out pointer-events-none;
+  @apply grid md:grid-cols-2 gap-8 items-center;
+}
+
+.bannerSlide.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.bannerImageContainer {
+  @apply relative z-0;
+}
+
+.bannerContent {
+  @apply z-10;
+}
+
+.bannerTitle {
+  @apply text-4xl md:text-6xl font-bold text-amber-900 leading-tight mb-4;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.bannerTitle span {
+  @apply text-green-700;
+}
+
+.bannerText {
+  @apply text-xl md:text-2xl text-amber-800 mt-4;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.bannerPrice {
+  @apply text-4xl md:text-5xl font-black text-green-600 mt-2 mb-6;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.bannerBtns {
+  @apply mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.btnGreen {
+  @apply bg-green-600 text-white px-8 py-3 rounded-full text-lg font-bold 
+         hover:bg-green-700 transition-all shadow-lg hover:shadow-xl 
+         transform hover:scale-105;
+}
+
+.btnOutline {
+  @apply border-2 border-green-600 text-green-600 px-8 py-3 rounded-full 
+         text-lg font-bold hover:bg-green-50 transition-all 
+         transform hover:scale-105;
+}
+
+.bannerImg {
+  @apply rounded-3xl shadow-2xl w-full max-w-lg mx-auto;
+  animation: fadeInRight 1s ease-out 0.3s both;
+}
+
+.bannerControls {
+  @apply absolute bottom-8 left-1/2 transform -translate-x-1/2 
+         flex items-center gap-4 z-20;
+}
+
+.bannerControlBtn {
+  @apply bg-white/80 hover:bg-white p-3 rounded-full shadow-lg 
+         transition-all hover:scale-110 text-gray-700 hover:text-green-600;
+}
+
+.bannerDots {
+  @apply flex gap-2;
+}
+
+.bannerDot {
+  @apply w-3 h-3 rounded-full bg-white/60 hover:bg-white/80 
+         transition-all cursor-pointer;
+}
+
+.bannerDot.active {
+  @apply bg-green-600 w-8;
+}
+
+/* ==================== SECTION HEADERS ==================== */
+.sectionHeader {
+  @apply text-center mb-12;
+}
+
+.sectionSubtitle {
+  @apply text-lg text-gray-600 mt-2;
+}
+
+.titleBrown {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-amber-900 mb-4;
+}
+
+.titleGreen {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-green-700 mb-4;
+}
+
+/* ==================== SECTION STYLES ==================== */
+.sectionWhite {
+  @apply py-16 md:py-20 bg-white;
+}
+
+.sectionGray {
+  @apply py-16 md:py-20 bg-gray-50;
+}
+
+.sectionAmber {
+  @apply py-16 md:py-20 bg-amber-50 text-center;
+}
+
+/* ==================== CÁC MÓN ĐƯỢC YÊU THÍCH ==================== */
+.popularGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8;
+}
+
+.popularCard {
+  @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
+         transition-all duration-300 transform hover:-translate-y-2 
+         border border-gray-100;
+}
+
+.popularImageWrapper {
+  @apply relative overflow-hidden;
+  height: 250px;
+}
+
+.popularImage {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
+
+.popularCard:hover .popularImage {
+  @apply scale-110;
+}
+
+.popularBadge {
+  @apply absolute top-4 right-4 bg-red-500 text-white px-3 py-1 
+         rounded-full text-xs font-bold shadow-lg;
+  animation: pulse 2s infinite;
+}
+
+.popularContent {
+  @apply p-6;
+}
+
+.popularName {
+  @apply text-xl font-bold text-gray-800 mb-2;
+}
+
+.popularRating {
+  @apply flex items-center gap-1 mb-3;
+}
+
+.popularReviews {
+  @apply text-sm text-gray-500 ml-2;
+}
+
+.popularPrice {
+  @apply text-2xl font-bold text-green-600 mb-4;
+}
+
+.popularButton {
+  @apply w-full bg-amber-600 text-white py-2 rounded-lg font-semibold 
+         hover:bg-amber-700 transition-all transform hover:scale-105;
+}
+
+/* ==================== CÁC LOẠI SẢN PHẨM ==================== */
+.categoryGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8;
+}
+
+.categoryCard {
+  @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
+         transition-all duration-300 transform hover:-translate-y-2 
+         border border-gray-100 relative;
+}
+
+.categoryIconWrapper {
+  @apply absolute top-4 left-4 z-10 p-4 rounded-full shadow-lg;
+}
+
+.categoryIcon {
+  @apply w-8 h-8 text-amber-900;
+}
+
+.categoryImage {
+  @apply w-full h-48 object-cover;
+}
+
+.categoryContent {
+  @apply p-6 text-center;
+}
+
+.categoryName {
+  @apply text-xl font-bold text-gray-800 mb-2;
+}
+
+.categoryDescription {
+  @apply text-sm text-gray-600 mb-3;
+}
+
+.categoryCount {
+  @apply text-sm font-semibold text-amber-600 mb-4;
+}
+
+.categoryButton {
+  @apply text-green-600 font-semibold hover:text-green-700 transition-colors 
+         flex items-center justify-center;
+}
+
+/* ==================== CHƯƠNG TRÌNH KHUYẾN MÃI ==================== */
+.promotionGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8;
+}
+
+.promotionCard {
+  @apply bg-gradient-to-b from-amber-50 to-white rounded-3xl overflow-hidden 
+         shadow-xl hover:shadow-2xl transition-all duration-300 
+         transform hover:-translate-y-2 border-2 border-amber-100;
+}
+
+.promotionImageWrapper {
+  @apply relative overflow-hidden;
+  height: 200px;
+}
+
+.promotionImage {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
+
+.promotionCard:hover .promotionImage {
+  @apply scale-110;
+}
+
+.promotionBadge {
+  @apply absolute top-4 right-4 bg-green-500 text-white px-4 py-2 
+         rounded-full text-sm font-bold shadow-lg;
+  animation: bounce 2s infinite;
+}
+
+.promotionContent {
+  @apply p-6 text-center;
+}
+
+.promotionTitle {
+  @apply text-xl font-bold text-amber-900 mb-2;
+}
+
+.promotionDesc {
+  @apply text-gray-600 mb-4;
+}
+
+.promotionButton {
+  @apply bg-green-600 text-white px-6 py-2 rounded-full font-semibold 
+         hover:bg-green-700 transition-all transform hover:scale-105 
+         inline-flex items-center;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .bannerWrapper {
+    height: auto;
+    min-height: 400px;
+  }
+
+  .bannerSlide {
+    @apply relative opacity-100;
+    position: static;
+    min-height: 400px;
+  }
+
+  .bannerControls {
+    @apply relative bottom-auto left-auto transform-none mt-6;
+  }
+}

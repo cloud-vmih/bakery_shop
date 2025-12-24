@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/account.route";
 import categoryRoutes from "./routes/category.route";
@@ -10,10 +11,14 @@ import orderRoutes from "./routes/orders.route";
 import paymentRoutes from "./routes/payment.route";
 import paymentVNPayRoutes from "./routes/payment.vnpay.route";
 
+import inventoryRoutes from "./routes/inventory.route";
+import branchRoutes from "./routes/branch.route";
+
 import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -27,7 +32,7 @@ app.use(express.json());
 // =====================
 // ROUTES
 // =====================
-app.use("/api/category", categoryRoutes);
+app.use("/api", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api", userRoutes);
 
@@ -38,5 +43,9 @@ app.use("/api/addresses", addressRoutes); // cho API cũ / thống nhất
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/payment/vnpay", paymentVNPayRoutes);
+
+app.use("/api", inventoryRoutes);
+
+app.use("/api/branchs", branchRoutes);
 
 export default app;

@@ -14,24 +14,20 @@
 //     const handleVNPayReturn = async () => {
 //       const txnRef = params.get("vnp_TxnRef");
 
-//       if (!txnRef) {
-//         navigate("/payment-failed", { replace: true });
-//         return;
-//       }
-
 //       // ✅ vnp_TxnRef = orderId_timestamp
-//       const orderId = Number(txnRef.split("_")[0]);
-//       if (Number.isNaN(orderId)) {
-//         navigate("/payment-failed", { replace: true });
-//         return;
-//       }
+//       const orderId = Number(txnRef!.split("_")[0]);
 
 //       try {
-//         // 🔥 SOURCE OF TRUTH: DB
+//         /**
+//          * 🔥 SOURCE OF TRUTH
+//          * Không tin query string
+//          * Không tin responseCode
+//          * → chỉ tin DB
+//          */
 //         const payment = await getPaymentByOrder(orderId);
 
+//         // ✅ PAYMENT PAID
 //         if (payment.status === "PAID") {
-//           // clear cart
 //           await clearCart();
 //           resetCart();
 
@@ -39,10 +35,16 @@
 //           return;
 //         }
 
-//         // FAILED / CANCELED
-//         navigate(`/payment-failed?orderId=${orderId}`, { replace: true });
-//       } catch (err) {
-//         navigate(`/payment-failed?orderId=${orderId}`, { replace: true });
+//         // ❌ FAILED / CANCELED
+//         navigate(
+//           `/payment-failed?orderId=${orderId}&reason=${payment.status}`,
+//           { replace: true }
+//         );
+//       } catch (error) {
+//         // ❌ Lỗi hệ thống / không lấy được payment
+//         navigate(`/payment-failed?orderId=${orderId}&reason=UNKNOWN`, {
+//           replace: true,
+//         });
 //       }
 //     };
 
@@ -78,26 +80,22 @@ export default function VNPayReturnPage() {
 
   useEffect(() => {
     const handleVNPayReturn = async () => {
-      const txnRef = params.get("vnp_TxnRef");
+      // ✅ CHỈ LẤY orderId (BE là source of truth)
+      const orderIdParam = params.get("orderId");
 
-      // ❌ Không có txnRef
-      if (!txnRef) {
-        navigate("/payment-failed?reason=INVALID_TXN", { replace: true });
+      if (!orderIdParam) {
+        console.error("❌ Missing orderId in VNPay return URL");
+        navigate("/payment-failed", { replace: true });
         return;
       }
 
-      // ✅ vnp_TxnRef = orderId_timestamp
-      const orderId = Number(txnRef.split("_")[0]);
-      if (Number.isNaN(orderId)) {
-        navigate("/payment-failed?reason=INVALID_ORDER_ID", { replace: true });
-        return;
-      }
+      const orderId = Number(orderIdParam);
 
       try {
         /**
          * 🔥 SOURCE OF TRUTH
-         * Không tin query string
-         * Không tin responseCode
+         * - Không tin query string (responseCode)
+         * - Không tin VNPay param
          * → chỉ tin DB
          */
         const payment = await getPaymentByOrder(orderId);
@@ -117,7 +115,7 @@ export default function VNPayReturnPage() {
           { replace: true }
         );
       } catch (error) {
-        // ❌ Lỗi hệ thống / không lấy được payment
+        console.error("❌ VNPay return error", error);
         navigate(`/payment-failed?orderId=${orderId}&reason=UNKNOWN`, {
           replace: true,
         });

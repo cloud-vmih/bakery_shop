@@ -74,9 +74,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  useEffect(() => {
-    loadCart();
-  }, []);
+  // useEffect(() => {
+  //   loadCart();
+  // }, []);
 
   const { user } = useUser();
 
@@ -112,6 +112,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   /* ---------- ADD TO CART ---------- */
   const addToCart = async (itemId: number, quantity = 1) => {
+    if (!user) {
+      throw new Error("NEED_LOGIN");
+    }
     try {
       await addToCartService(itemId, quantity);
       await loadCart();

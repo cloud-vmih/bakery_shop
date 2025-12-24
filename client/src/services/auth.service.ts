@@ -2,13 +2,13 @@ import API from "../api/axois.config";
 import { AxiosError } from "axios";
 
 interface LoginResponse {
-  token: string,
+  token: string;
   user: {
-    id: number,
-    fullName: string,
-    email: string,
-    type: string,
-  }
+    id: number;
+    fullName: string;
+    email: string;
+    type: string;
+  };
 }
 
 interface RegisterResponse {
@@ -16,10 +16,11 @@ interface RegisterResponse {
   username: string;
   type: string;
 }
-  
 
-
-export const login = async (username: string, password: string): Promise<LoginResponse> => {
+export const login = async (
+  username: string,
+  password: string
+): Promise<LoginResponse> => {
   try {
     const res = await API.post<LoginResponse>("/login", { username, password });
     return res.data;
@@ -33,9 +34,25 @@ export const logout = (): void => {
   localStorage.removeItem("token");
 };
 
-export const register = async (username: string, password: string, password2: string, fullName: string, email: string, phoneNumber: string, dateOfBirth: string): Promise<RegisterResponse> => {
+export const register = async (
+  username: string,
+  password: string,
+  password2: string,
+  fullName: string,
+  email: string,
+  phoneNumber: string,
+  dateOfBirth: string
+): Promise<RegisterResponse> => {
   try {
-    const res = await API.post("/register", { username, password, password2, fullName, email, phoneNumber, dateOfBirth });
+    const res = await API.post("/register", {
+      username,
+      password,
+      password2,
+      fullName,
+      email,
+      phoneNumber,
+      dateOfBirth,
+    });
     return res.data;
   } catch (error) {
     const err = error as AxiosError<any>;
@@ -49,17 +66,35 @@ export const getUserInfo = async (id: number): Promise<any> => {
     return res.data;
   } catch (error) {
     const err = error as AxiosError<any>;
-    throw new Error(err.response?.data?.error || "Lấy thông tin người dùng thất bại");
+    throw new Error(
+      err.response?.data?.error || "Lấy thông tin người dùng thất bại"
+    );
   }
 };
 
 export const googleLoginService = async (idToken: string) => {
   const res = await API.post(`/google`, { id_token: idToken });
-  return res.data; 
+  return res.data;
 };
 
 export const verifyToken = async () => {
-  const res = await API.get('/token')
-  return res.data
-}
+  const res = await API.get("/token");
+  return res.data;
+};
 
+export const resetPasswordService = {
+  sendOTP: async (email: string) => {
+    const res = await API.post("/sendOtp", { email });
+    return res.data;
+  },
+
+  verifyOTP: async (email: string, otp: string) => {
+    const res = await API.post("/verifyOtp", { email, otp });
+    return res.data;
+  },
+
+  resetPassword: async (email: string, password: string) => {
+    const res = await API.post("/resetPassword", { email, password });
+    return res.data;
+  },
+};
