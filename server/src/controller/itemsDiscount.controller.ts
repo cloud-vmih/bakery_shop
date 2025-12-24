@@ -1,31 +1,36 @@
 // src/controllers/itemsDiscount.controller.ts
 import { Request, Response } from "express";
-import { ItemsDiscountService } from "../servies/itemsDiscount.service";
+import {
+  getAllItemsDiscount,
+  getOneItemsDiscount,
+  createItemsDiscount,
+  updateItemsDiscount,
+  removeItemsDiscount,
+} from "../servies/itemsDiscount.service";
 
 // =============================
 // GET ALL
 // =============================
-export const getAllItemsDiscount = async (req: Request, res: Response) => {
+export const getAllItemsDiscountController = async (req: Request, res: Response) => {
   try {
-    const data = await ItemsDiscountService.getAll();
+    const data = await getAllItemsDiscount();
     return res.json(data);
   } catch (err) {
-    return res.status(500).json({ message: "Server error", err });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
 // =============================
 // GET ONE
 // =============================
-export const getOneItemsDiscount = async (req: Request, res: Response) => {
+export const getOneItemsDiscountController = async (req: Request, res: Response) => {
   try {
-    const data = await ItemsDiscountService.getOne(Number(req.params.id));
+    const data = await getOneItemsDiscount(Number(req.params.id));
     return res.json(data);
-  } catch (err: unknown) {
-    if (err instanceof Error && err.message === "NOT_FOUND") {
-      return res.status(404).json({ message: "Not found" });
+  } catch (err: any) {
+    if (err.message === "DISCOUNT_NOT_FOUND") {
+      return res.status(404).json({ message: "Discount not found" });
     }
-    console.error("Error in getOne:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -33,15 +38,17 @@ export const getOneItemsDiscount = async (req: Request, res: Response) => {
 // =============================
 // CREATE
 // =============================
-export const createItemsDiscount = async (req: Request, res: Response) => {
+export const createItemsDiscountController = async (req: Request, res: Response) => {
   try {
-    const data = await ItemsDiscountService.create(req.body);
-    return res.json(data);
-  } catch (err: unknown) {
-    if (err instanceof Error && err.message === "ITEM_NOT_FOUND") {
+    const data = await createItemsDiscount(req.body);
+    return res.status(201).json(data);
+  } catch (err: any) {
+    if (err.message === "ITEM_NOT_FOUND") {
       return res.status(400).json({ message: "Item does not exist" });
     }
-    console.error("Error in create:", err);
+    if (err.message === "INVALID_DISCOUNT_AMOUNT" || err.message === "INVALID_DATE_RANGE") {
+      return res.status(400).json({ message: err.message });
+    }
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -49,18 +56,16 @@ export const createItemsDiscount = async (req: Request, res: Response) => {
 // =============================
 // UPDATE
 // =============================
-export const updateItemsDiscount = async (req: Request, res: Response) => {
+export const updateItemsDiscountController = async (req: Request, res: Response) => {
   try {
-    const data = await ItemsDiscountService.update(
-      Number(req.params.id),
-      req.body
-    );
+    const data = await updateItemsDiscount(Number(req.params.id), req.body);
     return res.json(data);
-  } catch (err) {
-    const error = err as Error;
-
-    if (error.message === "NOT_FOUND") {
+  } catch (err: any) {
+    if (err.message === "DISCOUNT_NOT_FOUND") {
       return res.status(404).json({ message: "Discount not found" });
+    }
+    if (err.message === "INVALID_DISCOUNT_AMOUNT" || err.message === "INVALID_DATE_RANGE") {
+      return res.status(400).json({ message: err.message });
     }
     return res.status(500).json({ message: "Server error" });
   }
@@ -69,15 +74,13 @@ export const updateItemsDiscount = async (req: Request, res: Response) => {
 // =============================
 // DELETE
 // =============================
-export const removeItemsDiscount = async (req: Request, res: Response) => {
+export const removeItemsDiscountController = async (req: Request, res: Response) => {
   try {
-    await ItemsDiscountService.remove(Number(req.params.id));
+    await removeItemsDiscount(Number(req.params.id));
     return res.json({ message: "Deleted successfully" });
-  } catch (err) {
-    const error = err as Error;
-
-    if (error.message === "NOT_FOUND") {
-      return res.status(404).json({ message: "Not found" });
+  } catch (err: any) {
+    if (err.message === "DISCOUNT_NOT_FOUND") {
+      return res.status(404).json({ message: "Discount not found" });
     }
     return res.status(500).json({ message: "Server error" });
   }

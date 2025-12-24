@@ -2,12 +2,18 @@ import API from "../api/axois.config";
 import { AxiosError } from "axios";
 
 export interface ItemsDiscount {
+  id: number;
   itemId: number;
-  title: string;
-  dicountAmount: number;
+  title?: string;
+  discountAmount: number;
   startAt?: string;
   endAt?: string;
 }
+
+// 👇 Dùng cho CREATE / UPDATE
+export type ItemsDiscountPayload = Omit<ItemsDiscount, "id">;
+
+
 
 export const getAllItemsDiscount = async (): Promise<ItemsDiscount[]> => {
   try {
@@ -27,24 +33,21 @@ export const getItemsDiscount = async (id: number): Promise<ItemsDiscount> => {
   }
 };
 
-export const createItemsDiscount = async (payload: ItemsDiscount) => {
-  try {
-    const res = await API.post("/items-discount", payload);
-    return res.data;
-  } catch (error) {
-    const err = error as AxiosError<any>;
-    throw new Error(err.response?.data?.message || "Tạo discount thất bại");
-  }
+export const createItemsDiscount = async (
+  payload: ItemsDiscountPayload
+): Promise<ItemsDiscount> => {
+  const res = await API.post("/items-discount", payload);
+  return res.data;
 };
 
-export const updateItemsDiscount = async (id: number, payload: Partial<ItemsDiscount>) => {
-  try {
-    const res = await API.put(`/items-discount/${id}`, payload);
-    return res.data;
-  } catch (error) {
-    throw new Error("Cập nhật thất bại");
-  }
+export const updateItemsDiscount = async (
+  id: number,
+  payload: ItemsDiscountPayload
+): Promise<ItemsDiscount> => {
+  const res = await API.put(`/items-discount/${id}`, payload);
+  return res.data;
 };
+
 
 export const deleteItemsDiscount = async (id: number) => {
   try {
