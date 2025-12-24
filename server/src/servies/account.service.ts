@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
 import { createEmailVerification, isEmailVerified } from "../db/verify.db";
-import { sendVerifyEmail } from "../helper/sendEmail"
+import { sendVerifyEmail } from "../helper/sendEmail";
 
 import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo } from "../db/db.account";
 import { Account } from "../entity/Account";
@@ -59,8 +59,8 @@ export const loginUser = async (username: string, password: string) => {
   const acc = await findAccountByUsername(username);
   if (!acc) throw new Error("User not found");
 
-  const verified = await isEmailVerified(acc.id!);
-  if (!verified) throw new Error("Email not verified");
+  // const verified = await isEmailVerified(acc.id!);
+  // if (!verified) throw new Error("Email not verified");
 
   const valid = await bcrypt.compare(password, acc.password!);
   if (!valid) throw new Error("Invalid password");

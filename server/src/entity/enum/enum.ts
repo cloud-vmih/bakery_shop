@@ -38,3 +38,11 @@ export enum ECategory {
   COOKIE = "COOKIE",
   OTHER = "OTHER",
 }
+
+export enum ECancelStatus {
+  NONE = "NONE",
+  REQUESTED = "REQUESTED",
+  APPROVED = "APPROVED",      
+  REJECTED = "REJECTED",
+}
+

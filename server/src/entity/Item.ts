@@ -30,6 +30,9 @@ export class Item extends BaseEntity {
   @Column({ type: "json", nullable: true })
   itemDetail?: any;
 
+  @Column({ type: "int", default: 0 })
+stockQuantity?: number;
+
   @ManyToMany(() => Wishlist, w => w.item)
   wishlist?: Wishlist[];
 

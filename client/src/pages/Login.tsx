@@ -20,10 +20,8 @@ export default function AuthPage() {
       localStorage.setItem("token", data.token);
       switch (data.user.type) {
         case "admin":
-          navigate(`/admin`);
-          break;
         case "staff":
-          navigate(`/staff`);
+          navigate(`/admin/orders`);
           break;
         default:
           navigate(`/`);
