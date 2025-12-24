@@ -1,8 +1,4 @@
-// client/src/services/order.service.ts
-
 import API from "../api/axois.config"; // giả sử là axios instance
-
-// ==================== Định nghĩa kiểu dữ liệu ====================
 
 export type OrderDetailItem = {
   itemInfo: {
