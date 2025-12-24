@@ -61,8 +61,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
 
                 {/* Desktop Navigation */}
                 <nav className="hidden lg:flex items-center gap-8">
-                    {/* Navigation Links */}
-                    {/* Navigation Links */}
                     <div className="flex items-center gap-6">
                         {[
                             // Link cho Admin/Staff
@@ -80,7 +78,14 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                             { to: "/about", label: "About Us", types: ['Customer'] },
                             { to: "/contact", label: "Contact", types: ['Customer'] },
                         ]
-                            .filter(link => link.types.includes(user?.type || ''))
+                            .filter(link => {
+                                const userType = user?.type;
+                                if (!user) {
+                                    return link.types.includes('Customer');
+                                }
+
+                                return link.types.includes(userType);
+                            })
                             .map((link, index) => (
                                 <Link
                                     key={index}
@@ -95,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
 
                     {/* User Section */}
                     <div className="flex items-center gap-4">
-                        {user?.type === 'Customer' && (
+                        {user?.type === 'Customer' || !user && (
                         <Link
                             to="/cart"
                             className="relative p-2 rounded-full hover:bg-emerald-50 transition-colors inline-block"
@@ -234,7 +239,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                 ] : []),
 
                                 // Link chỉ cho Customer
-                                ...(user?.type === 'Customer' ? [
+                                ...(user?.type === 'Customer' || !user ? [
                                     { to: "/", label: "Home", icon: "fa-home" },
                                     { to: "/about", label: "About Us", icon: "fa-info-circle" },
                                     { to: "/contact", label: "Contact", icon: "fa-envelope" },
