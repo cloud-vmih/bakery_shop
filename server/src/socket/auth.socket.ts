@@ -32,10 +32,8 @@ export const socketAuth = (
 
       const payload = decoded as JwtPayload;
 
-      socket.data.user = {
-        id: payload.user.id.toString(),
-        type: "USER",
-      };
+      socket.data.user = payload.user;
+  
     } else {
       socket.data.user = {
         id: guestId,

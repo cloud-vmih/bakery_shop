@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/authContext"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from "react-router-dom";
+import { useSocketStore } from "../stores/socket.store";
 
 type User = {
     fullName: string;
@@ -26,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
 
     const handleLogout = onLogout ?? (() => {
         localStorage.removeItem("token");
+        useSocketStore.getState().reconnectSocket();
         navigate("/login");
     });
 

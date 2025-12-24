@@ -90,3 +90,9 @@ export async function updateUser(userId: number, updates: UpdateUserPayload): Pr
     avatar: savedUser.avatarURL || null,
   };
 }
+
+export async function getRawUserByID(userId: number) {
+  return await userRepository.findOne(
+    {where: {id: userId}}
+  );
+} 

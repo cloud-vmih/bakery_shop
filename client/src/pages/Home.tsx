@@ -1,5 +1,4 @@
 // src/pages/Home.tsx
-import toast from "react-hot-toast";
 import { useUser } from "../context/authContext";
 import { useEffect, useState } from "react";
 import {
@@ -383,6 +382,7 @@ const Home = () => {
         </div>
       </section>
     </div>
+    <ChatBox />
     </>
   );
 };

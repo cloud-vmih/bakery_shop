@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { verifyToken } from "../services/auth.services"; // FE gọi /token BE
+import { useSocketStore } from "../stores/socket.store";
 
 interface AuthContextType {
   user: any | null;
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await verifyToken();
          // FE sẽ tự gửi token bằng headers
         setUser(data.user); // BE trả user/info
+        useSocketStore.getState().reconnectSocket();
       } catch (err) {
         console.log("Token lỗi, clear luôn user");
         localStorage.removeItem("token");

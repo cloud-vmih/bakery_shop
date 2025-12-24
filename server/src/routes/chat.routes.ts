@@ -1,10 +1,11 @@
 import express from "express";
-import { loadMessages, getChatByUser } from "../controller/chat.controller";
+import * as chatController from "../controller/chat.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
 const messageRouter = express.Router();
 
-messageRouter.get("/:conversationId/messages", verifyToken, loadMessages);
-messageRouter.get("/active", verifyToken, getChatByUser)
+messageRouter.get("/:conversationId/messages", verifyToken, chatController.loadMessages);
+messageRouter.get("/active", verifyToken, chatController.getChatByUser)
+messageRouter.get("/conversations", verifyToken, chatController.loadConversations)
 
 export default messageRouter;

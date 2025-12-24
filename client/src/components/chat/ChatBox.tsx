@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { X, MessageCircle } from "lucide-react";
-import { useChatStore } from "../../stores/chat.store";
+import { X } from "lucide-react";
+import { useChatStore } from "../../stores/customerChat.store";
 import { useUser } from "../../context/authContext";
+import { MessageBubble } from "./MessageBubble";
 
 const ChatBox = () => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const { user } = useUser();
+
 
   const {
     activeConversationId,
@@ -19,13 +21,14 @@ const ChatBox = () => {
   const currentUserId = useMemo(() => {
     return user?.id.toString() ?? localStorage.getItem("guestID");
   }, [user]);
+  
   useEffect(() => {
     if (!open) return;
     initChat(currentUserId);
   }, [open, currentUserId, initChat]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages, activeConversationId]);
 
   const currentMessages =  activeConversationId ? messages[activeConversationId] || [] : [];
@@ -35,125 +38,104 @@ const ChatBox = () => {
     await sendMessage(input);
     setInput("");
   };
-
-  return (
+return (
     <>
-      {/* ================= NÚT MỞ CHAT - HÌNH BÁNH CUPCAKE ================= */}
+      {/*  NÚT MỞ CHAT */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 w-18 h-20 rounded-full hover:scale-110 transition-all duration-300 z-[1000] flex flex-col items-center justify-end pb-1 group"
+          className="
+            fixed bottom-5 right-5
+            bg-transparent
+            hover:scale-110
+            transition-transform duration-300
+            z-[1000]
+            group
+          "
         >
-          {/* Cupcake base */}
-          <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-amber-400 to-amber-500 shadow-xl border-2 border-amber-300 group-hover:border-amber-400 group-hover:shadow-2xl transition-all">
-            {/* Cupcake wrapper */}
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-14 h-8 rounded-t-full bg-gradient-to-b from-amber-200 to-amber-300 border-2 border-amber-100"></div>
-            
-            {/* Pink frosting/whip */}
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-b from-pink-300 to-pink-400 border-2 border-pink-200 shadow-inner">
-              {/* Swirl effect */}
-              <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full border-2 border-pink-100/50"></div>
-            </div>
-            
-            {/* Cherry/Sprinkle icon */}
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/5992/5992459.png"
-              alt="Chat với chúng tôi"
-              className="absolute top-1 left-1/2 -translate-x-1/2 w-6 h-6 object-contain z-10 animate-bounce"
-            />
+          <img
+            src="/images/boxchatIcon.png"
+            alt="Chat với chúng tôi"
+            className="w-60 h-60 object-contain drop-shadow-lg group-hover:drop-shadow-2xl transition-all"
+          />
+          {/* Tooltip */}
+          <div className="absolute -top-1 right-0 bg-emerald-400 text-white text-xs py-1 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+            Chat với chúng tôi
           </div>
-          
-          {/* Glow effect */}
-          <div className="absolute inset-0 rounded-full bg-yellow-200/20 blur-md group-hover:bg-yellow-300/30 transition-all -z-10"></div>
         </button>
       )}
 
-      {/* ================= POPUP CHAT NHỎ HƠN ================= */}
+      {/*  POPUP CHAT  */}
       {open && (
         <div
-          className="fixed bottom-28 right-6 w-80 h-[440px] bg-white rounded-2xl shadow-2xl border-2 border-amber-100 overflow-hidden flex flex-col z-[1000] transform transition-all duration-300 scale-100"
+          className="fixed bottom-24 right-5 w-[360px] h-[480px] bg-white rounded-2xl shadow-2xl border-2 border-amber-200 overflow-hidden flex flex-col z-[1000] animate-in slide-in-from-bottom-5"
           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
-          {/* HEADER - Cupcake themed */}
-          <div className="px-5 py-3 bg-gradient-to-r from-pink-300 via-pink-400 to-amber-400 text-white flex justify-between items-center relative">
-            {/* Cupcake sprinkle pattern */}
-            <div className="absolute top-1 right-4 w-6 h-6 opacity-30">
-              <div className="w-1 h-1 bg-white rounded-full absolute top-1 left-2"></div>
-              <div className="w-1 h-1 bg-white rounded-full absolute top-3 right-1"></div>
-              <div className="w-1 h-1 bg-yellow-200 rounded-full absolute bottom-1 left-1"></div>
-            </div>
-            
-            <div className="relative z-10">
-              <h3 className="text-base font-bold drop-shadow-sm">Hỗ trợ khách hàng</h3>
-              <p className="text-xs opacity-95">Chúng tôi luôn sẵn sàng giúp bạn 🍰</p>
+          {/* HEADER  */}
+          <div className="px-6 py-2 bg-gradient-to-r from-amber-100 to-yellow-100 border-b border-amber-200 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-4 text-green-800 flex items-center justify-center">
+                <img
+                  src="/images/boxchatHeader.png"
+                  alt="Chat với chúng tôi"
+                  className="w-10 h-10 object-contain drop-shadow-lg group-hover:drop-shadow-2xl transition-all"
+                ></img>
+              </div>
+              <div>
+                <h3 className="text-s font-bold text-green-800">
+                  Hỗ trợ khách hàng
+                </h3>
+                <p className="text-xs text-amber-800 font-medium">
+                  Chúng tôi luôn sẵn sàng giúp bạn 
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors backdrop-blur-sm"
+              className="w-8 h-8 rounded-full hover:bg-green-200 flex items-center justify-center transition-colors border border-amber-200 shadow-sm"
             >
-              <X size={16} />
+              <X size={20} className="text-gray-700" />
             </button>
           </div>
 
-          {/* BODY - Danh sách tin nhắn */}
-          <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-pink-50/40 to-amber-50/30">
-            {currentMessages.map((msg) => {
-              const isMine = msg.senderId === currentUserId;
-              return (
-                <div
-                  key={msg.id}
-                  className={`mb-3 max-w-[85%] ${
-                    isMine ? "ml-auto" : "mr-auto"
-                  }`}
-                >
-                  <div
-                    className={`px-3 py-2.5 rounded-2xl shadow-sm backdrop-blur-sm border ${
-                      isMine
-                        ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white border-amber-400"
-                        : "bg-gradient-to-r from-pink-100 to-white text-gray-800 border-pink-200"
-                    } transition-all duration-200`}
-                  >
-                    <p className="text-sm leading-relaxed">{msg.content}</p>
-                  </div>
-                  <div className={`text-xs mt-1 px-2 text-gray-500 ${isMine ? 'text-right' : 'text-left'}`}>
-                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              );
-            })}
+          {/* BODY - Chat messages */}
+          <div className="flex-1 px-2 py-4 overflow-y-auto bg-gradient-to-b from-green-50/50 to-amber-50/30">
+            {   currentMessages.map((msg) => (
+                 <MessageBubble key={msg.id} msg={msg} />
+              ))}
             <div ref={chatEndRef} />
           </div>
 
-          {/* INPUT AREA - Cupcake wrapper themed */}
-          <div className="p-3 bg-gradient-to-r from-amber-50 to-pink-50 border-t-2 border-amber-200">
-            <div className="flex gap-2">
+          {/* INPUT AREA */}
+          <div className="p-4 bg-gradient-to-r from-amber-100 to-yellow-100 border-t-2 border-amber-200">
+            <div className="flex gap-3">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                 placeholder="Nhập tin nhắn..."
-                className="flex-1 px-4 py-2.5 rounded-full border-2 border-amber-300 focus:border-pink-400 focus:outline-none text-sm bg-white/80 placeholder-gray-500 transition-all duration-300 hover:border-amber-400"
+                className="flex-1 px-5 py-1 border-2 border-amber-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none transition-all text-gray-800 placeholder-gray-500 bg-white/90"
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim()}
-                className="px-5 py-2.5 bg-gradient-to-r from-pink-400 to-amber-500 text-white font-semibold rounded-full shadow-md hover:from-pink-500 hover:to-amber-600 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1.5 min-w-[70px] justify-center"
+                className="px-2 py-1 bg-green-600 text-white font-bold rounded-xl shadow-md hover:bg-green-700 hover:scale-105 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                <span className="text-sm">Gửi</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span>Gửi</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               </button>
             </div>
-            
-            {/* Decorative sprinkles */}
-            <div className="flex justify-center gap-1 mt-2">
+
+            {/* Decorative elements */}
+            <div className="flex justify-center gap-1.5 mt-2">
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1 h-1 rounded-full ${
-                    i % 3 === 0 ? 'bg-pink-400' : 
-                    i % 3 === 1 ? 'bg-amber-400' : 
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    i % 3 === 0 ? 'bg-amber-400' : 
+                    i % 3 === 1 ? 'bg-green-400' : 
                     'bg-yellow-300'
                   }`}
                 ></div>
@@ -163,7 +145,7 @@ const ChatBox = () => {
         </div>
       )}
     </>
-    );
+  );
 };
 
 export default ChatBox;

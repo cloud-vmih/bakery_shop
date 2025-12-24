@@ -1,40 +1,22 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
-<<<<<<< HEAD
-import { createEmailVerification, isAccountVerified } from "../db/verify.db";
-import { sendVerifyEmail } from "../helper/sendEmail"
-
-import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, isEmailTaken, isPhoneNumberTaken } from "../db/db.account";
-import { Account } from "../entity/Account";
-import { Customer } from "../entity/Customer";
-=======
 import { createEmailVerification, isAccountVerified, verify, isEmailVerified } from "../db/verify.db";
 import { sendEmail } from "../helper/sendEmail"
 import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db/db.account";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 import { redis } from "../config/redis";
->>>>>>> origin/feature/updateQuantity
 
 export const registerUser = async (username: string, password: string, email: string, phoneNumber: string, fullName: string, dateOfBirth: Date, avatarURL: string) => {
 
   try {
-<<<<<<< HEAD
-  
-    const existing = await findAccountByUsername(username);
-    if (existing) throw new Error("Username already exists");
-
-    if(await isEmailTaken(email)) throw new Error("Email already used");
-    if(await isPhoneNumberTaken(phoneNumber)) throw new Error("Phone Number already used")
-=======
 
     const existing = await findAccountByUsername(username);
     if (existing) throw new Error("Username already exists");
 
     if (await findUserByEmail(email)) throw new Error("Email already used");
     if (await isPhoneNumberTaken(phoneNumber)) throw new Error("Phone Number already used")
->>>>>>> origin/feature/updateQuantity
 
     const hashed = await bcrypt.hash(password, 10);
     const account = new Account();
@@ -52,40 +34,23 @@ export const registerUser = async (username: string, password: string, email: st
     customer.account = acc;
     customer.avatarURL = avatarURL || "";
 
-<<<<<<< HEAD
-    const user =  await createUser(customer);
-
-    const token = jwt.sign({ id: acc.id, username: acc.username }, process.env.EMAIL_VERIFY_SECRET!, {expiresIn: "1h"});
-=======
     const user = await createUser(customer);
 
     const token = jwt.sign({ id: acc.id, username: acc.username }, process.env.EMAIL_VERIFY_SECRET!, { expiresIn: "1h" });
->>>>>>> origin/feature/updateQuantity
 
     await createEmailVerification(acc.id!);
 
     const verifyLink = `${process.env.CLIENT_URL}/verify?token=${token}`;
 
-<<<<<<< HEAD
-    await sendVerifyEmail(
-    user.email!,
-    "Verify your email",
-    `
-=======
     await sendEmail(
       user.email!,
       "Verify your email",
       `
->>>>>>> origin/feature/updateQuantity
       <h2>Verify your account</h2>
       <p>Click the link below:</p>
       <a href="${verifyLink}">${verifyLink}</a>
     `
-<<<<<<< HEAD
-  );
-=======
     );
->>>>>>> origin/feature/updateQuantity
 
     return { message: "Registered successfully. Check your email to verify." };
   } catch (err) {
@@ -96,11 +61,6 @@ export const registerUser = async (username: string, password: string, email: st
 export const loginUser = async (username: string, password: string) => {
   const acc = await findAccountByUsername(username);
   if (!acc) throw new Error("User not found");
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> origin/feature/updateQuantity
   const verified = await isAccountVerified(acc.id!);
   if (!verified) throw new Error("Email not verified");
 
@@ -112,11 +72,6 @@ export const loginUser = async (username: string, password: string) => {
   console.log("User type:", userInfo!.type);
 
   const token = jwt.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET!, {
-<<<<<<< HEAD
-    expiresIn: "1h",
-  });
-  return { token, user: userInfo };
-=======
     expiresIn: "15m",
   });
 
@@ -125,17 +80,12 @@ export const loginUser = async (username: string, password: string) => {
   });
 
   return { refresh_token, token, user: userInfo };
->>>>>>> origin/feature/updateQuantity
 };
 
 export const getUser = async (id: number) => {
   return await findUserByAccountId(id);
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/feature/updateQuantity
 export const googleService = {
   loginWithGoogle: async (idToken: string) => {
     const ticket = await googleClient.verifyIdToken({
@@ -159,29 +109,6 @@ export const googleService = {
 
     if (social) {
       accountId = social.account!.id!;
-<<<<<<< HEAD
-      
-      user = await findUserByAccountId(accountId);
-
-    } else {
-      const username = `google_${providerUserId}`;
-      const account = new Account();
-      account.username = username;
-      account.password = "*";
-      const acc = await createAccount(account);
-      accountId = acc.id!;
-
-      const customer = new Customer();
-      customer.fullName = fullName;
-      customer.email = email;
-      customer.phoneNumber = "0123456789";
-      customer.dateOfBirth = new Date();
-      customer.account = acc;
-      customer.avatarURL = avatarURL || "";
-      user = await createUser(customer);
-
-      await socialAuthRepo.linkSocialAccount(providerUserId, email, acc.id!);
-=======
 
       user = await findUserByAccountId(accountId);
 
@@ -213,26 +140,10 @@ export const googleService = {
       await socialAuthRepo.linkSocialAccount(providerUserId, email, accountId!);
       await createEmailVerification(accountId)
       await verify(accountId)
->>>>>>> origin/feature/updateQuantity
     }
 
     const jwtPayload = {
       accountId,
-<<<<<<< HEAD
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        avatarURL: user.avatarURL,
-        type: user.type,
-      },
-    };
-
-    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, { expiresIn: "1h" });
-    return { token, user: jwtPayload.user };
-  },
-};
-=======
       user: user
     };
 
@@ -304,4 +215,3 @@ export const changePassword = {
     catch (err) {throw new Error("Change password failed!")}
   }
 }
->>>>>>> origin/feature/updateQuantity

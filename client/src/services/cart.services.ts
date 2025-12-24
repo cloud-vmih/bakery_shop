@@ -1,6 +1,5 @@
 // src/services/cart.services.ts
 import API from "../api/axois.config";
-import toast from "react-hot-toast";
 
 export const addToCart = async (itemId: number) => {
   try {

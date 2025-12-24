@@ -1,10 +1,8 @@
 import { create } from "zustand";
 import { ChatMessage } from "../types/chat.type";
-import { getActiveConversation, getCurrentSenderId, loadMessagesAPI } from "../services/chat.services";
+import { getActiveConversation, loadMessages } from "../services/chat.services";
 import { useSocketStore } from "./socket.store";
 import toast from "react-hot-toast";
-import { getSocketAuth } from "../services/socket.services";
-import { User } from "../types/user.type";
 
 interface ChatState {
   activeConversationId: number | null;
@@ -24,17 +22,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
   initChat: async (currentUserId: string) => {
     set({ loading: true });
 
-
     const conversationId = await getActiveConversation();
-    toast.success("conversation", conversationId);
-
-    set({activeConversationId: conversationId});
-
+    toast.success(`conversation: ${conversationId}`);
     const socket = useSocketStore.getState().socket;
     socket?.emit("chat:join", { conversationId });
     if (!get().messages[conversationId]) {
 
-      const page = await loadMessagesAPI(conversationId);
+      const page = await loadMessages(conversationId);
       set((state) => ({
         messages: {
           ...state.messages,
@@ -42,7 +36,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             ...msg,
             isMine: msg.senderId.toString() === currentUserId,
           })),
-        },
+        }
       }));
     }
 
@@ -56,11 +50,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   sendMessage: async (content: string) => {
     const { activeConversationId } = get();
-    toast.success(activeConversationId?.toString()?? "none");
     if (!activeConversationId) return;
 
     const socket = useSocketStore.getState().socket;
-    toast.error(socket?.id ?? "no socket found");
     if (!socket) return;
 
     socket.emit("chat:send", {
@@ -72,9 +64,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
   
   attachListener: (currentUserId: string) => {
     const socket = useSocketStore.getState().socket;
+    toast.error(`${currentUserId}`)
     if (!socket) return;
     socket.off("chat:receive");
-    toast.error(`currentUser: ${currentUserId}`)
     socket.on("chat:receive", (message: ChatMessage) => {
       set((state) => ({
         messages: {
@@ -83,7 +75,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             ...(state.messages[message.conversationId] || []),
             {
               ...message,
-              isMine: message.senderId === currentUserId,
+              isMine: message.senderId.toString() === currentUserId,
             },
           ],
         },

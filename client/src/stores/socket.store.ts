@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { io, type Socket } from "socket.io-client";
 import { getSocketAuth } from "../services/socket.services";
 import { SocketState } from "../types/store.type";
-import toast from "react-hot-toast";
 const baseURL = "http://localhost:5000";
 
 

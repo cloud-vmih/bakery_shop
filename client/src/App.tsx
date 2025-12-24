@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/authContext";
 import { InventoryProvider} from "./context/inventoryContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import VerifyEmail from "./pages/verifyEmail";
-import MenuPagePage from "./pages/MenuPagePage";
+import MenuPage from "./pages/MenuPage";
 import ChangePassword from "./pages/ChangePassword";
 import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
@@ -20,7 +20,9 @@ import WishlistPage from "./pages/Wishlist";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SocketProvider } from "./context/socketContext";
-import ChatBox from "./components/chat/ChatBox";
+
+import AdminConversationChat from "./components/chat/AdminConversationChat";
+import AdminConversationList from "./components/chat/AdminConversationList";
 
 export default function App() {
   return (
@@ -29,7 +31,6 @@ export default function App() {
       <SocketProvider>
       <InventoryProvider>
     <BrowserRouter>
-      <ChatBox />
         <ToastContainer
             position="bottom-right"
             autoClose={2000}
@@ -51,6 +52,13 @@ export default function App() {
         <Route path="/order" element={<MyOrders />} />
         <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
         <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/admin/conversations" element={<AdminConversationList />} />
+        <Route
+          path="/admin/conversations/:id"
+          element={<AdminConversationChat />}
+        />
+
+
       </Routes>
     </BrowserRouter>
         </InventoryProvider>

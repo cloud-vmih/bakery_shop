@@ -12,7 +12,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   
   // Header kiểu: "Bearer <token>"
   const token = authHeader && authHeader.split(" ")[1];
-
   if (!token) {
     // Không có token = chưa đăng nhập
     return res.status(401).json({ 
@@ -29,6 +28,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 
     // Gắn thông tin user vào req
     (req as any).user = decoded.user;
+    console.log(`${decoded.user.id}`)
     next(); // Cho đi tiếp
   } catch (err: any) {
     // Phân biệt các loại lỗi token

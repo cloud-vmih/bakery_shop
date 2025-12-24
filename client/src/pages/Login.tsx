@@ -5,7 +5,6 @@ import "../styles/auth.css";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
 import GoogleLoginButton from "../components/GoogleLoginButton";
-import { useSocketStore } from "../stores/socket.store";
 export default function AuthPage() {
   
   const { user, setUser } = useUser();
@@ -35,7 +34,6 @@ export default function AuthPage() {
         default:
           navigate(`/`);
       }
-      useSocketStore.getState().reconnectSocket();
     } catch (err: any) {
       toast.error(err.message);
       setError(err.message || "Đăng nhập thất bại");

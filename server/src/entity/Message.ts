@@ -8,16 +8,10 @@ export class Message {
   @PrimaryGeneratedColumn("increment")
   id?: number;
 
-  @Column({
-    type: "enum",
-    enum: ESender
-  })
-  senderType!: ESender;
-
   @Column()
   senderId!: string;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User)
   senderUser?: User;
   
   @ManyToOne(() => Conversation, conv => conv.messages, {

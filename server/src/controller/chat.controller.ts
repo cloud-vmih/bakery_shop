@@ -53,6 +53,7 @@ export const loadMessages = async (req: Request, res: Response) => {
       data: messages,
     });
   } catch (error: any) {
+    console.log(error.message);
     return res.status(500).json({
       success: false,
       message: error.message || "Load messages failed",
@@ -60,3 +61,19 @@ export const loadMessages = async (req: Request, res: Response) => {
   }
 };
 
+export const loadConversations = async (req: Request, res: Response) => {
+  try {
+    const conversations = await chatService.getConversationsSummary();
+
+    return res.status(200).json({
+      success: true,
+      data: conversations,
+    });
+  }
+  catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Load conversations failed",
+    });
+  }
+}
