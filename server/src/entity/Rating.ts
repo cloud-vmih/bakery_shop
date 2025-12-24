@@ -1,6 +1,7 @@
-import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, ManyToOne, JoinColumn, Column, CreateDateColumn, BaseEntity, PrimaryGeneratedColumn, OneToOne, OneToMany } from "typeorm"
 import { Item } from "./Item"
 import { Customer } from "./Customer"
+import { ResponseRating } from "./ResponseRating";
 
 @Entity("rating")
 export class Rating extends BaseEntity {
@@ -15,6 +16,9 @@ export class Rating extends BaseEntity {
   @ManyToOne(() => Customer, (c) => c.ratings)
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
+
+  @OneToMany(() => ResponseRating, (responseRating) => responseRating.rating)
+  responses?: ResponseRating[];
 
   @Column()
   contents!: string;

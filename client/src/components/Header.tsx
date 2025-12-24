@@ -68,6 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                             { to: "/admin/menu", label: "Menu", types: ['Admin'] },
                             { to: "/admin/branch", label: "Branch", types: ['Admin', 'Staff'] },
                             { to: "/admin/promotion", label: "Promotion", types: ['Admin', 'Staff'] },
+                            { to: "/admin/reviews", label: "Reviews", types: ['Admin', 'Staff'] },
 
                             // Link chỉ cho Admin
                             { to: "/admin/staff", label: "Staff", types: ['Admin'] },
