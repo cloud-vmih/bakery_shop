@@ -6,7 +6,8 @@ import { addToCart } from "../services/cart.services";
 import { Header } from "../components/Header";
 import { useInventory } from "../context/inventoryContext";
 import "../styles/productDetails.css";
-import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
+import { ShoppingCartIcon} from "@heroicons/react/24/solid"; // Heroicons solid
+import { ClockIcon } from "lucide-react";
 
 const formatPrice = (price?: number) => {
   if (price === undefined || price === null) return "Liên hệ";
@@ -209,12 +210,29 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              {/* Mô tả */}
+              {/* Mô tả + Hạn sử dụng */}
               <div className="descriptionCard">
                 <h2 className="descriptionTitle">Mô tả sản phẩm</h2>
-                <p className="descriptionText">
+                <p className="descriptionText mb-6">
                   {item.description || "Sản phẩm chưa có mô tả chi tiết."}
                 </p>
+
+                {/* Phần Hạn sử dụng - chỉ hiển thị nếu có dữ liệu */}
+                {(item.itemDetail?.expiryNote || item.itemDetail?.expiryDays) && (
+                  <div className="mt-6 pt-6 border-t border-amber-200">
+                    <h3 className="text-lg font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                      <ClockIcon className="w-6 h-6 text-amber-700" />
+                      Hạn sử dụng & Bảo quản
+                    </h3>
+                    <p className="descriptionText text-green-700 font-medium flex items-start gap-2">
+                      <span className="mt-0.5">
+                        {item.itemDetail.expiryNote ||
+                          (item.itemDetail.expiryDays ? `Sử dụng tốt nhất trong ${item.itemDetail.expiryDays} ngày kể từ ngày nhận hàng.` : "")
+                        }
+                      </span>
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Nút thêm giỏ hàng */}
