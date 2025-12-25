@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
-import { createEmailVerification, isAccountVerified, verify, isEmailVerified } from "../db/verify.db";
+import { createEmailVerification, isAccountVerified, verify, isEmailVerified } from "../db(raw)/verify.db";
 import { sendEmail } from "../helper/sendEmail"
-import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db/db.account";
+import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db(raw)/db.account";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 import { redis } from "../config/redis";

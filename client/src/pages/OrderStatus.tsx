@@ -245,26 +245,6 @@ const getCancelButtonClass = () => {
     </div>
   )}
 </div>
-            {/* Ngày giao dự kiến */}
-            <div className="bg-white rounded-3xl shadow-lg p-8">
-              <p className="text-xl font-bold text-gray-800 mb-4">
-                Ngày giao dự kiến
-              </p>
-              <p className="text-2xl font-bold text-pink-600">
-                {data.deliveryAt
-                  ? new Date(data.deliveryAt).toLocaleDateString("vi-VN", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                    }) +
-                    " " +
-                    new Date(data.deliveryAt).toLocaleTimeString("vi-VN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : "Chưa xác định"}
-              </p>
-            </div>
           </div>
 
           {/* CỘT PHẢI */}

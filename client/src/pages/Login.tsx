@@ -26,10 +26,8 @@ export default function AuthPage() {
       setError("");
       switch (data.user.type) {
         case "admin":
-          navigate(`/admin`);
-          break;
         case "staff":
-          navigate(`/staff`);
+          navigate(`/admin`);
           break;
         default:
           navigate(`/`);

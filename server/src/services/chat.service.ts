@@ -1,5 +1,5 @@
-import * as chatDB from "../db/db.chat";
-import { getRawUserByID } from "../db/db.user";
+import * as chatDB from "../db(raw)/db.chat";
+import { getRawUserByID } from "../db(raw)/db.user";
 import { ENotiType } from "../entity/enum/enum";
 import { Message } from "../entity/Message";
 import { User } from "../entity/User";

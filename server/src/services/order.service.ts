@@ -1,6 +1,6 @@
 // server/src/services/order.service.ts
 
-import { orderRepo } from "../db/order.db";
+import { orderRepo } from "../db(raw)/order.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
 
 
@@ -79,7 +79,6 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     status,
     statusText: getStatusText(status),
     createdAt: order.createAt,
-    deliveryAt: order.deliveryAt || null,
     payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,

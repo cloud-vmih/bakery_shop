@@ -1,4 +1,4 @@
-import { getInventory, updateMultipleQuantities} from "../db/db.inventory";
+import { getInventory, updateMultipleQuantities} from "../db(raw)/db.inventory";
 
 export const getAll = async () => {
     return getInventory();

@@ -1,5 +1,5 @@
 // src/services/cart.service.ts
-import { getCartByUserId, createOrUpdateCart } from "../db/db.cart";
+import { getCartByUserId, createOrUpdateCart } from "../db(raw)/db.cart";
 
 export class CartService {
   async addItem(userId: number, itemId: number, quantity: number = 1) {

@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                     <div className="flex items-center gap-6">
                         {[
                             // Link cho Admin/Staff
-                            { to: "/admin", label: "Dashboard", types: ['Admin', 'Staff'] },
+                            { to: "/admin/dashboard", label: "Dashboard", types: ['Admin', 'Staff'] },
                             { to: "/admin/menu", label: "Menu", types: ['Admin'] },
                             { to: "/admin/branch", label: "Branch", types: ['Admin', 'Staff'] },
                             { to: "/admin/promotion", label: "Promotion", types: ['Admin', 'Staff'] },
@@ -254,7 +254,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
 
                                 // Link cho Admin/Staff
                                 ...(user?.type === 'Admin' || user?.type === 'Staff' ? [
-                                    { to: "/admin", label: "Dashboard", icon: "fa-chart-line" },
+                                    { to: "/admin/dashboard", label: "Dashboard", icon: "fa-chart-line" },
                                     { to: "/admin/branch", label: "Branch", icon: "fa-store" },
                                     { to: "/admin/promotion", label: "Promotion", icon: "fa-tag" },
                                 ] : []),

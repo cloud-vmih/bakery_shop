@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { verify } from "../db/verify.db";
+import { verify } from "../db(raw)/verify.db";
 
 export const verifyEmail = async (req: Request, res: Response) => {
     try {

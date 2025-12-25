@@ -5,12 +5,11 @@ import {
   getOrderList,
   getOrderDetail,
   updateOrderStatus,
+  cancelOrder,
   requestCancelOrder,
   handleCancelRequest,
   generateInvoiceHTML,
-  cancelOrder
 } from "../services/manageOrder.service";
-import * as customerOrderService from "../services/order.service";
 
 /* ================== TYPE ================== */
 interface AuthRequest extends Request {
@@ -141,63 +140,3 @@ export const printInvoice = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// XỬ LÝ ĐƠN HÀNG BÊN PHÍA CUSTOMER
-export class OrderController {
-  static async getMyOrders(req: Request, res: Response) {
-    try {
-      const userId = (req as any).user.id;
-      const result = await customerOrderService.getMyOrders(userId);
-      return res.status(200).json(result);
-    } catch (error: any) {
-      console.error("Lỗi lấy danh sách đơn hàng:", error);
-      return res.status(500).json({ message: "Lỗi server", orders: [] });
-    }
-  }
-
-  static async getOrderStatus(req: Request, res: Response) {
-    try {
-      const userId = (req as any).user.id;
-      const orderId = Number(req.params.orderId);
-
-      if (isNaN(orderId)) {
-        return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
-      }
-
-      const data = await customerOrderService.getOrderStatus(orderId, userId);
-      if (!data) {
-        return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
-      }
-
-      return res.status(200).json(data);
-    } catch (error: any) {
-      console.error("Lỗi lấy trạng thái đơn hàng:", error);
-      return res.status(500).json({ message: "Lỗi server" });
-    }
-  }
-
-  static async cancelOrder(req: Request, res: Response) {
-    try {
-      const orderId = Number(req.params.orderId);
-      const userId = (req as any).user.id;
-
-      if (isNaN(orderId)) {
-        return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
-      }
-
-      const result = await customerOrderService.cancelOrder(orderId, userId);
-
-      if (!result.success) {
-        return res.status(400).json({ message: result.message });
-      }
-
-      return res.status(200).json({
-        message: result.message,
-        action: result.action, // để frontend hiển thị thông báo phù hợp
-      });
-    } catch (error: any) {
-      console.error("Lỗi hủy đơn hàng:", error);
-      return res.status(500).json({ message: "Lỗi hệ thống khi hủy đơn hàng" });
-    }
-  }
-}
