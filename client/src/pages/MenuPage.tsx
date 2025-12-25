@@ -5,7 +5,6 @@ import { getMenu } from "../services/menu.services";
 import { addToCart } from "../services/cart.services";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/authContext";
-import { Header } from "../components/Header";
 import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { getBranches } from "../services/branch.services";

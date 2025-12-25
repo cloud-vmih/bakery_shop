@@ -7,17 +7,19 @@ interface PriceDisplayProps {
             endAt: string | Date;
         }>;
     };
+    size?: 'sm' | 'md' | 'lg'; // Thêm prop size
 }
-
 const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
 };
 
-export const PriceDisplay = ({ item }: PriceDisplayProps) => {
+export const PriceDisplay = ({
+                                 item,
+                                 size = 'md'
+                             }: PriceDisplayProps) => {
     const now = new Date();
 
-    // Tìm discount active
-    const activeDiscount = item.discounts?.find((discount: any) => {
+    const activeDiscount = item.discounts?.find(discount => {
         const startDate = new Date(discount.startAt);
         const endDate = new Date(discount.endAt);
         return now >= startDate && now <= endDate;
@@ -27,26 +29,58 @@ export const PriceDisplay = ({ item }: PriceDisplayProps) => {
         return <span className="text-gray-600">Liên hệ</span>;
     }
 
+    // Config kích thước theo size
+    const sizeConfig = {
+        sm: {
+            original: 'text-xs',
+            discountBadge: 'text-xs',
+            final: 'text-sm',
+            date: 'text-xs',
+            gap: 'gap-1',
+        },
+        md: {
+            original: 'text-sm',
+            discountBadge: 'text-xs',
+            final: 'text-lg',
+            date: 'text-xs',
+            gap: 'gap-2',
+        },
+        lg: {
+            original: 'text-base',
+            discountBadge: 'text-sm',
+            final: 'text-2xl',
+            date: 'text-sm',
+            gap: 'gap-3',
+        },
+    };
+
+    const config = sizeConfig[size];
+
     if (activeDiscount) {
         const discountedPrice = item.price - item.price * (activeDiscount.discountAmount/100);
 
         return (
-<>
-          <span className="line-through text-gray-400 text-sm">
+            <div className={`flex flex-col ${config.gap}`}>
+                <div className="flex items-center gap-2">
+          <span className={`line-through text-gray-400 ${config.original}`}>
             {formatPrice(item.price)}
           </span>
-                    <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">
+                    <span className={`bg-red-100 text-red-800 font-bold px-2 py-1 rounded ${config.discountBadge}`}>
             -{activeDiscount.discountAmount}%
-          </span><br/>
-                    <span className="text-red-600 font-bold text-lg">
-            {formatPrice(discountedPrice)}
-          </span><br/>
-    <span className="text-xs text-gray-500">
+          </span>
+                </div>
+                <span className={`text-red-600 font-bold ${config.final}`}>
+          {formatPrice(discountedPrice)}
+        </span>
+                <span className={`text-gray-500 ${config.date}`}>
+          <i className="fas fa-clock mr-1"></i>
           Khuyến mãi đến {new Date(activeDiscount.endAt).toLocaleDateString('vi-VN')}
         </span>
-
-</>
+            </div>
         );
     }
-    return <span className="font-medium">{formatPrice(item.price)}</span>;
+
+    return <span className={`font-medium ${config.final}`}>
+    {formatPrice(item.price)}
+  </span>;
 };

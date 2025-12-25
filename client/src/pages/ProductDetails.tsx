@@ -8,6 +8,7 @@ import { useInventory } from "../context/inventoryContext";
 import "../styles/productDetails.css";
 import { ShoppingCartIcon} from "@heroicons/react/24/solid"; // Heroicons solid
 import { ClockIcon } from "lucide-react";
+import { PriceDisplay } from "../components/ItemPrice";
 
 const formatPrice = (price?: number) => {
   if (price === undefined || price === null) return "Liên hệ";
@@ -59,6 +60,7 @@ const ProductDetails = () => {
         const res = await itemService.getById(Number(id));
         const data = (res as any)?.data ?? res;
         setItem(data);
+        toast(data.name)
       } catch (error) {
         toast.error("Không tải được chi tiết sản phẩm");
       } finally {
@@ -144,8 +146,6 @@ const ProductDetails = () => {
 
   if (loadingItem) {
     return (
-      <>
-        <Header />
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="animate-pulse space-y-6">
             <div className="h-96 bg-gray-200 rounded-2xl" />
@@ -155,24 +155,18 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
-      </>
     );
   }
 
   if (!item) {
     return (
-      <>
-        <Header />
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <p className="text-lg text-gray-600">Không tìm thấy sản phẩm.</p>
         </div>
-      </>
     );
   }
 
   return (
-    <>
-      <Header />
       <div className="productDetailsPage">
         <div className="productDetailsContainer">
           <div className="productDetailsGrid">
@@ -191,7 +185,9 @@ const ProductDetails = () => {
             <div className="productInfoSection">
               <div className="space-y-5">
                 <h1 className="productTitle">{item.name}</h1>
-                <p className="productPrice">{formatPrice(item.price)}</p>
+                  <p className="productPrice">
+                      <PriceDisplay item={item} size={"lg"} />
+                  </p>
 
                 {/* Tags loại bánh - nằm trên */}
                 {tags.length > 0 && (
@@ -246,7 +242,6 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-    </>
   );
 };
 

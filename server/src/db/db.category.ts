@@ -19,6 +19,6 @@ export const findItemById = async (id: number) => {
   const repo = AppDataSource.getRepository(Item);
   return await repo.findOne({
     where: { id },
-    relations: ["ratings", "wishlists", "inventory", "inventory.branch"],
+    relations: ["ratings", "wishlists", "inventory", "inventory.branch", "discounts"],
   });
 };

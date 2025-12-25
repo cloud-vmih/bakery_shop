@@ -39,7 +39,7 @@ export default function WishlistPage() {
 
   const goToProductDetail = (itemId?: number) => {
     if (!itemId) return;
-    navigate(`/products/${itemId}`);
+    navigate(`/product/${itemId}`);
   };
 
   if (loading) return <p className="text-center mt-6">Đang tải danh sách yêu thích...</p>;
