@@ -1,26 +1,28 @@
 import API from "../api/axois.config";
 import { AxiosError } from "axios";
-
-/**
- * ======================
- * TYPES
- * ======================
- */
-
 export interface MembershipDiscount {
   id: number;
-  code: string;
+  // code: string;  // ← XÓA: Bỏ code hoàn toàn
   title: string;
-  discountAmount: number; // % giảm (0-100)
+  discountAmount: number;
   minPoints: number;
+  itemId?: number;  // ← THÊM: Optional, undefined = áp dụng toàn bộ menu
   startAt?: string;
   endAt?: string;
   isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-// Payload dùng cho CREATE
+// Nếu có MembershipDiscountPayload, cũng thêm itemId?: number; vào đó
+export interface MembershipDiscountPayload {
+  // code: string;  // ← XÓA: Bỏ code hoàn toàn
+  title: string;
+  discountAmount: number;
+  minPoints: number;
+  itemId?: number;  // ← THÊM optional
+  startAt?: string;
+  endAt?: string;
+  isActive: boolean;
+}
 export type CreateMembershipDiscountPayload = Omit<
   MembershipDiscount,
   "id" | "createdAt" | "updatedAt"

@@ -24,8 +24,8 @@ export const createMembershipDiscount = async (
     return res.status(201).json(data);
   } catch (error: any) {
     switch (error.message) {
-      case "CODE_EXISTED":
-        return res.status(400).json({ message: "Code đã tồn tại" });
+      // case "CODE_EXISTED":  // ← XÓA: Bỏ xử lý code existed
+      //   return res.status(400).json({ message: "Code đã tồn tại" });
       case "INVALID_DISCOUNT_AMOUNT":
         return res.status(400).json({ message: "% giảm phải từ 0-100" });
       case "INVALID_DATE":

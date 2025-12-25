@@ -4,12 +4,16 @@ import { Address } from "./Address";
 import { User } from "./User";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
+import { MembershipPoint } from "./MembershipPoint";
 
 @ChildEntity()
 export class Customer extends User {
 
-  @Column({ nullable: true })
-  membership?: number;
+  @OneToMany(() => MembershipPoint, (point) => point.user)
+  points?: MembershipPoint[];
+
+  @Column("int", { nullable: true })
+  membershipPoints?: number; // tổng điểm hiện tại
 
   @OneToMany(() => Address, (ad : Address) => ad.customer)
   addresses?: Address[];

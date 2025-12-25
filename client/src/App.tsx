@@ -9,28 +9,28 @@ import Menu from "./pages/Menu";
 import { Header } from "./components/Header";
 import ItemsDiscountPage from "./pages/ItemsDiscountPage";
 import StaffPage from "./pages/Staff";
-
-
-
+// Thêm import này
+import MembershipPoints from "./pages/MembershipPoints"; // Thay bằng đường dẫn thực tế nếu khác
 
 export default function AppRoutes() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
-    <AuthProvider>  
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/*" element={<Home />} />
-        <Route path="/verify" element={<VerifyEmail />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/promotion" element={<ItemsDiscountPage />} />
-        <Route path="/staff" element={<StaffPage />} />
-
-      </Routes>
-    </BrowserRouter>
-    </AuthProvider>
+      <AuthProvider>  
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/*" element={<Home />} />
+            <Route path="/verify" element={<VerifyEmail />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/promotion" element={<ItemsDiscountPage />} />
+            <Route path="/staff" element={<StaffPage />} />
+            {/* Thêm route mới cho MembershipPoints */}
+            <Route path="/membership" element={<MembershipPoints />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </GoogleOAuthProvider>
   );
 }
