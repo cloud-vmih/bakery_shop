@@ -15,6 +15,7 @@ import {
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import "../styles/home.css";
 import { Header } from "../components/Header";
+import { AdminSidebar } from "../components/Sidebar";
 
 interface Banner {
   title: string;
@@ -206,9 +207,8 @@ const Home = () => {
   const prevBanner = () => setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
-    <>
-    <Header></Header>
     <div className="page">
+        <AdminSidebar />
       {/* ==================== 1. BANNER ==================== */}
       <section className="banner">
         <div className="bannerWrapper">
@@ -382,7 +382,6 @@ const Home = () => {
         </div>
       </section>
     </div>
-    </>
   );
 };
 

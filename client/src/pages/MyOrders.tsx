@@ -88,20 +88,15 @@ export default function MyOrders() {
 
   if (loading) {
     return (
-      <>
-        <Header />
         <div className="flex items-center justify-center min-h-screen bg-green-50">
           <div className="text-2xl text-green-700 font-medium animate-pulse">
             Đang tải đơn hàng...
           </div>
         </div>
-      </>
     );
   }
 
   return (
-    <>
-      <Header />
       <div className="min-h-screen bg-green-50 py-12 px-4">
         <div className="max-w-4xl mx-auto"> {/* Giảm max-width một chút để gọn hơn */}
           {/* Tiêu đề trang */}
@@ -310,6 +305,5 @@ export default function MyOrders() {
           )}
         </div>
       </div>
-    </>
   );
 }

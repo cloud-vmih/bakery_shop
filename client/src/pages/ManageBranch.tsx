@@ -7,6 +7,7 @@ import { Header } from "../components/Header";
 import GooglePlaceInput from "../components/AddressAutocomplete";
 import MapProvider from "../components/MapProvider";
 import InventoryPopup from "./ManageQuantity";
+import { AdminSidebar } from "../components/Sidebar";
 
 export default function BranchPage() {
   const [branches, setBranches] = useState<any[]>([]);
@@ -197,8 +198,7 @@ export default function BranchPage() {
     );
   }
     return (
-        <>
-            <Header />
+
             <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white p-4 sm:p-6">
                 <div className="max-w-6xl mx-auto">
                     {/* Header với gradient và shadow */}
@@ -431,6 +431,5 @@ export default function BranchPage() {
                     />
                 </div>
             </div>
-        </>
     );
 }

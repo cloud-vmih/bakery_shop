@@ -133,8 +133,6 @@ export default function OrderStatus() {
   }
 
   return (
-    <>
-      <Header />
       <div className="min-h-screen bg-green-50 py-12 px-4">
         <div className="max-w-5xl mx-auto">
           {/* Tiêu đề */}
@@ -450,6 +448,5 @@ export default function OrderStatus() {
           </div>
         )}
       </div>
-    </>
   );
 }

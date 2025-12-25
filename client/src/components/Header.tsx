@@ -5,11 +5,6 @@ import { useUser } from "../context/authContext"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from "react-router-dom";
 
-type User = {
-    fullName: string;
-    avatar: string;
-};
-
 type HeaderProps = {
     viewProfile?: () => void;
     onLogin?: () => void;
@@ -63,17 +58,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                 <nav className="hidden lg:flex items-center gap-8">
                     <div className="flex items-center gap-6">
                         {[
-                            // Link cho Admin/Staff
-                            { to: "/admin", label: "Dashboard", types: ['Admin', 'Staff'] },
-                            { to: "/admin/menu", label: "Menu", types: ['Admin'] },
-                            { to: "/admin/branch", label: "Branch", types: ['Admin', 'Staff'] },
-                            { to: "/admin/promotion", label: "Promotion", types: ['Admin', 'Staff'] },
-                            { to: "/admin/reviews", label: "Reviews", types: ['Admin', 'Staff'] },
-
-                            // Link chỉ cho Admin
-                            { to: "/admin/staff", label: "Staff", types: ['Admin'] },
-
-                            // Link chỉ cho customer
                             { to: "/", label: "Home", types: ['Customer'] },
                             { to: "/menu", label: "Menu", types: ['Customer', 'Staff'] },
                             { to: "/about", label: "About Us", types: ['Customer'] },
@@ -101,7 +85,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
 
                     {/* User Section */}
                     <div className="flex items-center gap-4">
-                        {user?.type === 'Customer' || !user && (
                         <Link
                             to="/cart"
                             className="relative p-2 rounded-full hover:bg-emerald-50 transition-colors inline-block"
@@ -111,7 +94,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
     3
   </span>
                         </Link>
-                        )}
                         {/* User Profile / Login */}
                         {!user ? (
                             <Link
@@ -141,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                         {user.fullName || user.username}
                                       </span>
                                         <span className="text-xs text-emerald-600">
-                                            {user.type === 'Admin' ? 'Administrator' : 'Member'}
+                                            {'Member'}
                                           </span>
                                     </div>
                                     <svg className="w-4 h-4 text-emerald-500 transform group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,8 +147,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <span className="fas fa-user text-lg"></span>
                                             <span>My Profile</span>
                                         </Link>
-                                        {user.type === 'Customer' && (
-                                            <>
                                         <Link
                                             to="/order"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
@@ -182,8 +162,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                             <span className="fas fa-heart text-lg"></span>
                                             <span>My Wishlist</span>
                                         </Link>
-                                            </>
-                                            )}
                                         <div className="border-t border-emerald-100 mt-2 pt-2">
                                             <button
                                                 onClick={handleLogout}
@@ -224,29 +202,12 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
                         <nav className="flex flex-col gap-1">
                             {[
-                                // Link luôn hiển thị (Menu)
-                                { to: user?.type === 'Admin' ? "/admin/menu" : "/menu", label: "Menu", icon: "fa-utensils" },
-
-                                // Link cho Admin/Staff
-                                ...(user?.type === 'Admin' || user?.type === 'Staff' ? [
-                                    { to: "/admin", label: "Dashboard", icon: "fa-chart-line" },
-                                    { to: "/admin/branch", label: "Branch", icon: "fa-store" },
-                                    { to: "/admin/promotion", label: "Promotion", icon: "fa-tag" },
-                                ] : []),
-
-                                // Link chỉ cho Admin
-                                ...(user?.type === 'Admin' ? [
-                                    { to: "/admin/staff", label: "Staff", icon: "fa-users" },
-                                ] : []),
-
-                                // Link chỉ cho Customer
                                 ...(user?.type === 'Customer' || !user ? [
                                     { to: "/", label: "Home", icon: "fa-home" },
+                                    { to: "/menu", label: "Menu", icon: "fa-utensils" },
                                     { to: "/about", label: "About Us", icon: "fa-info-circle" },
                                     { to: "/contact", label: "Contact", icon: "fa-envelope" },
                                 ] : []),
-
-                                // Cart chỉ cho Customer
                                 ...(user?.type === 'Customer' ? [
                                     { to: "/cart", label: "Cart (3)", icon: "fa-shopping-cart" },
                                 ] : []),
@@ -295,10 +256,7 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                                 Profile
                                             </Link>
 
-                                            {/* Customer specific links trên mobile */}
-                                            {user.type === 'Customer' && (
-                                                <>
-                                                    <Link
+                                            <Link
                                                         to="/order"
                                                         className="flex items-center justify-center gap-2 px-4 py-2 text-sm text-emerald-700 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
                                                         onClick={() => setOpen(false)}
@@ -314,9 +272,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                                         <span className="fas fa-heart"></span>
                                                         Wishlist
                                                     </Link>
-                                                </>
-                                            )}
-
                                             <button
                                                 onClick={() => {
                                                     handleLogout();

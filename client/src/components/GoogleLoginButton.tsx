@@ -19,12 +19,19 @@ export default function GoogleLoginButton() {
 
           setUser(data.user);
           if (data.token) {
-            // Interceptor JSON.parse => phải lưu dưới dạng JSON string
             localStorage.setItem("token", data.token);
           }
-
           toast.success("Đăng nhập Google thành công!");
-          navigate("/");
+          switch (data.user.type) {
+              case "Admin":
+                  navigate(`/admin/menu`);
+                  break;
+              case "Staff":
+                  navigate(`/admin`);
+                  break;
+              default:
+                  navigate(`/`);
+            }
         } catch (err: any) {
           toast.error("Đăng nhập Google thất bại");
         }

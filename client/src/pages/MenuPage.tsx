@@ -170,8 +170,6 @@ export default function MenuPage() {
   ];
 
   return (
-    <>
-      <Header />
       <div className="menuPage">
         <section className="menuSection">
           <div className="menuLayout">
@@ -435,6 +433,5 @@ export default function MenuPage() {
           </div>
         </section>
       </div>
-    </>
   );
 }

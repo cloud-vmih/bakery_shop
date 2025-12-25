@@ -20,7 +20,8 @@ import ItemsDiscountPage from "./pages/ItemsDiscountPage";
 import StaffPage from "./pages/Staff";
 import ManageReviews from "./pages/review";
 import MembershipPoints from "./pages/MembershipPoints";
-
+import { AdminLayout } from './layout/AdminLayout';
+import { MainLayout } from './layout/CustomerLayout';
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,21 +41,26 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/changePW" element={<ChangePassword />}/>
+          <Route element={<MainLayout />}>
         <Route path="/profile" element={<User />} />
         <Route path="/*" element={<Home />} />
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/nearest-branch" element={<NearestBranch />} />
-        <Route path="/admin/branch" element={<ManageBranch />} />
-          <Route path="/admin/menu" element={<MenuManagement />} />
-        <Route path="/order" element={<MyOrders />} />
-        <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
-        <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/admin/promotion" element={<ItemsDiscountPage />} />
-        <Route path="/admin/staff" element={<StaffPage />} />
-          <Route path="/admin/reviews" element={<ManageReviews />} />
-          <Route path="/membership" element={<MembershipPoints />} />
+              <Route path="/membership" element={<MembershipPoints />} />
+              <Route path="/order" element={<MyOrders />} />
+              <Route path="/orderDetails/:orderId" element={<OrderStatus />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
+          </Route>
+          <Route path="/admin" element={<AdminLayout />}>
+              {/*<Route index element={<Dashboard />} />*/}
+              <Route path="branch" element={<ManageBranch />} />
+              <Route path="menu" element={<MenuManagement />} />
+              <Route path="promotion" element={<ItemsDiscountPage />} />
+              <Route path="staff" element={<StaffPage />} />
+              <Route path="reviews" element={<ManageReviews />} />
+          </Route>
       </Routes>
     </BrowserRouter>
         </InventoryProvider>

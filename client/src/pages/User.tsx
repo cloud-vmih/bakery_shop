@@ -308,7 +308,6 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MapProvider>
-        <Header />
       <div className="profile-page">
         <div className="profile-container">
           <div className="profile-header">
