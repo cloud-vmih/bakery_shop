@@ -14,14 +14,18 @@ import wishlistRoutes from "./routes/wishlist.routes";
 import itemsDiscountRoutes from "./routes/itemsDiscount.routes";
 import staffRoutes from "./routes/staff.routes";
 import reviewRoutes from "./routes/review.routes";
+import membershipDiscountRoutes from "./routes/membershipDiscount.routes";
+
 import dotenv from "dotenv";
 dotenv.config();
+
 const app = express();
 app.use(cookieParser());
 app.use(cors({
   origin: "http://localhost:3000",  // chỉ định frontend origin
   credentials: true                 // cho phép gửi cookie / auth headers
 }));
+
 app.use(express.json());
 app.use("/api", categoryRoutes);
 app.use("/api", cartRoutes);  // Thêm dòng này
@@ -36,6 +40,10 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/items-discount", itemsDiscountRoutes);
 app.use("/api/staff", staffRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use("/api/promotion", membershipDiscountRoutes);
+app.get("/api/__ping", (req, res) => {
+  res.send("OK");
+});
+
+// export đặt CUỐI CÙNG
 export default app;
-
-

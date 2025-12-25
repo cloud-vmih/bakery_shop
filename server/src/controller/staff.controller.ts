@@ -1,5 +1,13 @@
 import { Request, Response } from "express";
-import { getAllStaff, createStaff, updateStaff, deleteStaff, getStaffById } from "../services/staff.service";
+import {
+  getAllStaff,
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  getStaffById,
+  lockStaff,
+  unlockStaff,
+} from "../services/staff.service";
 
 
 export const StaffController = {
@@ -12,9 +20,17 @@ export const StaffController = {
   }
 },
 
-  getAll: async (_: Request, res: Response) => {
-    return res.json(await getAllStaff());
-  },
+  getAll: async (req: Request, res: Response) => {
+  try {
+    const keyword = req.query.keyword as string || "";
+    const staffList = await getAllStaff(keyword);
+    res.json(staffList);
+  } catch (error: any) {
+    console.error("Lỗi getAll:", error);  // Log để xem chi tiết
+    res.status(500).json({ error: error.message || "Lỗi DB" });
+  }
+},
+
 
   getById: async (req: Request, res: Response) => {
     return res.json(await getStaffById(Number(req.params.id)));
@@ -28,16 +44,14 @@ export const StaffController = {
     return res.json(await deleteStaff(Number(req.params.id)));
   },
 
-  search: async (req: Request, res: Response) => {
-    return res.json({ message: "search staff" });
-  },
-
   lock: async (req: Request, res: Response) => {
-    return res.json({ message: "locked staff" });
-  },
+  return res.json(await lockStaff(Number(req.params.id)));
+},
+
 
   unlock: async (req: Request, res: Response) => {
-    return res.json({ message: "unlocked staff" });
-  },
+  return res.json(await unlockStaff(Number(req.params.id)));
+},
+
 };
 

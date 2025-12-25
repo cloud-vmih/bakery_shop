@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMa
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
+import { ItemsDiscount } from "./ItemDiscount";
 import {Inventory} from "./Inventory";
 
 @Entity("item")
@@ -39,4 +40,7 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => Inventory, (i: Inventory)=> i.item)
   inventory?: Inventory[];
+
+  @OneToMany(() => ItemsDiscount, (i: ItemsDiscount)=> i.item)
+  discounts?: ItemsDiscount[];
 }

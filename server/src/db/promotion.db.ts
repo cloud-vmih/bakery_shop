@@ -1,28 +1,49 @@
-// src/config/database.ts
-import "reflect-metadata";
-import { DataSource } from "typeorm";
+// src/db/promotion.db.ts
+import { AppDataSource } from "../config/database";
 import { ItemsDiscount } from "../entity/ItemDiscount";
 import { Item } from "../entity/Item";
 
-export const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT || 3306),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  // Quan trọng: list entity
-  entities: [Item, ItemsDiscount],
-  synchronize: true,
-  logging: false,
-});
+const repo = AppDataSource.getRepository(ItemsDiscount);
+const itemRepo = AppDataSource.getRepository(Item);
 
-// Hàm init gọi trong index.ts
-export const initDatabase = async () => {
-  try {
-    await AppDataSource.initialize();
-    console.log("Data Source initialized!");
-  } catch (error) {
-    console.error(" Data Source init error:", error);
-  }
+export const findAllItemsDiscount = async () => {
+  return await repo.find({
+    relations: ["item"], // ✅ BẮT BUỘC
+  });
+};
+
+export const findItemsDiscountById = async (id: number) => {
+  return await repo.findOne({
+    where: { id },
+    relations: ["item"], // ✅ BẮT BUỘC
+  });
+};
+
+export const createItemsDiscountDB = async (data: {
+  itemId: number;
+  title?: string;
+  discountAmount: number;
+  startAt: Date | null;
+  endAt: Date | null;
+}) => {
+  const item = await itemRepo.findOne({ where: { id: data.itemId } });
+  if (!item) return null;
+
+  const discount = repo.create({
+    item,
+    title: data.title,
+    discountAmount: data.discountAmount,
+    startAt: data.startAt,
+    endAt: data.endAt,
+  });
+
+  return await repo.save(discount);
+};
+
+export const updateItemsDiscountDB = async (entity: ItemsDiscount) => {
+  return await repo.save(entity);
+};
+
+export const removeItemsDiscountDB = async (entity: ItemsDiscount) => {
+  await repo.remove(entity);
 };

@@ -4,7 +4,10 @@ import { ECategory } from "../entity/enum/enum";
 
 export const findAllItems = async () => {
   const repo = AppDataSource.getRepository(Item);
-  return await repo.find();
+  return await repo.find({
+      relations: {
+          discounts: true
+      }});
 };
 
 export const findItemsByCategory = async (category: ECategory) => {

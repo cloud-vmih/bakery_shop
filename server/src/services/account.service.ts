@@ -6,6 +6,7 @@ import { sendEmail } from "../helper/sendEmail"
 import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db/db.account";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
+import { Staff } from "../entity/Staff";
 import { redis } from "../config/redis";
 
 export const registerUser = async (username: string, password: string, email: string, phoneNumber: string, fullName: string, dateOfBirth: Date, avatarURL: string) => {
@@ -62,13 +63,18 @@ export const loginUser = async (username: string, password: string) => {
   const acc = await findAccountByUsername(username);
   if (!acc) throw new Error("User not found");
 
+  const userInfo = await findUserByAccountId(acc.id!);
+
   const verified = await isAccountVerified(acc.id!);
-  if (!verified) throw new Error("Email not verified");
+  if (!verified && userInfo!.type === 'Customer') throw new Error("Email not verified");
+
+  if (userInfo!.type === 'Staff') {
+      const staffInfo = userInfo as Staff;
+      if (staffInfo!.status === 'locked') throw new Error("Tài khoản đã bị khóa");
+  }
 
   const valid = await bcrypt.compare(password, acc.password!);
   if (!valid) throw new Error("Invalid password");
-
-  const userInfo = await findUserByAccountId(acc.id!);
 
   console.log("User type:", userInfo!.type);
 

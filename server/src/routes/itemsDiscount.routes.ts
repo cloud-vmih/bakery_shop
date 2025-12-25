@@ -1,17 +1,35 @@
+// src/routes/itemsDiscount.routes.ts
 import { Router } from "express";
-import  * as promotionController  from "../controller/itemsDiscount.controller";
-import { verifyToken, verifyAdminOrStaff } from "../middleware/verifyToken";
+import {
+  getAllItemsDiscountController,
+  getOneItemsDiscountController,
+  createItemsDiscountController,
+  updateItemsDiscountController,
+  removeItemsDiscountController,
+} from "../controller/itemsDiscount.controller";
 
 const router = Router();
 
-router.get("/", verifyToken, verifyAdminOrStaff, promotionController.getAllItemsDiscount);
+router.get("/", getAllItemsDiscountController);
 
-router.get("/:id", verifyToken, verifyAdminOrStaff, promotionController.getOneItemsDiscount);
+// =============================
+// GET ONE
+// =============================
+router.get("/:id", getOneItemsDiscountController);
 
-router.post("/", verifyToken, verifyAdminOrStaff, promotionController.createItemsDiscount);
+// =============================
+// CREATE
+// =============================
+router.post("/", createItemsDiscountController);
 
-router.put("/:id", verifyToken, verifyAdminOrStaff, promotionController.updateItemsDiscount);
+// =============================
+// UPDATE
+// =============================
+router.put("/:id", updateItemsDiscountController);
 
-router.delete("/:id", verifyToken, verifyAdminOrStaff, promotionController.removeItemsDiscount);
+// =============================
+// DELETE
+// =============================
+router.delete("/:id", removeItemsDiscountController);
 
 export default router;

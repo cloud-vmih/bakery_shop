@@ -10,6 +10,7 @@ import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../service
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { getBranches } from "../services/branch.services";
 import { useInventory } from "../context/inventoryContext";
+import { PriceDisplay } from "../components/ItemPrice";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -352,9 +353,9 @@ export default function MenuPage() {
                           <div className="menuCardContent">
                             <div>
                               <h3 className="menuTitle">{item.name}</h3>
-                              <p className="menuPrice mt-3">
-                                {item.price ? formatPrice(item.price) : "Liên hệ"}
-                              </p>
+                                <p className="menuPrice mt-3">
+                                    <PriceDisplay item={item} />
+                                </p>
                             </div>
 
                             {/* Nút Add to Cart - luôn hiển thị */}
