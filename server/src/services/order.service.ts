@@ -1,5 +1,4 @@
 // server/src/services/order.service.ts
-
 import { orderRepo } from "../db/order.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
 
@@ -80,11 +79,11 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     statusText: getStatusText(status),
     createdAt: order.createAt,
     deliveryAt: order.deliveryAt || null,
-    payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
+    payStatus: order.payment?.status ?? EPayStatus.PENDING,        
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,
     payment: order.payment ? {
-      method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY", "MOMO"
+      method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY"
       status: order.payment.status,           // "PAID", "PENDING", "REFUNDED"
     } : null,
     items: order.orderDetails?.map((detail: any) => ({
@@ -101,7 +100,7 @@ interface CancelResult {
   action?: "canceled_directly" | "cancel_requested"; // để frontend xử lý thông báo phù hợp
 }
 /**
- * Hủy đơn hàng - Phiên bản mới có phân biệt theo trạng thái thanh toán
+ * Hủy đơn hàng - theo trạng thái thanh toán
  */
 export const cancelOrder = async (
   orderId: number,
