@@ -39,6 +39,7 @@ export const getItemDetail = async (req: Request, res: Response) => {
 
     return res.json(item);
   } catch (error) {
+    console.error("Error fetching item detail:", error);
     return res.status(500).json({ message: "Error fetching item detail" });
   }
 };

@@ -29,3 +29,12 @@ import thư viện gg maps api bên folder client: npm install @react-google-map
 đừng test gg maps api nhìu nha :3
 
 thêm vô .env : REACT_APP_GOOGLE_MAPS_KEY=AIzaSyA4lKLhL_fwCsbd1CiHbNiDA1CxhD1uyWU
+
+hạn sử dụng:
+thêm vô itemDetail trong pgAdmin 4: 
+- cake: "expiryDays": 3,
+  "expiryNote": "Bánh tươi - Bảo quản tủ lạnh, sử dụng trong 3 ngày kể từ ngày nhận hàng"
+- cookie: "expiryDays": 30,
+  "expiryNote": "Bảo quản nơi khô ráo, sử dụng trong 30 ngày"
+- bread: "expiryDays": 2,
+  "expiryNote": "Bánh tươi - Tốt nhất dùng trong ngày, bảo quản tủ lạnh tối đa 2 ngày"
