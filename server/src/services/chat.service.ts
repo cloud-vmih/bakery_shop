@@ -1,9 +1,9 @@
-import { G } from "@upstash/redis/zmscore-DhpQcqpW";
-import * as chatDB from "../db/chat.db";
+import * as chatDB from "../db/db.chat";
 import { getRawUserByID } from "../db/db.user";
-import { ESender } from "../entity/enum/enum";
+import { ENotiType } from "../entity/enum/enum";
 import { Message } from "../entity/Message";
 import { User } from "../entity/User";
+import { sendNotification } from "./notification.service";
 
 export const updateChat = async (
   conversationId: number,

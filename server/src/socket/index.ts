@@ -3,6 +3,7 @@ import http from 'http';
 import app from '../server';
 import { chatSocket } from './chat.socket';
 import { socketAuth } from './auth.socket';
+import { notificationSocket } from './notification.socket';
 
 const server = http.createServer(app);
 
@@ -18,6 +19,7 @@ io.use(socketAuth);
 io.on('connection', async (socket) => {
     console.log('Socket connected: ', socket.id);
     chatSocket(io, socket);
+    notificationSocket(socket);
 
     socket.on('disconnect', () => {
         console.log('Socket disconnected: ', socket.id);

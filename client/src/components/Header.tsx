@@ -5,6 +5,9 @@ import { useUser } from "../context/authContext"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from "react-router-dom";
 import { useSocketStore } from "../stores/socket.store";
+import { Bell } from "lucide-react";
+import { useNotificationStore } from "../stores/notification.store";
+import { NotificationDropdown } from "./NotificationDropdown";
 
 type User = {
     fullName: string;
@@ -21,6 +24,9 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
     const { user } = useUser();
+    const { unreadCount } = useNotificationStore();
+    const [dropDown, setDropDown] = React.useState(false);
+    
 
     // Default onLogin nếu cha không truyền vào
     const handleLogin = onLogin ?? (() => navigate("/login"));
@@ -94,6 +100,29 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                 </Link>
                             ))}
                     </div>
+                    {/* <div className="flex items-center gap-4"> */}
+
+                    {/* Notification */}
+                    <div className="relative">
+                        <button
+                        onClick={() => setDropDown(!dropDown)}
+                        className="relative p-2 rounded-full hover:bg-emerald-50 transition"
+                        >
+                        <Bell className="w-6 h-6 text-emerald-700" />
+
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5">
+                            {unreadCount > 99 ? "99+" : unreadCount}
+                            </span>
+                        )}
+                        </button>
+
+                        {dropDown && (
+                        <div className="absolute right-0 mt-2">
+                            <NotificationDropdown onClose={() => setDropDown(false)} />
+                        </div>
+                        )}
+                    </div>
 
                     {/* User Section */}
                     <div className="flex items-center gap-4">
@@ -118,8 +147,8 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
                                 <span>Login</span>
                             </Link>
                         ) : (
+                                           
                             <div className="relative group">
-
                                 <button className="flex items-center gap-3 p-2 rounded-xl hover:bg-emerald-50 transition-all duration-300 group">
                                     <div className="relative">
                                         <img

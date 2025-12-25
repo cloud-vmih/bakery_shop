@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { useSocketStore } from "../stores/socket.store";
 import { useEffect } from "react";
-import { useUser } from "./authContext";
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const { connectSocket, disconnectSocket } = useSocketStore();
@@ -10,8 +9,6 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
         return () => disconnectSocket();
     }, []);
-
-
 
     return <>{children}</>;
 }

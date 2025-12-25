@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import { useSocketStore } from "./socket.store";
+import toast from "react-hot-toast";
 
 interface Notification {
   id: number;
   title: string;
   content: string;
+  createAt: string;
   isRead: boolean;
 }
 
@@ -12,7 +14,7 @@ interface NotificationStore {
   notifications: Notification[];
   unreadCount: number;
 
-  attachSocketListeners: () => void;
+  init: () => void;
   markAsRead: (id: number) => void;
 }
 
@@ -20,26 +22,45 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   notifications: [],
   unreadCount: 0,
 
-  attachSocketListeners: () => {
+  init() {
     const socket = useSocketStore.getState().socket;
+
     if (!socket) return;
+    toast.success("Có socket");
+    socket.emit("notification:list", null, (data: Notification[]) => {
+      set({
+        notifications: data,
+        unreadCount: data.filter((n) => !n.isRead).length,
+      });
+    });
 
     socket.off("notification:new");
-
-    socket.on("notification:new", (notification) => {
-      set((state) => ({
-        notifications: [notification, ...state.notifications],
-        unreadCount: state.unreadCount + 1,
+    socket.on("notification:new", (n) => {
+      set((s) => ({
+        notifications: [n, ...s.notifications],
+        unreadCount: s.unreadCount + 1,
       }));
     });
   },
 
-  markAsRead: (id) => {
-    set((state) => ({
-      notifications: state.notifications.map((n) =>
-        n.id === id ? { ...n, isRead: true } : n
-      ),
-      unreadCount: Math.max(0, state.unreadCount - 1),
-    }));
+  markAsRead(id: number) {
+    const socket = useSocketStore.getState().socket;
+
+    if (!socket) return;
+    socket.emit("notification:markRead", { id });
+
+    set((s) => {
+      const wasUnread = s.notifications.find(n => n.id === id && !n.isRead);
+
+      return {
+        notifications: s.notifications.map((n) =>
+          n.id === id ? { ...n, isRead: true } : n
+        ),
+        unreadCount: wasUnread
+          ? Math.max(0, s.unreadCount - 1)
+          : s.unreadCount,
+      };
+    });
   },
 }));
+

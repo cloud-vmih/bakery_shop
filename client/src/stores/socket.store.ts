@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { io, type Socket } from "socket.io-client";
 import { getSocketAuth } from "../services/socket.services";
 import { SocketState } from "../types/store.type";
+import { useNotificationStore } from "../stores/notification.store";
 const baseURL = "http://localhost:5000";
 
 
@@ -18,8 +19,8 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
         socket.on("connect", () => {
             console.log("Socket connected: ", socket.id);
+            useNotificationStore.getState().init();
         });
-
         set({ socket });
     },
 

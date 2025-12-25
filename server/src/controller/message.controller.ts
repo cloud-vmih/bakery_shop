@@ -1,29 +1,5 @@
 import { Request, Response } from "express";
-import { createMessage, getMessagesByConversation } from "../services/message.service";
-import { io } from "../socket"; 
-
-export const sendMessage = async (req: Request, res: Response) => {
-  try {
-    const { content, conversationId } = req.body;
-    const senderId = (req as any).user.id;
-
-    const message = await createMessage(senderId, content, conversationId);
-
-    if (message.conversation && message.conversation.id){
-      io.to(`conversation_${message.conversation.id}`).emit("receive_message", message);
-    }
-
-    res.status(201).json({
-      success: true,
-      data: message,
-    });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+import { getMessagesByConversation } from "../services/chat.service";
 
 export const loadMessages = async (req: Request, res: Response) => {
   try {
