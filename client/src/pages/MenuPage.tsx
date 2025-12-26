@@ -1,14 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import "../styles/menu.css";
 import toast from "react-hot-toast";
-import { getMenu } from "../services/menu.services";
-import { addToCart } from "../services/cart.services";
+import { getMenu } from "../services/menu.service";
+import { addToCart } from "../services/cart.service";
 import { useNavigate } from 'react-router-dom';
-import { useUser } from "../context/authContext";
+import { useUser } from "../context/AuthContext";
 import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon, MapPinIcon } from "@heroicons/react/24/outline";
-import { getBranches } from "../services/branch.services";
-import { useInventory } from "../context/inventoryContext";
+import { getBranches } from "../services/branch.service";
+import { useInventory } from "../context/InventoryContext";
 import { PriceDisplay } from "../components/ItemPrice";
 
 export default function MenuPage() {

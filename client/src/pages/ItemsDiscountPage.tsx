@@ -8,15 +8,15 @@ import {
   deleteItemsDiscount,
   ItemsDiscount,
   ItemsDiscountPayload,
-} from "../services/itemsDiscount.services";
-import { getMenu } from "../services/menu.services";
+} from "../services/itemsDiscount.service";
+import { getMenu } from "../services/menu.service";
 import {
   getAllMembershipDiscounts,
   createMembershipDiscount,
   updateMembershipDiscount,
   deleteMembershipDiscount,
   MembershipDiscount,
-} from "../services/membershipDiscount.services";  // Service mới từ trước
+} from "../services/membershipDiscount.service";  // Service mới từ trước
 
 
 export default function ItemsDiscountPage() {  // ← Giả sử rename từ PromotionPage

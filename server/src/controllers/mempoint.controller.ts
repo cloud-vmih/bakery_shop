@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { MembershipService } from "../servies/mempoint.service";
+import { MembershipService } from "../services/mempoint.service";
 
 export class MembershipController {
   // Gọi sau thanh toán thành công

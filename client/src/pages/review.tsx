@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getReviews, replyReview, deleteReview, Review } from '../services/review.services';
+import { getReviews, replyReview, deleteReview, Review } from '../services/review.service';
 import '../styles/review.css';
 import toast from 'react-hot-toast';
 

@@ -1,5 +1,5 @@
 import { ECategory } from "../entity/enum/enum";
-import { findItemById, findItemsByCategory, findAllItems } from "../db/db.category";
+import { findItemById, findItemsByCategory, findAllItems } from "../db/category.db";
 
 export class CategoryService {
   async getAllItems() {

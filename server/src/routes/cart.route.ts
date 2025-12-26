@@ -1,6 +1,6 @@
 // server/src/routes/cart.routes.ts
 import { Router } from "express";
-import { addToCart, getCart } from "../controller/cart.controller";
+import { addToCart, getCart } from "../controllers/cart.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
 const router = Router();

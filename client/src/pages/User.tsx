@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile } from '../services/user.service';
-import { Header } from "../components/Header";
 import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
-import { useUser } from '../context/authContext';
+import { useUser } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import '../styles/Profile.css';
 import {

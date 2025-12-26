@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { orderService, OrderItem } from "../services/order.service";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
-import { useInventory } from "../context/inventoryContext";
+import { useInventory } from "../context/InventoryContext";
 import { toast } from "react-toastify";
 
 type TabKey =

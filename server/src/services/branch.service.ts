@@ -1,6 +1,6 @@
 import { Branch } from "../entity/Branch";
 import { Address } from "../entity/Address";
-import * as branchRepo from "../db/db.branch";
+import * as branchRepo from "../db/branch.db";
 
 export const createBranch = async (name: string, placeId: string, formattedAddress?: string, latitude?: number, longitude?: number) => {
   try{ 

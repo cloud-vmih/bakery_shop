@@ -1,9 +1,9 @@
 // Thêm component này trong BranchPage (trước return)
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getMenu} from "../services/menu.services";
-import { updateMultipleQuantities } from "../services/inventory.services";
-import { useInventory} from "../context/inventoryContext";
+import { getMenu} from "../services/menu.service";
+import { updateMultipleQuantities } from "../services/inventory.service";
+import { useInventory} from "../context/InventoryContext";
 
 export default function InventoryPopup({
                             branchId,

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as InventoryController from "../controller/inventory.controller"
+import * as InventoryController from "../controllers/inventory.controller"
 import { verifyToken } from "../middleware/verifyToken";
 import  { verifyAdmin} from "../middleware/verifyToken";
 

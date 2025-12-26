@@ -1,4 +1,4 @@
-import { getUserById, updateUser, UserResponse, UpdateUserPayload } from '../db/db.user';
+import { getUserById, updateUser, UserResponse, UpdateUserPayload } from '../db/user.db';
 
 // Lấy profile
 export async function getProfile(userId: number): Promise<UserResponse> {

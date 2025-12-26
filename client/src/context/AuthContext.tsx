@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { verifyToken } from "../services/auth.services"; // FE gọi /token BE
+import { verifyToken } from "../services/auth.service"; // FE gọi /token BE
 
 interface AuthContextType {
   user: any | null;

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { googleClient } from "../config/google";
 import { createEmailVerification, isAccountVerified, verify, isEmailVerified } from "../db/verify.db";
 import { sendEmail } from "../helper/sendEmail"
-import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db/db.account";
+import { createAccount, findAccountByUsername, findUserByAccountId, createUser, socialAuthRepo, findUserByEmail, isPhoneNumberTaken , updatePassword } from "../db/account.db";
 import { Account } from "../entity/Account";
 import { Customer } from "../entity/Customer";
 import { Staff } from "../entity/Staff";

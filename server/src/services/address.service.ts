@@ -4,11 +4,11 @@ import {
   unsetDefaultAddress,
   updateAddress,
   CreateAddressPayload,
-} from "../db/db.address";
+    deleteAddress,
+} from "../db/address.db";
 import { AppDataSource } from "../config/database";
 import { Customer } from "../entity/Customer";
 import { User } from "../entity/User";
-import { deleteAddress } from "../db/db.address"; 
 
 const userRepo = AppDataSource.getRepository(User);
 

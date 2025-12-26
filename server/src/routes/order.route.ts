@@ -1,6 +1,6 @@
 // server/src/routes/order.routes.ts
 import { Router } from "express";
-import { OrderController } from "../controller/order.controller";
+import { OrderController } from "../controllers/order.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
 const router = Router();

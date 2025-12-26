@@ -1,6 +1,6 @@
 // context/InventoryContext.tsx
 import { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from "react";
-import { getInventory } from "../services/inventory.services";
+import { getInventory } from "../services/inventory.service";
 import toast from "react-hot-toast";
 
 interface InventoryItem {

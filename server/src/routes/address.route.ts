@@ -5,7 +5,7 @@ import {
   editAddressController,
   setDefaultAddressController,
   deleteAddressController,
-} from "../controller/address.controller";
+} from "../controllers/address.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
 const router = express.Router();

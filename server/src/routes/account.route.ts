@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { register, login, getUserInfo, googleLogin, verifyOTP, sendOTP, resetPassword } from "../controller/account.controller";
-import {verifyEmail} from "../controller/verifyEmail.controller";
+import { register, login, getUserInfo, googleLogin, verifyOTP, sendOTP, resetPassword } from "../controllers/account.controller";
+import {verifyEmail} from "../controllers/verifyEmail.controller";
 import { verifyToken } from "../middleware/verifyToken";
-import { refresh } from "../controller/refreshToken";
+import { refresh } from "../controllers/refreshToken";
 
 const router = Router();
 

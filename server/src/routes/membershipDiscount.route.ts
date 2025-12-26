@@ -6,7 +6,7 @@ import {
   createMembershipDiscount,
   updateMembershipDiscount,
   removeMembershipDiscount,
-} from "../controller/membershipDiscount.controller";
+} from "../controllers/membershipDiscount.controller";
 
 const router = Router();
 

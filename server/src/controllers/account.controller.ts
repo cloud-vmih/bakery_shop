@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser, getUser, googleService, changePassword } from "../services/account.service";
 import cron from "node-cron";
-import { deletedUserNotVerified } from "../db/db.account";
+import { deletedUserNotVerified } from "../db/account.db";
 import { AppDataSource } from "../config/database";
 
 export const register = async (req: Request, res: Response) => {

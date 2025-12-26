@@ -1,4 +1,4 @@
-import { MembershipPointDB } from "../db/db.mempoint";
+import { MembershipPointDB } from "../db/mempoint.db";
 import { AppDataSource } from "../config/database";
 import { Customer } from "../entity/Customer";
 

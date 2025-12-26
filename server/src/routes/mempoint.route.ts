@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { MembershipController } from "../controller/mempoint.controller";
+import { MembershipController } from "../controllers/mempoint.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
 const router = Router();

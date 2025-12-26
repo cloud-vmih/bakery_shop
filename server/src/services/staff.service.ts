@@ -14,7 +14,7 @@ import {
   removeUser,
   removeAccount,
   searchStaff,
-} from "../db/db.staff";
+} from "../db/staff.db";
 
 // ===== DTO =====
 interface CreateStaffDto {

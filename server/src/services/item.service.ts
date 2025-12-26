@@ -1,7 +1,7 @@
 // src/services/item.service.ts
 import {
  ItemDB
-} from "../db/db.item";
+} from "../db/item.db";
 
 export class ItemService {
   static async getAll() {

@@ -1,8 +1,8 @@
 import { Rating } from '../entity/Rating';
 import { ResponseRating } from '../entity/ResponseRating';
 import { User } from '../entity/User'; // Giả sử User type cho Staff/Admin
-import { reviewRepository } from '../db/db.review';
-import { ratingRepository } from '../db/db.rating';
+import { reviewRepository } from '../db/review.db';
+import { ratingRepository } from '../db/rating.db';
 
 const BAD_WORDS_REGEX = /fuck|shit|damn/gi; // List từ khiếm nhã đơn giản
 

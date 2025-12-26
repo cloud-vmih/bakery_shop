@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
-import { register as registerService } from "../services/auth.services";
+import { register as registerService } from "../services/auth.service";
 import "../styles/auth.css";
 import toast from "react-hot-toast";
 import GoogleLoginButton from "../components/GoogleLoginButton";

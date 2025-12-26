@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import itemService, { Item } from "../services/items.service";
-import { addToCart } from "../services/cart.services";
+import { addToCart } from "../services/cart.service";
 import { Header } from "../components/Header";
 import { useInventory } from "../context/inventoryContext";
 import "../styles/productDetails.css";

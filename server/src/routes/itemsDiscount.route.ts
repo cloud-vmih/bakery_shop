@@ -6,7 +6,7 @@ import {
   createItemsDiscountController,
   updateItemsDiscountController,
   removeItemsDiscountController,
-} from "../controller/itemsDiscount.controller";
+} from "../controllers/itemsDiscount.controller";
 
 const router = Router();
 
