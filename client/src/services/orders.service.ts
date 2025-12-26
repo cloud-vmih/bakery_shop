@@ -16,7 +16,6 @@ export type OrderDetailItem = {
     flavor?: string;
     [key: string]: any;
   };
-  note?: string | null;
   quantity: number;
 };
 
@@ -51,7 +50,8 @@ export type OrderStatusResponse = {
     label: string;
     completed: boolean;
   }[];
-  items: OrderDetailItem[];             // đổi tên từ orderDetails → items cho dễ dùng
+  items: OrderDetailItem[];   
+  note?: string | null;          
 };
 
 // Response khi hủy/yêu cầu hủy đơn

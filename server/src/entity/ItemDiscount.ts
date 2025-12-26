@@ -1,22 +1,31 @@
-import { Entity, Column, BaseEntity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
-import { Item } from "./Item";  
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { Item } from "./Item";
 
 @Entity("itemsDiscount")
-export class ItemsDiscount extends BaseEntity {
-  @OneToOne(() => Item)
-  @JoinColumn({ name: "itemID" })
-  @PrimaryColumn()
-  itemId?: number;
+export class ItemsDiscount  {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  @Column()
-  title?: string;
+  @ManyToOne(() => Item, i => i.discounts, { eager: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "item_id" })  // Hoặc "itemId" nếu schema dùng camelCase
+  item!: Item;
 
-  @Column()
-  dicountAmount?: number;
+  @Column({ type: "text", nullable: true })
+  title?: string | null;
 
-  @Column({ type: "timestamp", nullable: true})
-  startAt?: Date;
+  @Column("decimal", { precision: 5, scale: 2, nullable: true })
+  discountAmount?: number | null;
 
   @Column({ type: "timestamp", nullable: true })
-  endAt?: Date;
+  startAt?: Date | null;
+
+  @Column({ type: "timestamp", nullable: true })
+  endAt?: Date | null;
+
 }

@@ -4,6 +4,7 @@ import itemService from "../services/items.service";
 import { toast } from "react-toastify";
 import {Item} from "../services/items.service";
 import { Header } from "../components/Header";
+import { AdminSidebar } from "../components/Sidebar";
 
 type CakeType = "CHEESECAKE" | "BIRTHDAYCAKE" | "MOUSSE";
 
@@ -203,8 +204,6 @@ export default function MenuManagement() {
   const sortedCategories = displayOrder.filter((c) => groupedItems[c]);
 
   return (
-      <>
-          <Header />
     <div className="min-h-screen bg-gradient-to-b from-white via-emerald-50 to-white py-8">
       <div className="max-w-7xl mx-auto px-6">
         {/* HEADER */}
@@ -582,6 +581,5 @@ export default function MenuManagement() {
         )}
       </div>
     </div>
-      </>
   );
 }

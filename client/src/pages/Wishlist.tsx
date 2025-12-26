@@ -39,8 +39,9 @@ export default function WishlistPage() {
   };
 
   const goToProductDetail = (itemId?: number) => {
+    toast.error(`Chức năng đang được phát triển!, ${ itemId }`);
     if (!itemId) return;
-    navigate(`/products/${itemId}`);
+    navigate(`/product/${itemId}`);
   };
 
   if (loading) return <p className="text-center mt-6">Đang tải danh sách yêu thích...</p>;

@@ -62,8 +62,6 @@ export default function Cart() {
 
   return (
     <>
-      <Header />
-
       <div className="min-h-screen bg-green-50">
         <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT */}

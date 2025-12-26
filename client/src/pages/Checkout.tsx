@@ -226,7 +226,6 @@ export default function Checkout() {
   /* ================= RENDER ================= */
   return (
     <>
-      <Header />
       <div
         className="min-h-screen"
         style={{ backgroundColor: "var(--page-bg)" }}

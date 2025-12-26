@@ -174,7 +174,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-    <Header />
     <div className="dashboard-container">
       {/* HEADER */}
       <div className="dashboard-header">

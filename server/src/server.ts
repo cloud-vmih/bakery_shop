@@ -17,8 +17,13 @@ import paymentRoutes from "./routes/payment.route";
 import paymentVNPayRoutes from "./routes/payment.vnpay.route";
 
 import manageOrderRoutes from "./routes/manageOrder.route"
-import wishlistRoutes from "./routes/wishlist.route";import messageRouters from "./routes/chat.route";
+import wishlistRoutes from "./routes/wishlist.route";
+import messageRouters from "./routes/chat.route";
 import dashboardRoutes from "./routes/dashboard.route"; // ← ĐẢM BẢO IMPORT ĐÚNG ĐƯỜNG DẪN
+import itemsDiscountRoutes from "./routes/itemsDiscount.route";
+import staffRoutes from "./routes/staff.route";
+import reviewRoutes from "./routes/review.route";
+import membershipDiscountRoutes from "./routes/membershipDiscount.route";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -59,4 +64,13 @@ app.use("/api/orders", ordersRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/payment/vnpay", paymentVNPayRoutes);
 
+app.use("/api/items-discount", itemsDiscountRoutes);
+app.use("/api/staff", staffRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use("/api/promotion", membershipDiscountRoutes);
+app.get("/api/__ping", (req, res) => {
+  res.send("OK");
+});
+
+// export đặt CUỐI CÙNG
 export default app;

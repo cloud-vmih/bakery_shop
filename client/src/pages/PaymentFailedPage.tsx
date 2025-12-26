@@ -22,8 +22,6 @@ export default function PaymentFailedPage() {
 
   return (
     <>
-      <Header />
-
       <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-rose-50 via-red-50 to-orange-50 flex items-center justify-center px-4">
         <div className="w-full max-w-lg bg-white rounded-3xl shadow-xl p-8 text-center">
           {/* ICON */}

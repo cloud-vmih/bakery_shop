@@ -10,7 +10,7 @@ import {
   OneToMany,
   OneToOne
 } from "typeorm";
-import { User } from "./User";
+import { Customer } from "./Customer";
 import {
   EOrderStatus,
   ECancelStatus,
@@ -18,15 +18,16 @@ import {
 import { OrderDetail } from "./OrderDetails";
 import { OrderInfo } from "./OrderInfo";
 import { Payment } from "./Payment";
+import { C } from "@upstash/redis/zmscore-DhpQcqpW";
 
 @Entity("orders")
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => Customer, { nullable: true })
   @JoinColumn({ name: "customerID" })
-  customer?: User;
+  customer?: Customer;
 
   @CreateDateColumn({ type: "timestamp" })
   createAt?: Date;

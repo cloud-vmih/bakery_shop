@@ -29,3 +29,9 @@ import thư viện gg maps api bên folder client: npm install @react-google-map
 đừng test gg maps api nhìu nha :3
 
 thêm vô .env : REACT_APP_GOOGLE_MAPS_KEY=AIzaSyA4lKLhL_fwCsbd1CiHbNiDA1CxhD1uyWU
+
+hạn sử dụng:
+thêm vô itemDetail trong pgAdmin 4: 
+- cake: "expiryDays": 3
+- cookie: "expiryDays": 30
+- bread: "expiryDays": 2,

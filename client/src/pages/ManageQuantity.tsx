@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getMenu} from "../services/menu.service";
-import { updateMultipleQuantities } from "../services/inventory.services";
+import { updateMultipleQuantities } from "../services/inventory.service";
 import { useInventory} from "../context/InventoryContext";
 
 export default function InventoryPopup({
@@ -24,6 +24,7 @@ export default function InventoryPopup({
     useEffect(() => {
         if (open && branchId) {
             loadInventoryData();
+            refreshInventory();
         }
     }, [open, branchId]);
 

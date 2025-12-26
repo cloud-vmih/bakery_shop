@@ -24,7 +24,7 @@ export class Inventory extends BaseEntity {
 
     @ManyToOne(() => Branch, b => b.inventory, {
         nullable: true,
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
     })
     @JoinColumn({ name: "branchID" })
     branch?: Branch;

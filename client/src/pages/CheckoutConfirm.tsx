@@ -173,6 +173,7 @@ import { checkInventoryForCheckout } from "../services/inventory.service";
 
 import { useCart } from "../context/CartContext";
 import { useInventory } from "../context/InventoryContext";
+import toast from "react-hot-toast";
 
 type InventoryErrorItem = {
   itemId: number;
@@ -206,7 +207,6 @@ export default function CheckoutConfirm() {
   if (!payload) {
     return (
       <>
-        <Header />
         <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
           <p>Không tìm thấy dữ liệu đơn hàng</p>
         </div>
@@ -217,7 +217,6 @@ export default function CheckoutConfirm() {
   if (!branchId) {
     return (
       <>
-        <Header />
         <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
           <p>Vui lòng chọn chi nhánh trước khi thanh toán</p>
         </div>
@@ -234,6 +233,7 @@ export default function CheckoutConfirm() {
 
     try {
       // 1️⃣ CHECK INVENTORY
+      toast.success(`Đang kiểm tra tồn kho... ${branchId}`);
       const res = await checkInventoryForCheckout(
         branchId,
         payload.items.map((i: any) => ({
@@ -288,8 +288,6 @@ export default function CheckoutConfirm() {
   /* ================= UI ================= */
   return (
     <>
-      <Header />
-
       <div className="min-h-[calc(100vh-80px)] bg-emerald-50 py-10 px-4">
         <div className="mx-auto max-w-3xl space-y-6">
           <h2 className="text-center text-2xl font-bold text-gray-900">

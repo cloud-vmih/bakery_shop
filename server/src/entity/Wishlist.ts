@@ -27,7 +27,7 @@ export class Wishlist extends BaseEntity {
   @JoinColumn({ name: "customerID" })
   customer!: Customer;
 
-  @ManyToOne(() => Item, (item) => item.wishlist, {
+  @ManyToOne(() => Item, (item) => item.wishlists, {
     eager: true,
     onDelete: "CASCADE",
   })

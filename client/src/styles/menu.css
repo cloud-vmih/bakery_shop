@@ -2,11 +2,11 @@
 .menuPage {
   @apply min-h-screen;
   background-color: #f0fdf4;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .menuPage * {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .menuSection {
@@ -227,14 +227,14 @@
 
 /* Overlay "Hết hàng" đẹp hơn */
 .menuCard.out-of-stock .menuImageWrapper::before {
-  content: "HẾT HÀNG";
+  content: 'HẾT HÀNG';
   @apply absolute inset-0 flex items-center justify-center text-white text-3xl font-bold tracking-wider z-10;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
   font-style: italic;
 }
 
 .menuCard.out-of-stock .menuImageWrapper::after {
-  content: "";
+  content: '';
   @apply absolute inset-0 bg-black/50 z-10;
 }
 
@@ -282,8 +282,7 @@
 
 /* Animations */
 @keyframes pulse-indicator {
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -302,7 +301,7 @@
     height: auto !important;
     margin-bottom: 1rem;
   }
-
+  
   .menuLayout {
     @apply flex-col;
   }
@@ -349,7 +348,7 @@
 
 /* Particle effect khi thêm (dùng ::before và ::after) */
 .wishlistButton.adding::before {
-  content: "❤";
+  content: '❤';
   @apply absolute text-2xl pointer-events-none;
   top: 50%;
   left: 50%;
@@ -359,20 +358,15 @@
 }
 
 .wishlistButton.adding::after {
-  content: "";
+  content: '';
   @apply absolute inset-0 rounded-full pointer-events-none;
-  background: radial-gradient(
-    circle,
-    rgba(255, 105, 180, 0.3) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(255,105,180,0.3) 0%, transparent 70%);
   animation: rippleHeart 0.8s ease-out;
 }
 
 /* Keyframes */
 @keyframes heartbeat {
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
   }
   50% {

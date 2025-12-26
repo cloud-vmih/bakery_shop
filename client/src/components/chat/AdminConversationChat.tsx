@@ -29,7 +29,6 @@ useEffect(() => {
 
 return (
   <>
-    < Header />
     {/* MAIN CONTAINER */}
     <div
       className="relative h-screen-50 bg-gradient-to-b from-green-50/50 to-amber-50/30 overflow-hidden"

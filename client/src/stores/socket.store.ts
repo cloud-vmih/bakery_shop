@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { io, type Socket } from "socket.io-client";
-import { getSocketAuth } from "../services/socket.services";
+import { getSocketAuth } from "../services/socket.service";
 import { SocketState } from "../types/store.type";
 import { useNotificationStore } from "../stores/notification.store";
 const baseURL = "http://localhost:5000";

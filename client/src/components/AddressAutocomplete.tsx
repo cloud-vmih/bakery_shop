@@ -33,25 +33,32 @@ export default function AddressAutocomplete({
     });
   };
 
-  return (
-    <Autocomplete
-      onLoad={(ac) => (autocompleteRef.current = ac)}
-      onPlaceChanged={handlePlaceChanged}
-      options={{
-        componentRestrictions: { country: "vn" },
-        fields: ["formatted_address", "geometry", "place_id"],
-      }}
-    >
-      <input
-        type="text"
-        placeholder={placeholder}
-        disabled={disabled}
-        className="searchInput w-full"
-        style={{
-          padding: "0.5rem 0.75rem",
-          fontSize: "0.875rem",
-        }}
-      />
-    </Autocomplete>
-  );
+    return (
+        <Autocomplete
+            onLoad={(ac) => (autocompleteRef.current = ac)}
+            onPlaceChanged={handlePlaceChanged}
+            options={{
+                componentRestrictions: { country: "vn"},
+                bounds: {
+                    north: 10.95,
+                    south: 10.70,
+                    east: 106.85,
+                    west: 106.55,
+                },
+                strictBounds: true,
+                fields: ["formatted_address", "geometry", "place_id"]
+            }}
+        >
+            <input
+                type="text"
+                placeholder={placeholder}
+                disabled={disabled}
+                className="searchInput w-full"
+                style={{
+                    padding: "0.5rem 0.75rem",
+                    fontSize: "0.875rem",
+                }}
+            />
+        </Autocomplete>
+    );
 }

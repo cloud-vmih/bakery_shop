@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Menu as MenuIcon, X as XIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/AuthContext"
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useUser } from "../context/AuthContext";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Link } from "react-router-dom";
 import { useSocketStore } from "../stores/socket.store";
 import { Bell } from "lucide-react";
@@ -12,14 +12,14 @@ import { useCart } from "../context/CartContext";
 import RequireAuthModal from "../components/RequireAuthModal";
 
 type User = {
-    fullName: string;
-    avatar: string;
+  fullName: string;
+  avatar: string;
 };
 
 type HeaderProps = {
-    viewProfile?: () => void;
-    onLogin?: () => void;
-    onLogout?: () => void;
+  viewProfile?: () => void;
+  onLogin?: () => void;
+  onLogout?: () => void;
 };
 
 export const Header: React.FC<HeaderProps> = ({
@@ -27,18 +27,17 @@ export const Header: React.FC<HeaderProps> = ({
   onLogin,
   onLogout,
 }) => {
-    const [open, setOpen] = React.useState(false);
-    const navigate = useNavigate();
-    const { user, logout } = useUser();
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const { user, logout } = useUser();
 
   const { totalItems, resetCart } = useCart();
   const [showAuthModal, setShowAuthModal] = React.useState(false);
-    const { unreadCount } = useNotificationStore();
-    const [dropDown, setDropDown] = React.useState(false);
-    
+  const { unreadCount } = useNotificationStore();
+  const [dropDown, setDropDown] = React.useState(false);
 
-    // Default onLogin nếu cha không truyền vào
-    const handleLogin = onLogin ?? (() => navigate("/login"));
+  // Default onLogin nếu cha không truyền vào
+  const handleLogin = onLogin ?? (() => navigate("/login"));
 
   const handleLogout =
     onLogout ??
@@ -86,37 +85,23 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </div>
         </Link>
-
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
-          {/* Navigation Links */}
-          {/* Navigation Links */}
           <div className="flex items-center gap-6">
             {[
-              // Link cho Admin/Staff
-              { to: "/admin", label: "Dashboard", types: ["Admin", "Staff"] },
-              { to: "/admin/menu", label: "Menu", types: ["Admin"] },
-              {
-                to: "/admin/branch",
-                label: "Branch",
-                types: ["Admin", "Staff"],
-              },
-              {
-                to: "/admin/promotion",
-                label: "Promotion",
-                types: ["Admin", "Staff"],
-              },
-
-              // Link chỉ cho Admin
-              { to: "/admin/staff", label: "Staff", types: ["Admin"] },
-
-              // Link chỉ cho customer
               { to: "/", label: "Home", types: ["Customer"] },
               { to: "/menu", label: "Menu", types: ["Customer", "Staff"] },
               { to: "/about", label: "About Us", types: ["Customer"] },
               { to: "/contact", label: "Contact", types: ["Customer"] },
             ]
-              .filter((link) => link.types.includes(user?.type || ""))
+              .filter((link) => {
+                const userType = user?.type;
+                if (!user) {
+                  return link.types.includes("Customer");
+                }
+
+                return link.types.includes(userType);
+              })
               .map((link, index) => (
                 <Link
                   key={index}
@@ -213,25 +198,21 @@ export const Header: React.FC<HeaderProps> = ({
                       <span className="fas fa-user text-lg"></span>
                       <span>My Profile</span>
                     </Link>
-                    {user.type === "Customer" && (
-                      <>
-                        <Link
-                          to="/order"
-                          className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
-                        >
-                          <span className="fas fa-box text-lg"></span>
-                          <span>My Orders</span>
-                        </Link>
+                    <Link
+                      to="/order"
+                      className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
+                    >
+                      <span className="fas fa-box text-lg"></span>
+                      <span>My Orders</span>
+                    </Link>
 
-                        <Link
-                          to="/wishlist"
-                          className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
-                        >
-                          <span className="fas fa-heart text-lg"></span>
-                          <span>My Wishlist</span>
-                        </Link>
-                      </>
-                    )}
+                    <Link
+                      to="/wishlist"
+                      className="flex items-center gap-3 px-4 py-3 text-sm text-emerald-700 hover:bg-emerald-50 transition-colors group/item"
+                    >
+                      <span className="fas fa-heart text-lg"></span>
+                      <span>My Wishlist</span>
+                    </Link>
                     <div className="border-t border-emerald-100 mt-2 pt-2">
                       <button
                         onClick={handleLogout}
@@ -292,43 +273,10 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
             <nav className="flex flex-col gap-1">
               {[
-                // Link luôn hiển thị (Menu)
-                {
-                  to: user?.type === "Admin" ? "/admin/menu" : "/menu",
-                  label: "Menu",
-                  icon: "fa-utensils",
-                },
-
-                // Link cho Admin/Staff
-                ...(user?.type === "Admin" || user?.type === "Staff"
-                  ? [
-                      {
-                        to: "/admin",
-                        label: "Dashboard",
-                        icon: "fa-chart-line",
-                      },
-                      {
-                        to: "/admin/branch",
-                        label: "Branch",
-                        icon: "fa-store",
-                      },
-                      {
-                        to: "/admin/promotion",
-                        label: "Promotion",
-                        icon: "fa-tag",
-                      },
-                    ]
-                  : []),
-
-                // Link chỉ cho Admin
-                ...(user?.type === "Admin"
-                  ? [{ to: "/admin/staff", label: "Staff", icon: "fa-users" }]
-                  : []),
-
-                // Link chỉ cho Customer
-                ...(user?.type === "Customer"
+                ...(user?.type === "Customer" || !user
                   ? [
                       { to: "/", label: "Home", icon: "fa-home" },
+                      { to: "/menu", label: "Menu", icon: "fa-utensils" },
                       {
                         to: "/about",
                         label: "About Us",
@@ -337,8 +285,6 @@ export const Header: React.FC<HeaderProps> = ({
                       { to: "/contact", label: "Contact", icon: "fa-envelope" },
                     ]
                   : []),
-
-                // Cart chỉ cho Customer
                 ...(user?.type === "Customer"
                   ? [
                       {

@@ -1,5 +1,4 @@
 // server/src/services/order.service.ts
-
 import { orderRepo } from "../db/order.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
 
@@ -50,6 +49,7 @@ const buildTimeline = (currentStatus: EOrderStatus) => {
 // Lấy danh sách đơn hàng của khách
 export const getMyOrders = async (userId: number) => {
   const orders = await orderRepo.findByCustomerId(userId);
+  console.log("Orders fetched for user", userId, ":", orders[0]);
 
   if (!orders || orders.length === 0) {
     return {
@@ -83,12 +83,12 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,
     payment: order.payment ? {
-      method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY", "MOMO"
+      method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY"
       status: order.payment.status,           // "PAID", "PENDING", "REFUNDED"
     } : null,
     items: order.orderDetails?.map((detail: any) => ({
-      itemInfo: detail.item || {},
-      quantity: detail.quantity ?? detail.itemInfo?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
+      item: detail.item || {},
+      quantity: detail.quantity ?? detail.item?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
     })) || [],
     note: order.orderInfo?.note || null,
   };
@@ -100,7 +100,7 @@ interface CancelResult {
   action?: "canceled_directly" | "cancel_requested"; // để frontend xử lý thông báo phù hợp
 }
 /**
- * Hủy đơn hàng - Phiên bản mới có phân biệt theo trạng thái thanh toán
+ * Hủy đơn hàng - theo trạng thái thanh toán
  */
 export const cancelOrder = async (
   orderId: number,

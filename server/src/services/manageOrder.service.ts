@@ -194,25 +194,25 @@ export const updateOrderStatus = async (
 
 /* ================== INVOICE ================== */
 export const generateInvoiceHTML = (order: Order) => {
-//   const templatePath = path.join(__dirname, "../templates/invoice.html");
-//   let html = fs.readFileSync(templatePath, "utf-8");
+  const templatePath = path.join(__dirname, "../templates/invoice.html");
+  let html = fs.readFileSync(templatePath, "utf-8");
 
-//   const itemInfo = order.orderDetails?.[0]?.item || {};
-//   const note = order.orderDetails?.[0]?.note || "";
-//   const subtotal = (order.orderDetails?.[0]?.quantity || 1) * (itemInfo.price || 0);
+  const itemInfo = order.orderDetails?.[0]?.item;
+  const note = order.orderInfo?.note || "";
+  const subtotal = (order.orderDetails?.[0]?.quantity || 1) * (itemInfo?.price || 0);
 
-//   return html
-//     .replace(/{{orderId}}/g, String(order.id))
-//     .replace(/{{customerName}}/g, order.customer?.fullName || "Khách lẻ")
-//     .replace(/{{phone}}/g, order.customer?.phoneNumber || "-")
-//     .replace(
-//       /{{date}}/g,
-//       new Date(order.createAt!).toLocaleDateString("vi-VN")
-//     )
-//     .replace(/{{status}}/g, String(order.status ?? ""))
-//     .replace(/{{itemName}}/g, itemInfo.name || "Sản phẩm")
-//     .replace(/{{quantity}}/g, String(itemInfo.quantity || 1))
-//     .replace(/{{price}}/g, String(itemInfo.price || 0))
-//     .replace(/{{subtotal}}/g, subtotal.toLocaleString())
-//     .replace(/{{note}}/g, note);
+  return html
+    .replace(/{{orderId}}/g, String(order.id))
+    .replace(/{{customerName}}/g, order.customer?.fullName || "Khách lẻ")
+    .replace(/{{phone}}/g, order.customer?.phoneNumber || "-")
+    .replace(
+      /{{date}}/g,
+      new Date(order.createAt!).toLocaleDateString("vi-VN")
+    )
+    .replace(/{{status}}/g, String(order.status ?? ""))
+    .replace(/{{itemName}}/g, itemInfo?.name || "Sản phẩm")
+    .replace(/{{quantity}}/g, String(order.orderDetails?.[0]?.quantity || 1))
+    .replace(/{{price}}/g, String(itemInfo?.price || 0))
+    .replace(/{{subtotal}}/g, subtotal.toLocaleString())
+    .replace(/{{note}}/g, note);
 };

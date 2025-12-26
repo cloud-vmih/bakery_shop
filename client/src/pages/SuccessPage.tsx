@@ -54,8 +54,6 @@ export default function SuccessPage() {
 
   return (
     <>
-      <Header />
-
       <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 flex items-center justify-center px-4">
         <div className="w-full max-w-lg bg-white/90 backdrop-blur rounded-3xl shadow-2xl p-8 text-center animate-fadeIn">
           {/* ICON */}

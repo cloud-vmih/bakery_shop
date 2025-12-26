@@ -15,6 +15,7 @@ import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import "../styles/home.css";
 import { Header } from "../components/Header";
 import ChatBox from "../components/chat/ChatBox";
+import { AdminSidebar } from "../components/Sidebar";
 
 interface Banner {
   title: string;
@@ -207,7 +208,6 @@ const Home = () => {
 
   return (
     <>
-    <Header></Header>
     <div className="page">
       {/* ==================== 1. BANNER ==================== */}
       <section className="banner">
