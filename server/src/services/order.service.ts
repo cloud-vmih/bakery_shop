@@ -1,6 +1,6 @@
 // server/src/services/order.service.ts
 
-import { orderRepo } from "../db(raw)/order.db";
+import { orderRepo } from "../db/order.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
 
 
@@ -66,7 +66,7 @@ export const getMyOrders = async (userId: number) => {
 // Lấy chi tiết trạng thái một đơn hàng
 export const getOrderStatus = async (orderId: number, userId: number) => {
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
-
+  console.log("Order fetched:", order);
   if (!order) {
     return null;
   }
@@ -87,10 +87,10 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
       status: order.payment.status,           // "PAID", "PENDING", "REFUNDED"
     } : null,
     items: order.orderDetails?.map((detail: any) => ({
-      itemInfo: detail.itemInfo || {},
-      note: detail.note || null,
+      itemInfo: detail.item || {},
       quantity: detail.quantity ?? detail.itemInfo?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
     })) || [],
+    note: order.orderInfo?.note || null,
   };
 };
 

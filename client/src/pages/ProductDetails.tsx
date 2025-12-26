@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { useUser } from "../context/authContext";
+import { useUser } from "../context/AuthContext";
 import { useEffect } from "react";
 
 const ProductDetails = () => {

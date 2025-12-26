@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { ChatMessage } from "../types/chat.type";
-import { getActiveConversation, loadMessages } from "../services/chat.services";
+import { getActiveConversation, loadMessages } from "../services/chat.service";
 import { useSocketStore } from "./socket.store";
 import toast from "react-hot-toast";
 

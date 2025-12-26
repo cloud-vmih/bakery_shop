@@ -1,5 +1,5 @@
 import { ChatMessage } from "../../types/chat.type";
-import { useUser } from "../../context/authContext";
+import { useUser } from "../../context/AuthContext";
 import { useMemo } from "react";
 
 export const MessageBubble = ({ msg }: { msg: ChatMessage }) => {

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { orderService } from "../services/order.service";
 import { Header } from "../components/Header";
+import toast from "react-hot-toast";
 
 export default function OrderStatus() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -262,9 +263,9 @@ const getCancelButtonClass = () => {
 
                   return (
                     <div key={idx} className="flex gap-6 items-start">
-                      {info.image ? (
+                      {info.imageURL ? (
                         <img
-                          src={info.image}
+                          src={info.imageURL}
                           alt={info.name}
                           className="w-24 h-24 object-cover rounded-2xl shadow flex-shrink-0"
                         />
@@ -293,18 +294,20 @@ const getCancelButtonClass = () => {
                           {(info.price * quantity).toLocaleString("vi-VN")}đ
                         </p>
 
-                        {item.note && (
-                          <p className="mt-3 text-pink-700 italic text-lg">
-                            Ghi chú: {item.note}
-                          </p>
-                        )}
+                  
                       </div>
                     </div>
                   );
                 })}
               </div>
             </div>
-
+                <div className="border-t border-gray-200">
+                  {data.note && (
+                          <p className="mt-3 text-pink-700 italic text-lg">
+                            Ghi chú: {data.note}
+                          </p>
+                        )}
+                </div>
             {/* Thông tin thanh toán */}
             {data.payment && (
               <div className="bg-white rounded-3xl shadow-lg p-8">

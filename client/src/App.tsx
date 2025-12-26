@@ -1,13 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import RegisterPage from "./pages/Register";
+import Cart from "./pages/CartPage";
 import Home from "./pages/Home";
 import VerifyEmail from "./pages/verifyEmail";
 import OrderManagement from "./pages/OrderManagement";
 import Dashboard from "./pages/Dashboard";
-import { AuthProvider } from "./context/authContext";
-import { InventoryProvider} from "./context/inventoryContext";
+import { AuthProvider } from "./context/AuthContext";
+import { InventoryProvider} from "./context/InventoryContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { CartProvider } from "./context/CartContext";
+import Checkout from "./pages/Checkout";
+import CheckoutConfirm from "./pages/CheckoutConfirm";
+import SuccessPage from "./pages/SuccessPage";
+import VNPayReturnPage from "./pages/VNPayReturnPage";
+import PaymentFailedPage from "./pages/PaymentFailedPage";
 import MenuPage from "./pages/MenuPage";
 import ChangePassword from "./pages/ChangePassword";
 import ProductDetails from "./pages/ProductDetails";
@@ -21,7 +28,7 @@ import WishlistPage from "./pages/Wishlist";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { SocketProvider } from "./context/socketContext";
+import { SocketProvider } from "./context/SocketContext";
 
 import AdminConversationChat from "./components/chat/AdminConversationChat";
 import AdminConversationList from "./components/chat/AdminConversationList";
@@ -31,8 +38,9 @@ export default function App() {
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
       <AuthProvider>
       <SocketProvider>
+        <CartProvider>
       <InventoryProvider>
-    <BrowserRouter>
+      <BrowserRouter>
             <ToastContainer
             position="bottom-right"
             autoClose={2000}
@@ -64,9 +72,20 @@ export default function App() {
           path="/admin/conversations/:id"
           element={<AdminConversationChat />}
         />
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout/confirm" element={<CheckoutConfirm />} />
+        <Route path="/order-success/:orderId" element={<SuccessPage />} />
+         <Route
+                path="/payment/vnpay/return"
+                element={<VNPayReturnPage />}
+              />
+              <Route path="/payment-failed" element={<PaymentFailedPage />} />
       </Routes>
         </BrowserRouter>
           </InventoryProvider>
+          </CartProvider>
     </SocketProvider>
     </AuthProvider>
     </GoogleOAuthProvider>

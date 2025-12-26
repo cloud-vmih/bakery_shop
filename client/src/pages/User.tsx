@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile } from '../services/user.service';
 import { Header } from "../components/Header";
 import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
-import { useUser } from '../context/authContext';
+import { useUser } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import '../styles/Profile.css';
 import {
   getMyAddresses,
-  addAddress,
+  createAddress,
   updateAddress,
   setDefaultAddress,
   Address,
@@ -222,7 +222,7 @@ const ProfilePage: React.FC = () => {
         ...(hasExistingAddresses && isDefaultAddress ? { isDefault: true } : {}),
       };
 
-      await addAddress(payload);
+      await createAddress(payload);
       toast.success('Thêm địa chỉ thành công');
       setShowAddAddressForm(false);
       setSelectedAddress(null);

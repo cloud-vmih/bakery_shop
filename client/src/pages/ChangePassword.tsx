@@ -1,6 +1,6 @@
 // src/pages/ChangePassword.tsx
 import { useState, useEffect } from "react";
-import { resetPasswordService } from "../services/auth.services";
+import { resetPasswordService } from "../services/auth.service";
 import toast from "react-hot-toast";
 import '../styles/changePassword.css'; // Import CSS
 

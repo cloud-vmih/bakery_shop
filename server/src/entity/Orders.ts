@@ -13,11 +13,10 @@ import {
 import { User } from "./User";
 import {
   EOrderStatus,
-  EPayment,
-  EPayStatus,
   ECancelStatus,
 } from "./enum/enum";
 import { OrderDetail } from "./OrderDetails";
+import { OrderInfo } from "./OrderInfo";
 import { Payment } from "./Payment";
 
 @Entity("orders")
@@ -31,9 +30,6 @@ export class Order extends BaseEntity {
 
   @CreateDateColumn({ type: "timestamp" })
   createAt?: Date;
-
-  @UpdateDateColumn({ type: "timestamp" })
-  updatedAt?: Date;
 
   @Column({
     type: "enum",
@@ -61,6 +57,10 @@ export class Order extends BaseEntity {
 
   @OneToMany(() => OrderDetail, (od) => od.order, { cascade: true })
   orderDetails?: OrderDetail[];
+
+
+  @OneToOne(() => OrderInfo, (info) => info.order)
+  orderInfo?: OrderInfo;
 
   @OneToOne(() => Payment, (payment) => payment.order)
   payment?: Payment;

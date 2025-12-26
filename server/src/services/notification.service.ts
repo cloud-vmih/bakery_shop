@@ -1,9 +1,9 @@
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
-import { getRawUserByID } from "../db(raw)/db.user";
+import { getRawUserByID } from "../db/user.db";
 import { ENotiType } from "../entity/enum/enum";
 import { io } from "../socket";
-import * as notificationDB from "../db(raw)/db.notification";
+import * as notificationDB from "../db/notification.db";
 
 export const sendNotification = async ( userIds: number[], title: string, contents: string, notiType: ENotiType) => {
     const users = (await Promise.all(

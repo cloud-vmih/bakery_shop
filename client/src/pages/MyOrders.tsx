@@ -204,11 +204,6 @@ export default function MyOrders() {
                               <h4 className="text-xl font-bold text-gray-800">
                                 {info.name || "Bánh ngọt"}
                               </h4>
-                              {detail.note && (
-                                <p className="text-pink-600 mt-1 italic">
-                                  Ghi chú: {detail.note}
-                                </p>
-                              )}
                               <p className="text-gray-600 mt-1">
                                 Số lượng: {detail.quantity || 1}
                               </p>

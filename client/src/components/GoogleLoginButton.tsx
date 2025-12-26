@@ -1,7 +1,7 @@
 import { GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
-import { googleLoginService } from "../services/auth.services";
-import { useUser } from "../context/authContext";
+import { googleLoginService } from "../services/auth.service";
+import { useUser } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "../stores/socket.store";
 
@@ -15,7 +15,7 @@ export default function GoogleLoginButton() {
         try {
           const idToken = credentialResponse.credential;
           if (!idToken) return toast.error("Google không trả id_token!");
-        
+
           const data = await googleLoginService(idToken);
 
           setUser(data.user);

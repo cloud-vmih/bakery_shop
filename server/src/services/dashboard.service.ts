@@ -1,7 +1,7 @@
 // src/services/dashboard.service.ts
 import dayjs from "dayjs";
 import { Between } from "typeorm";
-import { orderRepo } from "../db(raw)/db.manageOrder";
+import { orderRepo } from "../db/manageOrder.db";
 import { Order } from "../entity/Orders";
 
 interface DashboardFilters {
@@ -95,23 +95,23 @@ export const getDashboardData = async (filters: DashboardFilters) => {
     }
 
     // Chi tiết sản phẩm & doanh thu
-    order.orderDetails?.forEach((detail) => {
-      const info = detail.itemInfo || {};
-      const quantity = info.quantity || 1;
-      const price = info.price || 0;
-      const subtotal = quantity * price;
+    // order.orderDetails?.forEach((detail) => {
+    //   // const info = detail.itemInfo || {};
+    //   const quantity = info.quantity || 1;
+    //   const price = info.price || 0;
+    //   const subtotal = quantity * price;
 
-      netRevenue += subtotal;
-      totalCakesSold += quantity;
-      dailyRevenue += subtotal;
+    //   netRevenue += subtotal;
+    //   totalCakesSold += quantity;
+    //   dailyRevenue += subtotal;
 
-      const name = info.name || "Sản phẩm không tên";
-      const current = productMap.get(name) || { sold: 0, revenue: 0 };
-      productMap.set(name, {
-        sold: current.sold + quantity,
-        revenue: current.revenue + subtotal,
-      });
-    });
+    //   const name = info.name || "Sản phẩm không tên";
+    //   const current = productMap.get(name) || { sold: 0, revenue: 0 };
+    //   productMap.set(name, {
+    //     sold: current.sold + quantity,
+    //     revenue: current.revenue + subtotal,
+    //   });
+    // });
 
     revenueByDay.set(dayKey, (revenueByDay.get(dayKey) || 0) + dailyRevenue);
   });
@@ -142,12 +142,12 @@ export const getDashboardData = async (filters: DashboardFilters) => {
   });
 
   let prevNetRevenue = 0;
-  prevOrders.forEach(order => {
-    order.orderDetails?.forEach(d => {
-      const info = d.itemInfo || {};
-      prevNetRevenue += (info.quantity || 1) * (info.price || 0);
-    });
-  });
+  // prevOrders.forEach(order => {
+  //   order.orderDetails?.forEach(d => {
+  //     const info = d.itemInfo || {};
+  //     prevNetRevenue += (info.quantity || 1) * (info.price || 0);
+  //   });
+  // });
 
   const revenueChangePercent = prevNetRevenue > 0
     ? Math.round(((netRevenue - prevNetRevenue) / prevNetRevenue) * 100 * 10) / 10

@@ -1,7 +1,7 @@
 // stores/adminConversationChat.store.ts
 import { create } from "zustand";
 import { ChatMessage } from "../types/chat.type";
-import { loadMessages } from "../services/chat.services";
+import { loadMessages } from "../services/chat.service";
 import { useSocketStore } from "./socket.store";
 
 interface ConversationChatState {

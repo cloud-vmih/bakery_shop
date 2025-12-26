@@ -1,0 +1,92 @@
+import { AppDataSource } from "../config/database";
+import { Cart } from "../entity/Cart";
+import { CartItem } from "../entity/CartItem";
+import { Item } from "../entity/Item";
+
+export const getCartByUserId = async (userId: number) => {
+  return await AppDataSource.getRepository(Cart).findOne({
+    where: { customer: { id: userId } },
+    relations: {
+      items: {
+        item: true, // 👈 load luôn product
+      },
+    },
+  });
+};
+
+export const createOrUpdateCart = async (
+  userId: number,
+  itemId: number,
+  quantity: number = 1
+) => {
+  const cartRepo = AppDataSource.getRepository(Cart);
+  const cartItemRepo = AppDataSource.getRepository(CartItem);
+  const itemRepo = AppDataSource.getRepository(Item);
+
+  // 1️⃣ Check item
+  const item = await itemRepo.findOne({
+    where: { id: itemId },
+    select: ["id"],
+  });
+  if (!item) throw new Error("Sản phẩm không tồn tại");
+
+  // 2️⃣ Get or create cart
+  let cart = await getCartByUserId(userId);
+
+  if (!cart) {
+    const newCart = cartRepo.create({
+      customer: { id: userId } as any,
+      createAt: new Date(),
+      updateAt: new Date(),
+    });
+    await cartRepo.save(newCart);
+
+    cart = await cartRepo.findOneByOrFail({ id: newCart.id });
+  }
+
+  // 🔥 QUAN TRỌNG: đảm bảo cart.id tồn tại
+  if (!cart.id) {
+    throw new Error("Cart ID missing");
+  }
+
+  // 3️⃣ Find cart item
+  const cartItem = await cartItemRepo.findOne({
+    where: {
+      cart: { id: cart.id },
+      item: { id: itemId },
+    },
+  });
+
+  if (cartItem) {
+    cartItem.quantity = (cartItem.quantity ?? 0) + quantity;
+    await cartItemRepo.save(cartItem);
+  } else {
+    const newCartItem = cartItemRepo.create({
+      cart: { id: cart.id } as Cart,
+      item: { id: itemId } as Item,
+      quantity,
+    });
+    await cartItemRepo.save(newCartItem);
+  }
+
+  // 4️⃣ Update cart time
+  await cartRepo.update(cart.id, {
+    updateAt: new Date(),
+  });
+
+  return cart;
+};
+
+export const clearCartByUserId = async (userId: number) => {
+  const cartRepo = AppDataSource.getRepository(Cart);
+
+  const cart = await cartRepo.findOne({
+    where: { customer: { id: userId } },
+    relations: ["items"],
+  });
+
+  if (!cart) return true;
+
+  await cartRepo.remove(cart);
+  return true;
+};

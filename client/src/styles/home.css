@@ -105,25 +105,25 @@
   @apply text-lg text-gray-600 mt-2;
 }
 
-.titleBrown { 
-  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-amber-900 mb-4; 
+.titleBrown {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-amber-900 mb-4;
 }
 
-.titleGreen { 
-  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-green-700 mb-4; 
+.titleGreen {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold text-green-700 mb-4;
 }
 
 /* ==================== SECTION STYLES ==================== */
-.sectionWhite { 
-  @apply py-16 md:py-20 bg-white; 
+.sectionWhite {
+  @apply py-16 md:py-20 bg-white;
 }
 
-.sectionGray { 
-  @apply py-16 md:py-20 bg-gray-50; 
+.sectionGray {
+  @apply py-16 md:py-20 bg-gray-50;
 }
 
-.sectionAmber { 
-  @apply py-16 md:py-20 bg-amber-50 text-center; 
+.sectionAmber {
+  @apply py-16 md:py-20 bg-amber-50 text-center;
 }
 
 /* ==================== CÁC MÓN ĐƯỢC YÊU THÍCH ==================== */
@@ -297,7 +297,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -306,7 +307,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -320,13 +322,13 @@
     height: auto;
     min-height: 400px;
   }
-  
+
   .bannerSlide {
     @apply relative opacity-100;
     position: static;
     min-height: 400px;
   }
-  
+
   .bannerControls {
     @apply relative bottom-auto left-auto transform-none mt-6;
   }

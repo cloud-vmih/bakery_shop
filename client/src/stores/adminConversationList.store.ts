@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { ConversationSummary } from "../types/chat.type";
-import { loadConversations } from "../services/chat.services";
+import { loadConversations } from "../services/chat.service";
 import { useSocketStore } from "./socket.store";
 
 interface ConversationListState {

@@ -1,5 +1,14 @@
-import { Entity, ManyToOne, JoinColumn, Unique, BaseEntity, PrimaryColumn, OneToOne, ManyToMany } from "typeorm"
-import { Item } from "./Item"
+import {
+  Entity,
+  ManyToOne,
+  JoinColumn,
+  Unique,
+  BaseEntity,
+  PrimaryColumn,
+  OneToOne,
+  ManyToMany,
+} from "typeorm";
+import { Item } from "./Item";
 import { Customer } from "./Customer";
 
 @Entity("wishlist")
@@ -12,12 +21,16 @@ export class Wishlist extends BaseEntity {
   @PrimaryColumn({ name: "itemID", type: "bigint" })
   itemID!: number;
 
-  @ManyToOne(() => Customer, customer => customer.wishlists, {onDelete: "CASCADE"})
+  @ManyToOne(() => Customer, (customer) => customer.wishlists, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "customerID" })
   customer!: Customer;
 
-  @ManyToOne(() => Item, item => item.wishlists, {eager: true, onDelete: "CASCADE"})
+  @ManyToOne(() => Item, (item) => item.wishlist, {
+    eager: true,
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "itemID" })
   item!: Item;
 }
-

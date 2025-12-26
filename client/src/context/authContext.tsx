@@ -1,20 +1,28 @@
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { verifyToken } from "../services/auth.services"; // FE gọi /token BE
+import { verifyToken } from "../services/auth.service"; // FE gọi /token BE
 import { useSocketStore } from "../stores/socket.store";
 
 interface AuthContextType {
   user: any | null;
-  setUser: (user: any) => void;
+  setUser: (user: any | null) => void;
+  logout: () => void; 
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any | null>(null);
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return; 
+      if (!token) return;
 
       try {
         const data = await verifyToken();
@@ -22,7 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(data.user); // BE trả user/info
         useSocketStore.getState().reconnectSocket();
       } catch (err) {
-        console.log("Token lỗi, clear luôn user");
         localStorage.removeItem("token");
         setUser(null);
       }
@@ -32,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

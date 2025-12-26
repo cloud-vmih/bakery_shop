@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { X } from "lucide-react";
 import { useChatStore } from "../../stores/customerChat.store";
-import { useUser } from "../../context/authContext";
+import { useUser } from "../../context/AuthContext";
 import { MessageBubble } from "./MessageBubble";
 
 const ChatBox = () => {

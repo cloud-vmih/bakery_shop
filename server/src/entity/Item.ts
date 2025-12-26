@@ -1,8 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+  ManyToMany,
+} from "typeorm";
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
-import {Inventory} from "./Inventory";
+import { Inventory } from "./Inventory";
 
 @Entity("item")
 export class Item extends BaseEntity {
@@ -31,12 +38,12 @@ export class Item extends BaseEntity {
   @Column({ type: "json", nullable: true })
   itemDetail?: any;
 
-  @OneToMany(() => Wishlist, w => w.item)
-  wishlists!: Wishlist[];
+  @ManyToMany(() => Wishlist, w => w.item)
+  wishlist?: Wishlist[];
 
-  @OneToMany(() => Rating, r => r.item)
+  @OneToMany(() => Rating, (r) => r.item)
   ratings?: Rating[];
 
-  @OneToMany(() => Inventory, (i: Inventory)=> i.item)
+  @OneToMany(() => Inventory, (i: Inventory) => i.item)
   inventory?: Inventory[];
 }

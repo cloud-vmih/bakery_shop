@@ -46,7 +46,7 @@ import {
   getOrders,
   updateOrderStatus,
   cancelOrder,
-} from "../services/order.service";
+} from "../services/orders.service";
 import "../styles/OrderManagement.css";
 
 const { Title, Text } = Typography;

@@ -2,8 +2,8 @@ import {
   orderRepo,
   findOrderById,
   saveOrder,
-  saveOrderDetail,
-} from "../db(raw)/db.manageOrder";
+  saveOrderInfo,
+} from "../db/manageOrder.db";
 import { EOrderStatus, ECancelStatus } from "../entity/enum/enum";
 import { Order } from "../entity/Orders";
 import dayjs from "dayjs";
@@ -45,10 +45,10 @@ export const cancelOrder = async (
   order.cancelReason = cancelReason;
   order.cancelHandledBy = handledBy;
 
-  if (order.orderDetails?.[0]) {
-    order.orderDetails[0].note = `Admin/Staff hủy: ${cancelReason}`;
-    await saveOrderDetail(order.orderDetails[0]);
-  }
+  // if (order.orderDetails?.[0]) {
+  //   order.orderDetails[0].note = `Admin/Staff hủy: ${cancelReason}`;
+  //   await saveOrderDetail(order.orderDetails[0]);
+  // }
 
   return await saveOrder(order);
 };
@@ -84,9 +84,9 @@ export const requestCancelOrder = async (
   order.cancelStatus = ECancelStatus.REQUESTED;
   order.cancelReason = reason;
 
-  if (order.orderDetails?.[0]) {
-    order.orderDetails[0].note = `Khách yêu cầu hủy: ${reason}`;
-    await saveOrderDetail(order.orderDetails[0]);
+  if (order.orderInfo) {
+    order.orderInfo.note = `Khách yêu cầu hủy: ${reason}`;
+    await saveOrderInfo(order.orderInfo);
   }
 
   return await saveOrder(order);
@@ -118,11 +118,11 @@ export const handleCancelRequest = async (
     order.cancelHandledBy = staffId;
     order.cancelNote = note;
 
-    if (order.orderDetails?.[0]) {
-      order.orderDetails[0].note += ` | Đã duyệt hủy${
+    if (order.orderInfo) {
+      order.orderInfo.note += ` | Đã duyệt hủy${
         note ? `: ${note}` : ""
       }`;
-      await saveOrderDetail(order.orderDetails[0]);
+      await saveOrderInfo(order.orderInfo);
     }
   } else {
     order.cancelStatus = ECancelStatus.REJECTED;
@@ -194,25 +194,25 @@ export const updateOrderStatus = async (
 
 /* ================== INVOICE ================== */
 export const generateInvoiceHTML = (order: Order) => {
-  const templatePath = path.join(__dirname, "../templates/invoice.html");
-  let html = fs.readFileSync(templatePath, "utf-8");
+//   const templatePath = path.join(__dirname, "../templates/invoice.html");
+//   let html = fs.readFileSync(templatePath, "utf-8");
 
-  const itemInfo = order.orderDetails?.[0]?.itemInfo || {};
-  const note = order.orderDetails?.[0]?.note || "";
-  const subtotal = (itemInfo.quantity || 1) * (itemInfo.price || 0);
+//   const itemInfo = order.orderDetails?.[0]?.item || {};
+//   const note = order.orderDetails?.[0]?.note || "";
+//   const subtotal = (order.orderDetails?.[0]?.quantity || 1) * (itemInfo.price || 0);
 
-  return html
-    .replace(/{{orderId}}/g, String(order.id))
-    .replace(/{{customerName}}/g, order.customer?.fullName || "Khách lẻ")
-    .replace(/{{phone}}/g, order.customer?.phoneNumber || "-")
-    .replace(
-      /{{date}}/g,
-      new Date(order.createAt!).toLocaleDateString("vi-VN")
-    )
-    .replace(/{{status}}/g, String(order.status ?? ""))
-    .replace(/{{itemName}}/g, itemInfo.name || "Sản phẩm")
-    .replace(/{{quantity}}/g, String(itemInfo.quantity || 1))
-    .replace(/{{price}}/g, String(itemInfo.price || 0))
-    .replace(/{{subtotal}}/g, subtotal.toLocaleString())
-    .replace(/{{note}}/g, note);
+//   return html
+//     .replace(/{{orderId}}/g, String(order.id))
+//     .replace(/{{customerName}}/g, order.customer?.fullName || "Khách lẻ")
+//     .replace(/{{phone}}/g, order.customer?.phoneNumber || "-")
+//     .replace(
+//       /{{date}}/g,
+//       new Date(order.createAt!).toLocaleDateString("vi-VN")
+//     )
+//     .replace(/{{status}}/g, String(order.status ?? ""))
+//     .replace(/{{itemName}}/g, itemInfo.name || "Sản phẩm")
+//     .replace(/{{quantity}}/g, String(itemInfo.quantity || 1))
+//     .replace(/{{price}}/g, String(itemInfo.price || 0))
+//     .replace(/{{subtotal}}/g, subtotal.toLocaleString())
+//     .replace(/{{note}}/g, note);
 };

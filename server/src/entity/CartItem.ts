@@ -1,13 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, BaseEntity, OneToOne } from "typeorm"
-import { Cart } from "./Cart"
-import { Item } from "./Item"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  Column,
+  BaseEntity,
+  OneToOne,
+} from "typeorm";
+import { Cart } from "./Cart";
+import { Item } from "./Item";
 
 @Entity("cartItem")
 export class CartItem extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne(() => Cart, c => c.items)
+  @ManyToOne(() => Cart, (c) => c.items, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "cartID" })
   cart?: Cart;
 

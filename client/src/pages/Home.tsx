@@ -1,5 +1,5 @@
 // src/pages/Home.tsx
-import { useUser } from "../context/authContext";
+import { useUser } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import {
   CakeIcon,

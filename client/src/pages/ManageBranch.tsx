@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
-import { getBranches, createBranch, updateBranch, deleteBranch, } from "../services/branch.services";
+import { getBranches, createBranch, updateBranch, deleteBranch, } from "../services/branch.service";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useUser } from "../context/authContext";
+import { useUser } from "../context/AuthContext";
 import { Header } from "../components/Header";
 import GooglePlaceInput from "../components/AddressAutocomplete";
 import MapProvider from "../components/MapProvider";

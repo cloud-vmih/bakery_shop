@@ -4,7 +4,7 @@ import {
   getRatingsByItem,
   getRatingsByCustomer,
   deleteRating,
-} from "../db(raw)/rating.db";
+} from "../db/rating.db";
 import { Rating } from "../entity/Rating";
 
 /**
