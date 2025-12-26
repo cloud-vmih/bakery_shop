@@ -17,6 +17,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { getBranches } from "../services/branch.service";
 import { useInventory } from "../context/InventoryContext";
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  Item,
+} from "../services/wishlist.service";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -37,6 +43,7 @@ export default function MenuPage() {
 
   const { user, setUser } = useUser();
   const { addToCart } = useCart();
+  const [wishlist, setWishlist] = useState<number[]>([]);
 
   const navigate = useNavigate();
   const { getItemQuantity, branchId, setBranchId } = useInventory(); //gọi brandId để lưu brandId
@@ -58,6 +65,14 @@ export default function MenuPage() {
     };
     loadMenu();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getWishlist().then((data) => {
+      setWishlist(data.map((i) => i.id!).filter(Boolean));
+    });
+  }, [user]);
 
   useEffect(() => {
     const loadBranches = async () => {
@@ -84,6 +99,29 @@ export default function MenuPage() {
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");
+    }
+  };
+
+  const handleToggleWishlist = async (itemId?: number) => {
+    if (!itemId) return;
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để sử dụng wishlist");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (wishlist.includes(itemId)) {
+        await removeFromWishlist(itemId);
+        setWishlist((prev) => prev.filter((id) => id !== itemId));
+        toast.success("Đã xóa khỏi wishlist");
+      } else {
+        await addToWishlist(itemId);
+        setWishlist((prev) => [...prev, itemId]);
+        toast.success("Đã thêm vào wishlist");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Có lỗi xảy ra");
     }
   };
 
@@ -331,6 +369,33 @@ export default function MenuPage() {
                             !isDisabled && navigate(`/product/${item.id}`)
                           }
                         >
+                          {/* Wishlist button - giữ nguyên */}
+                          <div className="absolute top-3 right-3 z-20">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isDisabled) handleToggleWishlist(item.id);
+                              }}
+                              disabled={isDisabled}
+                              className={`
+                                wishlistButton relative overflow-hidden
+                                ${wishlist.includes(item.id) ? "liked" : ""}
+                                ${
+                                  isDisabled
+                                    ? "opacity-60 cursor-not-allowed"
+                                    : ""
+                                }
+                              `}
+                            >
+                              {/* Icon tim */}
+                              <span className="text-2xl block transition-all duration-300">
+                                {wishlist.includes(item.id) ? "❤️" : "🤍"}
+                              </span>
+
+                              {/* Hiệu ứng khi đang thêm (chúng ta sẽ trigger bằng state tạm) */}
+                              {/* Ở đây mình dùng trick đơn giản: khi click, thêm class tạm thời nếu chưa liked */}
+                            </button>
+                          </div>
                           {/* Hình ảnh */}
                           <div className="menuImageWrapper">
                             {item.imageURL ? (

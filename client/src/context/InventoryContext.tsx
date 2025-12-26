@@ -1,4 +1,3 @@
-// context/InventoryContext.tsx
 import {
   createContext,
   useState,
@@ -98,16 +97,6 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Get quantity for specific item in specific branch
-  // const getItemQuantity = useCallback(
-  //   (itemId: number, branchId: number): number => {
-  //     const item = inventory.find(
-  //       (i) => i.itemId === itemId && i.branchId === branchId
-  //     );
-  //     return item?.stockQuantity || 0;
-  //   },
-  //   [inventory]
-  // );
   const getItemQuantity = useCallback(
     (itemId: number, branchId: number): number => {
       const item = inventory.find(

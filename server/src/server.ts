@@ -14,6 +14,9 @@ import paymentVNPayRoutes from "./routes/payment.vnpay.route";
 import inventoryRoutes from "./routes/inventory.route";
 import branchRoutes from "./routes/branch.route";
 
+import profileRoutes from "./routes/user.route";
+import wishlistRoutes from "./routes/wishlist.route";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -47,5 +50,9 @@ app.use("/api/payment/vnpay", paymentVNPayRoutes);
 app.use("/api", inventoryRoutes);
 
 app.use("/api/branchs", branchRoutes);
+
+app.use("/api", profileRoutes);
+
+app.use("/api/wishlist", wishlistRoutes);
 
 export default app;

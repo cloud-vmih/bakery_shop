@@ -12,6 +12,8 @@ import SuccessPage from "./pages/SuccessPage";
 import VNPayReturnPage from "./pages/VNPayReturnPage";
 import PaymentFailedPage from "./pages/PaymentFailedPage";
 import { InventoryProvider } from "./context/InventoryContext";
+import User from "./pages/User";
+import WishlistPage from "./pages/Wishlist";
 
 export default function App() {
   return (
@@ -24,7 +26,9 @@ export default function App() {
               <Route path="/menu" element={<Menu />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/profile" element={<User />} />
               <Route path="/checkout/confirm" element={<CheckoutConfirm />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/order-success/:orderId" element={<SuccessPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

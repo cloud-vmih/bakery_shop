@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import toast from "react-hot-toast";
 import { useUser } from "../context/AuthContext";
 import { useEffect, useState } from "react";

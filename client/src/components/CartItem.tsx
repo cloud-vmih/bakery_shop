@@ -3,7 +3,7 @@ import { Minus, Plus, X } from "lucide-react";
 type Props = {
   item: any;
   checked: boolean;
-  available: number; // tồn kho thực tế (stock - reserved)
+  available: number;
   onToggle: () => void;
   onIncrease: () => void;
   onDecrease: () => void;
@@ -27,9 +27,11 @@ export default function CartItem({
 
   return (
     <div
-      className={`flex items-center py-5 border-b gap-4 ${
-        isOverStock ? "bg-red-50" : ""
-      }`}
+      className={`
+    flex items-center py-5 border-b gap-4 transition
+    ${isOverStock ? "bg-red-50" : ""}
+    hover:bg-gray-50 hover:shadow-sm
+  `}
     >
       {/* CHECKBOX */}
       <input
@@ -58,13 +60,23 @@ export default function CartItem({
 
         {/* STOCK INFO */}
         {available !== Infinity && (
-          <p
-            className={`text-xs mt-1 ${
-              available === 0 || isOverStock ? "text-red-600" : "text-gray-500"
-            }`}
+          <span
+            className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium
+      ${
+        available === 0
+          ? "bg-red-100 text-red-700"
+          : isOverStock
+          ? "bg-yellow-100 text-yellow-700"
+          : "bg-green-100 text-green-700"
+      }
+    `}
           >
-            {available === 0 ? "Hết hàng" : `Còn ${available} sản phẩm`}
-          </p>
+            {available === 0
+              ? "Hết hàng"
+              : isOverStock
+              ? "Vượt tồn kho"
+              : `Còn ${available}`}
+          </span>
         )}
 
         {/* QUANTITY CONTROL */}

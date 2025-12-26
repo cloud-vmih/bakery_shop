@@ -1,165 +1,3 @@
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { useMemo, useState } from "react";
-
-// import { Header } from "../components/Header";
-// import OrderSummary from "../components/checkout/OrderSummary";
-
-// import { createOrder } from "../services/orders.service";
-// import { createVNPayUrl } from "../services/payment.service";
-// import { clearCart } from "../services/cart.service";
-// import { useCart } from "../context/CartContext";
-
-// export default function CheckoutConfirm() {
-//   const { resetCart } = useCart();
-//   const navigate = useNavigate();
-//   const location = useLocation();
-
-//   const payload = (location.state as any)?.payload;
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-
-//   const totalAmount = useMemo(() => {
-//     if (!payload?.items) return 0;
-//     return payload.items.reduce(
-//       (sum: number, i: any) => sum + i.item.price * i.quantity,
-//       0
-//     );
-//   }, [payload]);
-
-//   if (!payload) {
-//     return (
-//       <>
-//         <Header />
-//         <div className="min-h-[calc(100vh-80px)] bg-emerald-50 flex items-center justify-center px-4">
-//           <div className="bg-white rounded-2xl border border-emerald-200 p-6 text-center">
-//             <h3 className="text-lg font-semibold mb-2">Xác nhận đơn hàng</h3>
-//             <p className="text-sm text-gray-500 mb-4">
-//               Không tìm thấy dữ liệu đơn hàng
-//             </p>
-//             <button
-//               onClick={() => navigate("/checkout")}
-//               className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-//             >
-//               Quay lại Checkout
-//             </button>
-//           </div>
-//         </div>
-//       </>
-//     );
-//   }
-
-//   const handleConfirm = async () => {
-//     if (isSubmitting) return;
-//     setIsSubmitting(true);
-
-//     try {
-//       const order = await createOrder(payload);
-
-//       if (payload.paymentMethod === "COD") {
-//         await clearCart();
-//         resetCart();
-//         navigate(`/order-success/${order.orderId}`, { replace: true });
-//         return;
-//       }
-
-//       if (payload.paymentMethod === "VNPAY") {
-//         const { vnpayUrl } = await createVNPayUrl(order.orderId, totalAmount);
-//         window.location.href = vnpayUrl;
-//         return;
-//       }
-
-//       throw new Error("Unsupported payment method");
-//     } catch (err: any) {
-//       alert(err.message || "Không thể tạo đơn hàng");
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <Header />
-
-//       <div className="min-h-[calc(100vh-80px)] bg-emerald-50 py-10 px-4">
-//         <div className="mx-auto max-w-3xl space-y-6">
-//           {/* TITLE */}
-//           <h2 className="text-center text-2xl font-bold text-gray-900">
-//             Xác nhận đơn hàng
-//           </h2>
-
-//           {/* CUSTOMER INFO */}
-//           <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
-//             <h3 className="mb-4 text-lg font-semibold">Thông tin khách hàng</h3>
-
-//             <div className="space-y-3 text-sm">
-//               <div className="flex justify-between">
-//                 <span className="text-gray-500">Khách hàng</span>
-//                 <span className="font-medium text-gray-900 text-right">
-//                   {payload.customer.fullName} – {payload.customer.phone}
-//                 </span>
-//               </div>
-
-//               <div className="flex justify-between">
-//                 <span className="text-gray-500">Email</span>
-//                 <span className="font-medium text-gray-900">
-//                   {payload.customer.email}
-//                 </span>
-//               </div>
-
-//               <div className="flex justify-between">
-//                 <span className="text-gray-500">Địa chỉ</span>
-//                 <span className="font-medium text-gray-900 text-right">
-//                   {payload.address.fullAddress}
-//                 </span>
-//               </div>
-
-//               <div className="flex justify-between items-center">
-//                 <span className="text-gray-500">Thanh toán</span>
-//                 <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-//                   {payload.paymentMethod}
-//                 </span>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* ORDER SUMMARY */}
-//           <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
-//             <OrderSummary items={payload.items} />
-//           </div>
-
-//           {/* ACTIONS */}
-//           <div className="space-y-3">
-//             <button
-//               onClick={handleConfirm}
-//               disabled={isSubmitting}
-//               className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500
-//                          py-3 text-sm font-semibold text-white
-//                          hover:from-emerald-700 hover:to-emerald-600
-//                          disabled:opacity-50"
-//             >
-//               {isSubmitting ? "Đang xử lý..." : "Xác nhận đặt hàng"}
-//             </button>
-
-//             <button
-//               onClick={() => navigate("/checkout")}
-//               disabled={isSubmitting}
-//               className="w-full rounded-xl border border-emerald-200 bg-white
-//                          py-3 text-sm font-semibold text-gray-700
-//                          hover:bg-emerald-50"
-//             >
-//               Quay lại chỉnh sửa
-//             </button>
-
-//             <Link
-//               to="/cart"
-//               className="block text-center text-sm text-emerald-600 hover:underline"
-//             >
-//               ← Quay lại giỏ hàng
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
@@ -173,11 +11,36 @@ import { checkInventoryForCheckout } from "../services/inventory.service";
 
 import { useCart } from "../context/CartContext";
 import { useInventory } from "../context/InventoryContext";
+import { calculateOrderTotals } from "../utils/orderCalculator";
+
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  CreditCard,
+  ShoppingBag,
+  AlertTriangle,
+} from "lucide-react";
 
 type InventoryErrorItem = {
   itemId: number;
   available: number;
   requested: number;
+};
+
+const PAYMENT_METHOD_META: Record<
+  string,
+  { label: string; className: string }
+> = {
+  COD: {
+    label: "Thanh toán khi nhận hàng",
+    className: "bg-emerald-100 text-emerald-700",
+  },
+  VNPAY: {
+    label: "Thanh toán qua VNPay Gateway",
+    className: "bg-blue-100 text-blue-700",
+  },
 };
 
 export default function CheckoutConfirm() {
@@ -194,13 +57,14 @@ export default function CheckoutConfirm() {
   );
   const [error, setError] = useState<string | null>(null);
 
-  const totalAmount = useMemo(() => {
-    if (!payload?.items) return 0;
-    return payload.items.reduce(
-      (sum: number, i: any) => sum + i.item.price * i.quantity,
-      0
-    );
+  const totals = useMemo(() => {
+    return calculateOrderTotals(payload.items, {
+      shippingFee: payload.shippingFee ?? 0,
+      discount: payload.discount ?? 0,
+    });
   }, [payload]);
+
+  const paymentMeta = PAYMENT_METHOD_META[payload.paymentMethod];
 
   /* ================= GUARDS ================= */
   if (!payload) {
@@ -267,7 +131,7 @@ export default function CheckoutConfirm() {
 
       // 4️⃣ VNPAY
       if (payload.paymentMethod === "VNPAY") {
-        const { vnpayUrl } = await createVNPayUrl(order.orderId, totalAmount);
+        const { vnpayUrl } = await createVNPayUrl(order.orderId, totals.total);
         window.location.href = vnpayUrl;
         return;
       }
@@ -291,76 +155,181 @@ export default function CheckoutConfirm() {
       <Header />
 
       <div className="min-h-[calc(100vh-80px)] bg-emerald-50 py-10 px-4">
-        <div className="mx-auto max-w-3xl space-y-6">
-          <h2 className="text-center text-2xl font-bold text-gray-900">
+        <div className="mx-auto max-w-6xl space-y-6">
+          {/* PROGRESS */}
+          <div className="text-sm text-gray-600">
+            <span className="text-emerald-600 font-medium">Giỏ hàng</span>
+            <span className="mx-2">›</span>
+            <span className="text-emerald-600 font-medium">
+              Thông tin đặt hàng
+            </span>
+            <span className="mx-2">›</span>
+            <span className="font-semibold text-gray-900">
+              Xác nhận đơn hàng
+            </span>
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900">
             Xác nhận đơn hàng
           </h2>
 
-          {/* CUSTOMER INFO */}
-          <div className="rounded-2xl border bg-white p-6">
-            <h3 className="mb-4 font-semibold">Thông tin khách hàng</h3>
-            <div className="text-sm space-y-2">
-              <div className="flex justify-between">
-                <span>Khách hàng</span>
-                <span>
-                  {payload.customer.fullName} – {payload.customer.phone}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Email</span>
-                <span>{payload.customer.email}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Địa chỉ</span>
-                <span>{payload.address.fullAddress}</span>
-              </div>
-            </div>
-          </div>
+          {/* GRID */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* CUSTOMER INFO */}
+              <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                <h3 className="flex items-center gap-2 text-lg font-semibold mb-5">
+                  <User className="w-5 h-5 text-emerald-600" />
+                  Thông tin khách hàng
+                </h3>
 
-          {/* ORDER SUMMARY */}
-          <div className="rounded-2xl border bg-white p-6">
-            <OrderSummary items={payload.items} />
-          </div>
+                <div className="space-y-4 text-sm text-gray-700">
+                  <div className="flex items-center gap-4">
+                    <User className="w-4 h-4 text-emerald-500" />
+                    <span className="w-28 text-gray-500">Khách hàng</span>
+                    <span className="font-medium">
+                      {payload.customer.fullName}
+                    </span>
+                  </div>
 
-          {/* INVENTORY ERROR */}
-          {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 space-y-2">
-              <p className="font-semibold">{error}</p>
+                  <div className="flex items-center gap-4">
+                    <Phone className="w-4 h-4 text-emerald-500" />
+                    <span className="w-28 text-gray-500">Điện thoại</span>
+                    <span>{payload.customer.phone}</span>
+                  </div>
 
-              {inventoryErrors.length > 0 && (
-                <ul className="list-disc list-inside space-y-1">
-                  {inventoryErrors.map((e) => (
-                    <li key={e.itemId}>
-                      {getItemName(e.itemId)}: còn {e.available}, cần{" "}
-                      {e.requested}
-                    </li>
-                  ))}
-                </ul>
+                  <div className="flex items-center gap-4">
+                    <Mail className="w-4 h-4 text-emerald-500" />
+                    <span className="w-28 text-gray-500">Email</span>
+                    <span>{payload.customer.email}</span>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <MapPin className="w-4 h-4 text-emerald-500 mt-1" />
+                    <span className="w-28 text-gray-500">Địa chỉ</span>
+                    <span className="flex-1">
+                      {payload.address.fullAddress}
+                    </span>
+                  </div>
+
+                  {payload.note && (
+                    <div className="flex items-start gap-4">
+                      <ShoppingBag className="w-4 h-4 text-emerald-500 mt-1" />
+                      <span className="w-28 text-gray-500">Ghi chú</span>
+                      <span className="italic text-gray-500">
+                        {payload.note}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* ORDER SUMMARY */}
+              <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                  <ShoppingBag className="w-5 h-5 text-emerald-600" />
+                  Sản phẩm đã chọn
+                </h3>
+                <OrderSummary
+                  items={payload.items}
+                  shippingFee={payload.shippingFee}
+                  discount={payload.discount}
+                />
+              </div>
+
+              {/* INVENTORY ERROR */}
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  <div className="flex items-center gap-2 font-semibold mb-2">
+                    <AlertTriangle className="w-4 h-4" />
+                    {error}
+                  </div>
+
+                  {inventoryErrors.length > 0 && (
+                    <ul className="list-disc list-inside space-y-1">
+                      {inventoryErrors.map((e) => (
+                        <li key={e.itemId}>
+                          {getItemName(e.itemId)}: còn {e.available}, cần{" "}
+                          {e.requested}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               )}
             </div>
-          )}
 
-          {/* ACTIONS */}
-          <div className="space-y-3">
-            <button
-              onClick={handleConfirm}
-              disabled={isSubmitting}
-              className="w-full rounded-xl bg-emerald-600 py-3 text-white font-semibold disabled:opacity-50"
-            >
-              {isSubmitting ? "Đang xử lý..." : "Xác nhận đặt hàng"}
-            </button>
+            {/* RIGHT – STICKY */}
+            <div className="space-y-6 sticky top-24 h-fit">
+              <div className="rounded-2xl bg-white p-6 shadow-md border">
+                <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                  <CreditCard className="w-5 h-5 text-emerald-600" />
+                  Tóm tắt thanh toán
+                </h3>
 
-            <button
-              onClick={() => navigate("/checkout")}
-              disabled={isSubmitting}
-              className="w-full rounded-xl border bg-white py-3"
-            >
-              Quay lại chỉnh sửa
-            </button>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <div className="flex justify-between">
+                    <span>Tạm tính</span>
+                    <span>{totals.subtotal.toLocaleString()} VND</span>
+                  </div>
 
-            <Link to="/cart" className="block text-center text-emerald-600">
-              ← Quay lại giỏ hàng
-            </Link>
+                  <div className="flex justify-between">
+                    <span>VAT (10%)</span>
+                    <span>{totals.vat.toLocaleString()} VND</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span>Phí ship</span>
+                    <span>{totals.shippingFee.toLocaleString()} VND</span>
+                  </div>
+
+                  <div className="order-row text-green-600">
+                    <span>Giảm giá</span>
+                    <span>-{totals.discount.toLocaleString()} VND</span>
+                  </div>
+
+                  <div className="flex justify-between font-bold text-lg text-emerald-700">
+                    <span>Tổng cộng</span>
+                    <span>{totals.total.toLocaleString()} VND</span>
+                  </div>
+                </div>
+
+                {/* PAYMENT METHOD */}
+                <div
+                  className={`mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${
+                    paymentMeta?.className ?? "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  Phương thức:&nbsp;
+                  {paymentMeta?.label ?? payload.paymentMethod}
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={handleConfirm}
+                  disabled={isSubmitting}
+                  className="mt-6 w-full rounded-xl bg-emerald-600 py-3 text-white font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
+                >
+                  {isSubmitting ? "Đang xử lý..." : "Xác nhận đặt hàng"}
+                </button>
+
+                <button
+                  onClick={() => navigate("/checkout")}
+                  disabled={isSubmitting}
+                  className="mt-3 w-full rounded-xl border bg-white py-3 text-sm"
+                >
+                  Quay lại chỉnh sửa
+                </button>
+
+                <Link
+                  to="/cart"
+                  className="block mt-3 text-center text-sm text-emerald-600"
+                >
+                  ← Quay lại giỏ hàng
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

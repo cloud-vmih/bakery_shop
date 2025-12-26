@@ -5,6 +5,7 @@ import { useInventory } from "../context/InventoryContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
+import { calculateOrderTotals } from "../utils/orderCalculator";
 
 import toast from "react-hot-toast";
 
@@ -29,12 +30,7 @@ export default function Cart() {
 
   const selectedItems = items.filter((i) => checkedItems.includes(i.id));
 
-  const subtotal = selectedItems.reduce(
-    (sum, i) => sum + i.item.price * i.quantity,
-    0
-  );
-  const vat = subtotal * 0.1;
-  const total = subtotal + vat;
+  const { subtotal, vat, total } = calculateOrderTotals(selectedItems);
 
   const [highlight, setHighlight] = useState(false);
   useEffect(() => {
@@ -69,8 +65,19 @@ export default function Cart() {
           {/* LEFT */}
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-2xl font-bold text-green-800">
-                🛒 Giỏ hàng của bạn
+              <h2 className="flex items-center gap-3 text-xl font-bold text-green-800">
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                </svg>
+                Giỏ hàng của bạn
               </h2>
 
               {items.length > 0 && (
@@ -146,43 +153,68 @@ export default function Cart() {
 
           {/* RIGHT */}
           <div className="bg-white rounded-2xl shadow-lg p-6 h-fit sticky top-24">
-            <h3 className="text-xl font-semibold text-green-800 mb-4">
-              🧾 Tổng cộng giỏ hàng
-            </h3>
-
-            <div className="space-y-3 text-sm text-gray-700">
-              <div className="flex justify-between">
-                <span>Tạm tính</span>
-                <span>{subtotal.toLocaleString()} VND</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>VAT (10%)</span>
-                <span>{vat.toLocaleString()} VND</span>
-              </div>
-
-              <hr />
-
-              <div
-                className={`flex justify-between font-bold text-lg transition ${
-                  highlight ? "text-green-800 scale-[1.02]" : "text-green-700"
-                }`}
+            {/* HEADER */}
+            <h2 className="flex items-center gap-3 text-xl font-bold text-green-800">
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
               >
-                <span>Tổng cộng</span>
-                <span>{total.toLocaleString()} VND</span>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 14h6M9 10h6M7 4h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 012-2z"
+                />
+              </svg>
+              Tổng cộng giỏ hàng
+            </h2>
+
+            {/* SUBTOTAL */}
+            <div className="mt-6 space-y-3 text-sm text-gray-700">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tạm tính</span>
+                <span className="font-medium">
+                  {subtotal.toLocaleString()} VND
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-600">VAT (10%)</span>
+                <span className="font-medium">{vat.toLocaleString()} VND</span>
               </div>
             </div>
 
+            {/* DIVIDER */}
+            <hr className="my-5 border-gray-200" />
+
+            {/* TOTAL */}
+            <div
+              className={`
+      flex justify-between items-center
+      text-lg font-bold
+      transition-all duration-300
+      ${highlight ? "scale-105 text-green-800" : "text-green-700"}
+    `}
+            >
+              <span>Tổng cộng</span>
+              <span>{total.toLocaleString()} VND</span>
+            </div>
+
+            {/* CTA */}
             <button
               disabled={selectedItems.length === 0 || hasOverStockItem}
               onClick={() => navigate("/checkout")}
-              className={`mt-6 w-full py-3 rounded-xl font-semibold shadow-md transition
-    ${
-      selectedItems.length === 0 || hasOverStockItem
-        ? "bg-gray-400 cursor-not-allowed opacity-60"
-        : "bg-green-600 hover:bg-green-700 text-white"
-    }
-  `}
+              className={`
+      mt-6 w-full py-3.5 rounded-xl font-semibold
+      transition-all duration-200
+      ${
+        selectedItems.length === 0 || hasOverStockItem
+          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+          : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg"
+      }
+    `}
             >
               Tiến hành thanh toán
             </button>

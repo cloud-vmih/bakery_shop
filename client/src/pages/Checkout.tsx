@@ -218,6 +218,8 @@ export default function Checkout() {
       paymentMethod,
       items: selectedItems,
       note,
+      shippingFee: 30000, //thay đổi biến ở đây
+      discount: 50000, //thay đổi biến ở đây
     };
 
     navigate("/checkout/confirm", { state: { payload } });
@@ -232,9 +234,11 @@ export default function Checkout() {
         style={{ backgroundColor: "var(--page-bg)" }}
       >
         <div className="max-w-6xl mx-auto px-4 pt-6 text-sm">
-          <span className="text-green-500 font-medium">Giỏ hàng</span>
+          <span className="text-emerald-600 font-medium">Giỏ hàng</span>
           <span className="mx-2">›</span>
-          <span>Thanh toán và giao hàng</span>
+          <span className="font-semibold text-gray-900">
+            Thông tin đặt hàng
+          </span>
         </div>
 
         <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -280,9 +284,12 @@ export default function Checkout() {
           </div>
 
           <div className="space-y-6">
-            <OrderSummary items={selectedItems} />
+            <OrderSummary
+              items={selectedItems}
+              discount={50000} //Thêm biến ở đây
+              shippingFee={30000} //Thêm biến ở đây
+            />
             <ConfirmOrderButton onSubmit={handleSubmit} />
-
             {errors.length > 0 && (
               <div className="checkout-errors">
                 {errors.map((e, i) => (
@@ -292,8 +299,10 @@ export default function Checkout() {
                 ))}
               </div>
             )}
-
-            <Link to="/cart" className="checkout-back">
+            <Link
+              to="/cart"
+              className="block mt-3 text-center text-sm text-emerald-600"
+            >
               ← Quay lại giỏ hàng
             </Link>
           </div>

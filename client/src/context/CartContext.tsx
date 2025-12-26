@@ -74,10 +74,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // useEffect(() => {
-  //   loadCart();
-  // }, []);
-
   const { user } = useUser();
 
   useEffect(() => {
