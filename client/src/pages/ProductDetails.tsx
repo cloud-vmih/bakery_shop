@@ -186,7 +186,7 @@ const ProductDetails = () => {
               <div className="space-y-5">
                 <h1 className="productTitle">{item.name}</h1>
                   <p className="productPrice">
-                      <PriceDisplay item={item} size={"lg"} />
+                      <PriceDisplay item={item} size={"lg"} menu={false} />
                   </p>
 
                 {/* Tags loại bánh - nằm trên */}

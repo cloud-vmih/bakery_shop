@@ -7,7 +7,8 @@ interface PriceDisplayProps {
             endAt: string | Date;
         }>;
     };
-    size?: 'sm' | 'md' | 'lg'; // Thêm prop size
+    size?: 'sm' | 'md' | 'lg';
+    menu?: boolean
 }
 const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
@@ -15,7 +16,8 @@ const formatPrice = (price: number) => {
 
 export const PriceDisplay = ({
                                  item,
-                                 size = 'md'
+                                 size = 'md',
+                                 menu = true
                              }: PriceDisplayProps) => {
     const now = new Date();
 
@@ -56,7 +58,7 @@ export const PriceDisplay = ({
 
     const config = sizeConfig[size];
 
-    if (activeDiscount) {
+    if (activeDiscount && !menu) {
         const discountedPrice = item.price - item.price * (activeDiscount.discountAmount/100);
 
         return (
@@ -79,8 +81,21 @@ export const PriceDisplay = ({
             </div>
         );
     }
+    if (activeDiscount && menu) {
+        const discountedPrice = item.price - item.price * (activeDiscount.discountAmount/100);
+        return(
+        <div className={`flex items-center ${config.gap}`}>
+          <span className={`line-through text-gray-400 ${config.original}`}>
+            {formatPrice(item.price)}
+          </span>
+        <span className={`text-red-600 font-bold ${config.final}`}>
+          {formatPrice(discountedPrice)}
+        </span>
+        </div>
+        )
+    }
 
-    return <span className={`font-medium ${config.final}`}>
+    return <span className={`font-bold ${config.final}`}>
     {formatPrice(item.price)}
   </span>;
 };

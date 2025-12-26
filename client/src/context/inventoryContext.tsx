@@ -1,5 +1,5 @@
 // context/InventoryContext.tsx
-import { createContext, useState, useContext, ReactNode, useEffect, useCallback } from "react";
+import { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from "react";
 import { getInventory } from "../services/inventory.services";
 import toast from "react-hot-toast";
 
@@ -83,6 +83,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
         );
         return item?.stockQuantity || 0;
     }, [inventory]);
+
 
     // Clear inventory data
     const clearInventory = useCallback(() => {
