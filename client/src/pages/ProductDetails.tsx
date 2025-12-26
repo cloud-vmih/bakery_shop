@@ -6,7 +6,7 @@ import { addToCart } from "../services/cart.services";
 import { Header } from "../components/Header";
 import { useInventory } from "../context/inventoryContext";
 import "../styles/productDetails.css";
-import { ShoppingCartIcon} from "@heroicons/react/24/solid"; // Heroicons solid
+import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
 import { ClockIcon } from "lucide-react";
 import { PriceDisplay } from "../components/ItemPrice";
 
@@ -213,19 +213,22 @@ const ProductDetails = () => {
                   {item.description || "Sản phẩm chưa có mô tả chi tiết."}
                 </p>
 
-                {/* Phần Hạn sử dụng - chỉ hiển thị nếu có dữ liệu */}
-                {(item.itemDetail?.expiryNote || item.itemDetail?.expiryDays) && (
+                {/* Phần Hạn sử dụng - chỉ hiển thị nếu có expiryDays */}
+                {item.itemDetail?.expiryDays && (
                   <div className="mt-6 pt-6 border-t border-amber-200">
                     <h3 className="text-lg font-semibold text-amber-900 mb-3 flex items-center gap-2">
                       <ClockIcon className="w-6 h-6 text-amber-700" />
                       Hạn sử dụng & Bảo quản
                     </h3>
-                    <p className="descriptionText text-green-700 font-medium flex items-start gap-2">
-                      <span className="mt-0.5">
-                        {item.itemDetail.expiryNote ||
-                          (item.itemDetail.expiryDays ? `Sử dụng tốt nhất trong ${item.itemDetail.expiryDays} ngày kể từ ngày nhận hàng.` : "")
-                        }
-                      </span>
+                    <p className="descriptionText text-green-700 font-medium">
+                      {item.category === "COOKIE"
+                        ? `Sử dụng tốt nhất trong ${item.itemDetail.expiryDays - 10} ngày kể từ ngày sản xuất.`
+                        : `Sử dụng tốt nhất trong ${item.itemDetail.expiryDays} ngày kể từ ngày nhận hàng.`}
+                    </p>
+                    <p className="descriptionText text-gray-600 text-sm mt-3">
+                      {item.category === "COOKIE"
+                        ? "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp."
+                        : "Bánh tươi handmade, vui lòng bảo quản trong tủ lạnh để giữ độ ngon tối ưu."}
                     </p>
                   </div>
                 )}
