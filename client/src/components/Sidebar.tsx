@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { useUser } from "../context/authContext"
+import { useUser } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom";
 
 export const AdminSidebar = () => {

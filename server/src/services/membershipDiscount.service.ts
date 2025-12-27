@@ -1,4 +1,4 @@
-import { MembershipDiscountDB } from "../db/db.membershipDiscount";
+import { MembershipDiscountDB } from "../db/membershipDiscount.db";
 
 interface CreatePayload {
   // code: string;  // ← XÓA: Bỏ code hoàn toàn

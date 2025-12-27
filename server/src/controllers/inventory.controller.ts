@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import { getAll, updateQuanities} from "../services/inventory.service";
 import cron from 'node-cron';
-import { deletedInventory } from "../db/db.inventory"
+import { deletedInventory } from "../db/inventory.db"
 
 export const getAllItems = async (req: Request, res: Response) => {
     try {

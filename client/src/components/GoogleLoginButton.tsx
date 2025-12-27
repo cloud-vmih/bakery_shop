@@ -1,7 +1,7 @@
 import { GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
-import { googleLoginService } from "../services/auth.services";
-import { useUser } from "../context/authContext";
+import { googleLoginService } from "../services/auth.service";
+import { useUser } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleLoginButton() {

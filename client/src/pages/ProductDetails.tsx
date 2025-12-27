@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import itemService, { Item } from "../services/items.service";
 import { addToCart } from "../services/cart.service";
 import { Header } from "../components/Header";
-import { useInventory } from "../context/inventoryContext";
+import { useInventory } from "../context/InventoryContext";
 import "../styles/productDetails.css";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
 import { ClockIcon } from "lucide-react";

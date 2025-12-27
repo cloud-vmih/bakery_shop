@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/authContext"
+import { useUser } from "../context/AuthContext"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,6 @@ export const Header: React.FC<HeaderProps> = ({ viewProfile, onLogin, onLogout }
     const navigate = useNavigate();
     const { user } = useUser();
 
-    // Default onLogin nếu cha không truyền vào
     const handleLogin = onLogin ?? (() => navigate("/login"));
 
     const handleLogout = onLogout ?? (() => {
