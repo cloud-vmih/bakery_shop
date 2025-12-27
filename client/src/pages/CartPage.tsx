@@ -4,9 +4,9 @@ import { useCart } from "../context/CartContext";
 import { useInventory } from "../context/InventoryContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Header } from "../components/Header";
 import { calculateOrderTotals } from "../utils/orderCalculator";
 import BranchSelectModal from "../components/BranchSelectModal";
+import { formatVND } from "../utils/formatCurrency";
 
 import { MapPinIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { getBranches } from "../services/branch.service";
@@ -81,8 +81,6 @@ export default function Cart() {
 
   return (
     <>
-      <Header />
-
       <div className="min-h-screen bg-green-50">
         <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT */}
@@ -233,14 +231,12 @@ export default function Cart() {
             <div className="mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex justify-between">
                 <span className="text-gray-600">Tạm tính</span>
-                <span className="font-medium">
-                  {subtotal.toLocaleString()} VND
-                </span>
+                <span className="font-medium">{formatVND(subtotal)} </span>
               </div>
 
               <div className="flex justify-between">
                 <span className="text-gray-600">VAT (10%)</span>
-                <span className="font-medium">{vat.toLocaleString()} VND</span>
+                <span className="font-medium">{formatVND(vat)}</span>
               </div>
             </div>
 
@@ -257,7 +253,7 @@ export default function Cart() {
     `}
             >
               <span>Tổng cộng</span>
-              <span>{total.toLocaleString()} VND</span>
+              <span>{formatVND(total)}</span>
             </div>
             {branchId === null && (
               <div className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 p-3 rounded-lg">

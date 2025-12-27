@@ -18,8 +18,6 @@ import ConfirmOrderButton from "../components/checkout/ConfirmOrderButton";
 import MapProvider from "../components/MapProvider";
 import { AddressResult } from "../components/AddressAutocomplete";
 
-import { Header } from "../components/Header";
-
 import "../styles/checkout.css";
 
 /* ===============================
@@ -220,6 +218,7 @@ export default function Checkout() {
       note,
       shippingFee: 30000, //thay đổi biến ở đây
       discount: 50000, //thay đổi biến ở đây
+      membershipDiscount: 0,
     };
 
     navigate("/checkout/confirm", { state: { payload } });
@@ -227,87 +226,80 @@ export default function Checkout() {
 
   /* ================= RENDER ================= */
   return (
-    <>
-      <Header />
-      <div
-        className="min-h-screen"
-        style={{ backgroundColor: "var(--page-bg)" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 pt-6 text-sm">
-          <span className="text-emerald-600 font-medium">Giỏ hàng</span>
-          <span className="mx-2">›</span>
-          <span className="font-semibold text-gray-900">
-            Thông tin đặt hàng
-          </span>
+    <div className="min-h-screen" style={{ backgroundColor: "var(--page-bg)" }}>
+      <div className="max-w-6xl mx-auto px-4 pt-6 text-sm">
+        <span className="text-emerald-600 font-medium">Giỏ hàng</span>
+        <span className="mx-2">›</span>
+        <span className="font-semibold text-gray-900">Thông tin đặt hàng</span>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2">
+          <div className="checkout-section">
+            <CustomerInfo value={customer} onChange={setCustomer} />
+          </div>
+
+          <MapProvider>
+            <div className="checkout-section">
+              <ShippingInfo
+                addresses={addresses}
+                selectedAddressId={selectedAddressId}
+                onSelectAddress={setSelectedAddressId}
+                newAddress={newAddress}
+                onNewAddressChange={setNewAddress}
+                saveAddress={saveAddressState}
+                setSaveAddress={setSaveAddressState}
+                setDefault={setDefault}
+                setSetDefault={setSetDefault}
+                onSelectNewAddress={setNewAddressObj}
+              />
+            </div>
+          </MapProvider>
+
+          <div className="checkout-section checkout-note">
+            <h3 className="checkout-title">Yêu cầu khác (tuỳ chọn)</h3>
+            <textarea
+              className="checkout-textarea"
+              placeholder="Nhập yêu cầu của bạn (ví dụ: ít ngọt, giao trước 18h...)"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          <div className="checkout-section">
+            <PaymentMethodSelector
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+            />
+          </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2">
-            <div className="checkout-section">
-              <CustomerInfo value={customer} onChange={setCustomer} />
+        <div className="space-y-6">
+          <OrderSummary
+            items={selectedItems}
+            discount={50000} //Thêm biến ở đây
+            shippingFee={30000} //Thêm biến ở đây
+            membershipDiscount={0}
+          />
+          <ConfirmOrderButton onSubmit={handleSubmit} />
+          {errors.length > 0 && (
+            <div className="checkout-errors">
+              {errors.map((e, i) => (
+                <div key={i} className="checkout-error">
+                  • {e}
+                </div>
+              ))}
             </div>
-
-            <MapProvider>
-              <div className="checkout-section">
-                <ShippingInfo
-                  addresses={addresses}
-                  selectedAddressId={selectedAddressId}
-                  onSelectAddress={setSelectedAddressId}
-                  newAddress={newAddress}
-                  onNewAddressChange={setNewAddress}
-                  saveAddress={saveAddressState}
-                  setSaveAddress={setSaveAddressState}
-                  setDefault={setDefault}
-                  setSetDefault={setSetDefault}
-                  onSelectNewAddress={setNewAddressObj}
-                />
-              </div>
-            </MapProvider>
-
-            <div className="checkout-section checkout-note">
-              <h3 className="checkout-title">Yêu cầu khác (tuỳ chọn)</h3>
-              <textarea
-                className="checkout-textarea"
-                placeholder="Nhập yêu cầu của bạn (ví dụ: ít ngọt, giao trước 18h...)"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div className="checkout-section">
-              <PaymentMethodSelector
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <OrderSummary
-              items={selectedItems}
-              discount={50000} //Thêm biến ở đây
-              shippingFee={30000} //Thêm biến ở đây
-            />
-            <ConfirmOrderButton onSubmit={handleSubmit} />
-            {errors.length > 0 && (
-              <div className="checkout-errors">
-                {errors.map((e, i) => (
-                  <div key={i} className="checkout-error">
-                    • {e}
-                  </div>
-                ))}
-              </div>
-            )}
-            <Link
-              to="/cart"
-              className="block mt-3 text-center text-sm text-emerald-600"
-            >
-              ← Quay lại giỏ hàng
-            </Link>
-          </div>
+          )}
+          <Link
+            to="/cart"
+            className="block mt-3 text-center text-sm text-emerald-600"
+          >
+            ← Quay lại giỏ hàng
+          </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }

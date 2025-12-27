@@ -1,4 +1,5 @@
 import { calculateOrderTotals } from "../../utils/orderCalculator";
+import { formatVND } from "../../utils/formatCurrency";
 
 type Props = {
   items: any[];
@@ -7,6 +8,7 @@ type Props = {
   shippingFee?: number;
   discount?: number;
   vatRate?: number;
+  membershipDiscount?: number;
 
   // Tuỳ chọn hiển thị
   showDetails?: boolean; // ẩn list sản phẩm nếu cần
@@ -16,12 +18,14 @@ export default function OrderSummary({
   items,
   shippingFee = 0,
   discount = 0,
+  membershipDiscount = 0,
   vatRate = 0.1,
   showDetails = true,
 }: Props) {
   const { subtotal, vat, total } = calculateOrderTotals(items, {
     shippingFee,
     discount,
+    membershipDiscount,
     vatRate,
   });
 
@@ -50,7 +54,7 @@ export default function OrderSummary({
               </div>
 
               <div className="order-price">
-                {(ci.item.price * ci.quantity).toLocaleString()}đ
+                {formatVND(ci.item.price * ci.quantity)}
               </div>
             </div>
           ))}
@@ -62,31 +66,34 @@ export default function OrderSummary({
       {/* ===== PRICE BREAKDOWN ===== */}
       <div className="order-row">
         <span>Tạm tính</span>
-        <span>{subtotal.toLocaleString()}đ</span>
+        <span>{formatVND(subtotal)}</span>
       </div>
 
       <div className="order-row">
         <span>VAT ({vatRate * 100}%)</span>
-        <span>{vat.toLocaleString()}đ</span>
+        <span>{formatVND(vat)}</span>
       </div>
 
-      {shippingFee >= 0 && (
-        <div className="order-row">
-          <span>Phí giao hàng</span>
-          <span>{shippingFee.toLocaleString()}đ</span>
-        </div>
-      )}
+      <div className="order-row">
+        <span>Phí giao hàng</span>
+        <span>{formatVND(shippingFee)}</span>
+      </div>
 
-      {discount >= 0 && (
+      <div className="order-row text-green-600">
+        <span>Giảm giá</span>
+        <span>-{formatVND(discount)}</span>
+      </div>
+
+      {membershipDiscount >= 0 && (
         <div className="order-row text-green-600">
-          <span>Giảm giá</span>
-          <span>-{discount.toLocaleString()}đ</span>
+          <span>Giảm giá thành viên</span>
+          <span>-{formatVND(membershipDiscount)}</span>
         </div>
       )}
 
       <div className="order-total">
         <span>Tổng cộng</span>
-        <span>{total.toLocaleString()}đ</span>
+        <span>{formatVND(total)}</span>
       </div>
     </section>
   );
