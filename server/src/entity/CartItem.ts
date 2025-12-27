@@ -4,8 +4,7 @@ import {
   ManyToOne,
   JoinColumn,
   Column,
-  BaseEntity,
-  OneToOne,
+  BaseEntity
 } from "typeorm";
 import { Cart } from "./Cart";
 import { Item } from "./Item";

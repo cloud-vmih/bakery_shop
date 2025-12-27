@@ -3,8 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  OneToMany,
-  ManyToMany,
+  OneToMany
 } from "typeorm";
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
@@ -39,7 +38,7 @@ export class Item extends BaseEntity {
   @Column({ type: "json", nullable: true })
   itemDetail?: any;
 
-  @ManyToMany(() => Wishlist, w => w.item)
+  @OneToMany(() => Wishlist, w => w.item)
   wishlists!: Wishlist[];
 
   @OneToMany(() => Rating, (r) => r.item)
