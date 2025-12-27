@@ -1,4 +1,5 @@
 import { Minus, Plus, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 type Props = {
   item: any;
@@ -22,8 +23,6 @@ export default function CartItem({
   const totalPrice = item.item.price * item.quantity;
 
   const isOverStock = available !== Infinity && item.quantity > available;
-
-  const isMaxReached = available !== Infinity && item.quantity >= available;
 
   return (
     <div
@@ -74,7 +73,7 @@ export default function CartItem({
             {available === 0
               ? "Hết hàng"
               : isOverStock
-              ? "Vượt tồn kho"
+              ? "Vượt số lượng hàng có sẵn"
               : `Còn ${available}`}
           </span>
         )}
@@ -99,29 +98,19 @@ export default function CartItem({
 
           {/* PLUS */}
           <button
-            onClick={onIncrease}
-            disabled={isMaxReached}
-            title={
-              isMaxReached ? "Số lượng vượt quá hàng có sẵn" : "Tăng số lượng"
-            }
-            className={`w-7 h-7 flex items-center justify-center border rounded transition
-              ${
-                isMaxReached
-                  ? "opacity-40 cursor-not-allowed"
-                  : "hover:bg-gray-100"
+            onClick={() => {
+              if (available !== Infinity && item.quantity >= available) {
+                toast.error("Không thể tăng quá số lượng có sẵn hiện tại");
+                return;
               }
-            `}
+              onIncrease();
+            }}
+            className="w-7 h-7 flex items-center justify-center border rounded transition hover:bg-gray-100"
+            title="Tăng số lượng"
           >
             <Plus size={14} />
           </button>
         </div>
-
-        {/* WARNING */}
-        {isOverStock && (
-          <p className="text-xs text-red-600 mt-1">
-            ⚠️ Số lượng trong giỏ vượt quá số hàng có sẵn
-          </p>
-        )}
       </div>
 
       {/* TOTAL PRICE */}

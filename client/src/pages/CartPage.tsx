@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { calculateOrderTotals } from "../utils/orderCalculator";
+import BranchSelectModal from "../components/BranchSelectModal";
+
+import { MapPinIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { getBranches } from "../services/branch.service";
 
 import toast from "react-hot-toast";
 
@@ -26,7 +30,24 @@ export default function Cart() {
     confirmOpen,
   } = useCart();
 
-  const { branchId, getItemQuantity } = useInventory();
+  const [branches, setBranches] = useState<any[]>([]);
+
+  useEffect(() => {
+    getBranches()
+      .then(setBranches)
+      .catch(() => {
+        toast.error("Không thể tải danh sách chi nhánh");
+      });
+  }, []);
+
+  const { branchId, getItemQuantity, setBranchId, refreshInventory } =
+    useInventory();
+
+  const selectedBranch = branchId
+    ? branches.find((b) => b.id === branchId)
+    : null;
+
+  const [showBranchModal, setShowBranchModal] = useState(false);
 
   const selectedItems = items.filter((i) => checkedItems.includes(i.id));
 
@@ -49,12 +70,14 @@ export default function Cart() {
     );
   }
 
-  const hasOverStockItem = items.some((cartItem) => {
-    if (branchId === null) return false;
+  const hasOverStockItem =
+    branchId !== null &&
+    items.some((cartItem) => {
+      const available = getItemQuantity(cartItem.item.id, branchId);
+      return cartItem.quantity > available;
+    });
 
-    const available = getItemQuantity(cartItem.item.id, branchId);
-    return cartItem.quantity > available;
-  });
+  const cannotCheckout = selectedItems.length === 0 || hasOverStockItem;
 
   return (
     <>
@@ -130,12 +153,6 @@ export default function Cart() {
                   available={available}
                   onToggle={() => toggleItem(cartItem.id)}
                   onIncrease={() => {
-                    if (cartItem.quantity >= available) {
-                      toast.error(
-                        `⚠️ "${cartItem.item.name}" chỉ còn ${available} sản phẩm`
-                      );
-                      return;
-                    }
                     increase(cartItem);
                   }}
                   onDecrease={() => {
@@ -171,6 +188,47 @@ export default function Cart() {
               Tổng cộng giỏ hàng
             </h2>
 
+            {/* SELECTED BRANCH */}
+            <div className="mt-4 mb-6">
+              {selectedBranch ? (
+                <div className="flex items-center justify-between gap-4 px-4 py-3.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-100 shrink-0">
+                      <MapPinIcon className="w-5 h-5 text-emerald-600" />
+                    </div>
+
+                    <div className="leading-tight">
+                      <div className="text-sm font-semibold text-emerald-800">
+                        {selectedBranch.name}
+                      </div>
+                      <div className="text-xs text-gray-600 mt-0.5">
+                        {selectedBranch.address?.fullAddress ||
+                          "Chưa có địa chỉ"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowBranchModal(true)}
+                    className="flex items-center gap-1 text-xs font-medium text-emerald-700 hover:text-emerald-800 transition"
+                  >
+                    <PencilIcon className="w-4 h-4" />
+                    Đổi
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowBranchModal(true)}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gray-50 border border-dashed border-gray-300 text-gray-600 hover:border-emerald-400 hover:text-emerald-700 transition"
+                >
+                  <MapPinIcon className="w-5 h-5 shrink-0" />
+                  <span className="text-sm font-medium">
+                    Chọn chi nhánh để kiểm tra tồn kho
+                  </span>
+                </button>
+              )}
+            </div>
+
             {/* SUBTOTAL */}
             <div className="mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex justify-between">
@@ -201,20 +259,32 @@ export default function Cart() {
               <span>Tổng cộng</span>
               <span>{total.toLocaleString()} VND</span>
             </div>
-
+            {branchId === null && (
+              <div className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 p-3 rounded-lg">
+                Vui lòng chọn chi nhánh để kiểm tra tồn kho và tiếp tục thanh
+                toán
+              </div>
+            )}
             {/* CTA */}
             <button
-              disabled={selectedItems.length === 0 || hasOverStockItem}
-              onClick={() => navigate("/checkout")}
+              disabled={cannotCheckout}
+              onClick={() => {
+                if (branchId === null) {
+                  setShowBranchModal(true);
+                  return;
+                }
+
+                navigate("/checkout");
+              }}
               className={`
-      mt-6 w-full py-3.5 rounded-xl font-semibold
-      transition-all duration-200
-      ${
-        selectedItems.length === 0 || hasOverStockItem
-          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-          : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg"
-      }
-    `}
+    mt-6 w-full py-3.5 rounded-xl font-semibold
+    transition-all duration-200
+    ${
+      cannotCheckout
+        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+        : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg"
+    }
+  `}
             >
               Tiến hành thanh toán
             </button>
@@ -226,6 +296,15 @@ export default function Cart() {
         open={confirmOpen}
         onConfirm={confirmRemove}
         onCancel={cancelRemove}
+      />
+      <BranchSelectModal
+        open={showBranchModal}
+        onClose={() => setShowBranchModal(false)}
+        onSelect={(branchId) => {
+          setBranchId(branchId);
+          setShowBranchModal(false);
+          refreshInventory();
+        }}
       />
     </>
   );

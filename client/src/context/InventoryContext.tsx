@@ -44,7 +44,6 @@ const InventoryContext = createContext<InventoryContextType | undefined>(
 export const InventoryProvider = ({ children }: { children: ReactNode }) => {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [branchId, setBranchId] = useState<number | null>(null);
   const [branchId, setBranchId] = useState<number | null>(() => {
     const saved = localStorage.getItem("selectedBranchId");
     return saved ? Number(saved) : null;
