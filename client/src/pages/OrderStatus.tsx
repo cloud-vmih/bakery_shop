@@ -32,9 +32,9 @@ export default function OrderStatus() {
   // Tính tổng tiền
   const calculateTotal = () => {
     if (!data?.items || data.items.length === 0) return 0;
-    return data.items.reduce((sum: number, item: any) => {
-      const price = item.itemInfo?.price || 0;
-      const quantity = item.quantity || 1;
+    return data.items.reduce((sum: number, i: any) => {
+      const price = i.item?.price || 0;
+      const quantity = i.quantity || 1;
       return sum + price * quantity;
     }, 0);
   };
@@ -111,7 +111,6 @@ export default function OrderStatus() {
   if (loading) {
     return (
       <>
-        <Header />
         <div className="flex items-center justify-center min-h-screen bg-green-50">
           <div className="text-2xl text-green-700 font-medium animate-pulse">
             Đang chuẩn bị bánh cho bạn...
@@ -124,7 +123,6 @@ export default function OrderStatus() {
   if (!data) {
     return (
       <>
-        <Header />
         <div className="text-center py-20 bg-green-50">
           <p className="text-4xl text-red-600 font-bold">Không tìm thấy đơn hàng</p>
         </div>
@@ -251,15 +249,15 @@ export default function OrderStatus() {
               <div className="bg-white rounded-3xl shadow-lg border border-amber-200 p-8">
                 <h2 className="text-2xl font-bold text-green-800 mb-6">Thông tin sản phẩm</h2>
                 <div className="space-y-8">
-                  {data.items.map((item: any, idx: number) => {
-                    const info = item.itemInfo || {};
-                    const quantity = item.quantity || 1;
+                  {data.items.map((i: any, idx: number) => {
+                    const info = i.item || {};
+                    const quantity = i.quantity || 1;
 
                     return (
                       <div key={idx} className="flex gap-8 items-start">
-                        {info.image ? (
+                        {info.imageURL ? (
                           <img
-                            src={info.image}
+                            src={info.imageURL}
                             alt={info.name}
                             className="w-28 h-28 object-cover rounded-2xl shadow-md border border-amber-100 flex-shrink-0"
                           />
@@ -283,18 +281,18 @@ export default function OrderStatus() {
                           <p className="text-xl font-bold text-green-800 mt-3">
                             {(info.price * quantity).toLocaleString("vi-VN")}đ
                           </p>
-                          {item.note && (
-                            <p className="text-base text-amber-900 bg-amber-50 px-4 py-2 rounded-xl mt-3">
-                              Ghi chú: {item.note}
-                            </p>
-                          )}
+                        
                         </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-
+                  {data.note && (
+                            <p className="text-base text-amber-900 bg-amber-50 px-4 py-2 rounded-xl mt-3">
+                              Ghi chú: {data.note}
+                            </p>
+                          )}
               {/* Thông tin thanh toán */}
               {data.payment && (
                 <div className="bg-white rounded-3xl shadow-lg border border-amber-200 p-8">

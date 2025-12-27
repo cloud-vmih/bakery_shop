@@ -6,22 +6,20 @@ import { User } from "../entity/User";
 import { EmailVerification } from "../entity/EmailVerification";
 import { LessThan } from "typeorm";
 
-
 export const createAccount = async (account: Account) => {
   //console.log("Creating account for username:", username);
   const repo = AppDataSource.getRepository(Account);
   const acc = repo.create(account);
   await repo.save(acc);
   return acc;
-}
+};
 
 export const createUser = async (user: Customer) => {
   const repo = AppDataSource.getRepository(Customer);
   const newUser = repo.create(user);
   await repo.save(newUser);
   return newUser;
-}
-
+};
 
 export const deletedUserNotVerified = async () => {
   const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000);
@@ -33,7 +31,7 @@ export const deletedUserNotVerified = async () => {
   const pending = await verRepo.find({
     where: {
       isVerified: false,
-      verifiedAt: LessThan(thirtyMinsAgo)
+      verifiedAt: LessThan(thirtyMinsAgo),
     },
     relations: ["account"],
   });
@@ -42,7 +40,7 @@ export const deletedUserNotVerified = async () => {
   for (const v of pending) {
     await accRepo.delete(v.account!.id!);
   }
-}
+};
 
 export const findAccountByUsername = async (username: string) => {
   const repo = AppDataSource.getRepository(Account);
@@ -56,32 +54,29 @@ export const findUserByAccountId = async (id: number) => {
   return await repo.findOne({
     where: { account: { id: id } },
   });
-}
+};
 
 export const updatePassword = async (hash: string, id: number) => {
-  const accountRepo = AppDataSource.getRepository(Account)
-  await accountRepo.update(
-    { id },
-    { password: hash }
-  );
-}
+  const accountRepo = AppDataSource.getRepository(Account);
+  await accountRepo.update({ id }, { password: hash });
+};
 
 export const findUserByEmail = async (email: string) => {
   const repo = AppDataSource.getRepository(User);
   const user = await repo.findOne({
-    where: { email},
-    relations: ["account"]
-  })
-  return user ?? null
-}
+    where: { email },
+    relations: ["account"],
+  });
+  return user ?? null;
+};
 
 export const isPhoneNumberTaken = async (phoneNumber: string) => {
   const repo = AppDataSource.getRepository(User);
   const user = await repo.findOne({
-    where: { phoneNumber}
-  })
-  return !!user
-}
+    where: { phoneNumber },
+  });
+  return !!user;
+};
 
 export const socialAuthRepo = {
   findSocialAccount: async (providerUserId: string) => {
@@ -93,7 +88,11 @@ export const socialAuthRepo = {
     });
   },
 
-  linkSocialAccount: async (providerUserId: string, email: string, accountId: number) => {
+  linkSocialAccount: async (
+    providerUserId: string,
+    email: string,
+    accountId: number
+  ) => {
     const repo = AppDataSource.getRepository(GoogleAccount);
 
     const acc = repo.create({

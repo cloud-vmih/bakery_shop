@@ -2,32 +2,36 @@ import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 
 export interface AddressResult {
-    fullAddress: string;
-    lat: number;
-    lng: number;
-    placeId?: string;
+  fullAddress: string;
+  lat: number;
+  lng: number;
+  placeId?: string;
 }
 
 interface Props {
-    onSelect: (address: AddressResult) => void;
-    placeholder?: string;
-    disabled?: boolean;
+  onSelect: (address: AddressResult) => void;
+  placeholder?: string;
+  disabled?: boolean;
 }
 
-export default function AddressAutocomplete({ onSelect, placeholder, disabled = false }: Props) {
-    const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+export default function AddressAutocomplete({
+  onSelect,
+  placeholder,
+  disabled = false,
+}: Props) {
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
-    const handlePlaceChanged = () => {
-        const place = autocompleteRef.current?.getPlace();
-        if (!place?.geometry?.location) return;
+  const handlePlaceChanged = () => {
+    const place = autocompleteRef.current?.getPlace();
+    if (!place?.geometry?.location) return;
 
-        onSelect({
-            fullAddress: place.formatted_address || "",
-            lat: place.geometry?.location?.lat(),
-            lng: place.geometry?.location?.lng(),
-            placeId: place.place_id
-        });
-    };
+    onSelect({
+      fullAddress: place.formatted_address || "",
+      lat: place.geometry?.location?.lat(),
+      lng: place.geometry?.location?.lng(),
+      placeId: place.place_id,
+    });
+  };
 
     return (
         <Autocomplete

@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, ManyToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+  ManyToMany,
+} from "typeorm";
 import { ECategory } from "./enum/enum";
 import { Wishlist } from "./Wishlist";
 import { Rating } from "./Rating";
@@ -35,10 +42,10 @@ export class Item extends BaseEntity {
   @OneToMany(() => Wishlist, w => w.item)
   wishlists!: Wishlist[];
 
-  @OneToMany(() => Rating, r => r.item)
+  @OneToMany(() => Rating, (r) => r.item)
   ratings?: Rating[];
 
-  @OneToMany(() => Inventory, (i: Inventory)=> i.item)
+  @OneToMany(() => Inventory, (i: Inventory) => i.item)
   inventory?: Inventory[];
 
   @OneToMany(() => ItemsDiscount, (i: ItemsDiscount)=> i.item)

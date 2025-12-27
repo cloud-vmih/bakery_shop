@@ -2,11 +2,10 @@ import { useState, FormEvent } from "react";
 import { login as loginService } from "../services/auth.service";
 import toast from "react-hot-toast";
 import "../styles/auth.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/AuthContext";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 export default function AuthPage() {
-  
   const { user, setUser } = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

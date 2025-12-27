@@ -27,3 +27,41 @@ export const updateMultipleQuantities = async (branchId: number, update: Invento
         throw new Error("Update failed!");
     }
 };
+
+export const checkInventoryForCheckout = async (
+  branchId: number,
+  items: Array<{ itemId: number; quantity: number }>
+): Promise<{
+  ok: boolean;
+  insufficient: Array<{
+    itemId: number;
+    available: number;
+    requested: number;
+  }>;
+}> => {
+  try {
+    const res = await API.post("/inventory/check", {
+      branchId,
+      items,
+    });
+
+    const data = res.data;
+
+    // 🔥 CHUẨN HOÁ RESPONSE
+    if (data?.ok !== undefined) {
+      return data;
+    }
+
+    if (data?.result?.ok !== undefined) {
+      return data.result;
+    }
+
+    // fallback an toàn
+    return {
+      ok: true,
+      insufficient: [],
+    };
+  } catch (error: any) {
+    throw new Error(error?.response?.data?.message || "Không đủ tồn kho");
+  }
+};

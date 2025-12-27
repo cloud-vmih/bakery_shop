@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { FormEvent } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { register as registerService } from "../services/auth.service";
 import "../styles/auth.css";
 import toast from "react-hot-toast";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function RegisterPage() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [password2, setPassword2] = useState("");
-    const [isRegister, setIsRegister] = useState(false);
-    const [email, setEmail] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [errorPassword, setErrorPassword] = useState("");
-    const [errorPassword2, setErrorPassword2] = useState("");
-    const [errorEmail, setErrorEmail] = useState("");
-    const [isDisabled, setIsDisabled] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
+  const [errorPassword2, setErrorPassword2] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault();

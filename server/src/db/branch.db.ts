@@ -2,7 +2,6 @@ import { Branch } from "../entity/Branch";
 import { Address } from "../entity/Address";
 import { AppDataSource } from "../config/database";
 
-
 export const createBranchWithAddress = async (
   branchData: Partial<Branch>,
   addressData: Partial<Address>
@@ -16,10 +15,10 @@ export const createBranchWithAddress = async (
 
     const address = addressRepo.create({
       ...addressData,
-      branch: branch, 
+      branch: branch,
     });
     await addressRepo.save(address);
-    
+
     branch.address = address;
 
     return branch;
@@ -30,12 +29,12 @@ export const getAllBranch = async () => {
   const repoBranch = AppDataSource.getRepository(Branch);
   const branches = await repoBranch.find({
     relations: {
-      address: true
-    }}
-  );
+      address: true,
+    },
+  });
 
-  return branches
-}
+  return branches;
+};
 
 export const updateBranchWithAddress = async (
   branchId: number,
@@ -76,4 +75,3 @@ export const deleteBranch = async (branchId: number) => {
   }
   return { message: "Branch deleted" };
 };
-

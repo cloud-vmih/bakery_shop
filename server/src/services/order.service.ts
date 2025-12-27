@@ -49,6 +49,7 @@ const buildTimeline = (currentStatus: EOrderStatus) => {
 // Lấy danh sách đơn hàng của khách
 export const getMyOrders = async (userId: number) => {
   const orders = await orderRepo.findByCustomerId(userId);
+  console.log("Orders fetched for user", userId, ":", orders[0]);
 
   if (!orders || orders.length === 0) {
     return {
@@ -65,7 +66,7 @@ export const getMyOrders = async (userId: number) => {
 // Lấy chi tiết trạng thái một đơn hàng
 export const getOrderStatus = async (orderId: number, userId: number) => {
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
-
+  console.log("Order fetched:", order);
   if (!order) {
     return null;
   }
@@ -78,8 +79,7 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     status,
     statusText: getStatusText(status),
     createdAt: order.createAt,
-    deliveryAt: order.deliveryAt || null,
-    payStatus: order.payment?.status ?? EPayStatus.PENDING,        
+    payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
     timeline,
     payment: order.payment ? {
@@ -87,10 +87,10 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
       status: order.payment.status,           // "PAID", "PENDING", "REFUNDED"
     } : null,
     items: order.orderDetails?.map((detail: any) => ({
-      itemInfo: detail.itemInfo || {},
-      note: detail.note || null,
-      quantity: detail.quantity ?? detail.itemInfo?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
+      item: detail.item || {},
+      quantity: detail.quantity ?? detail.item?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
     })) || [],
+    note: order.orderInfo?.note || null,
   };
 };
 

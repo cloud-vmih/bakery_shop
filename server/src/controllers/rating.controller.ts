@@ -1,7 +1,7 @@
 // // controllers/rating.controller.ts
 // import { Request, Response } from "express";
 // import { ratingService } from "../services/rating.service";
-//
+
 // export const addOrUpdateRatingController = async (req: Request, res: Response) => {
 //   try {
 //     const { itemID, contents } = req.body;
@@ -12,7 +12,7 @@
 //     res.status(500).json({ error: err.message });
 //   }
 // };
-//
+
 // export const getItemRatingsController = async (req: Request, res: Response) => {
 //   try {
 //     const itemID = Number(req.params.itemID);
@@ -22,7 +22,7 @@
 //     res.status(500).json({ error: err.message });
 //   }
 // };
-//
+
 // export const getCustomerRatingsController = async (req: Request, res: Response) => {
 //   try {
 //     const customerID = Number(req.params.customerID);
@@ -32,7 +32,7 @@
 //     res.status(500).json({ error: err.message });
 //   }
 // };
-//
+
 // export const deleteRatingController = async (req: Request, res: Response) => {
 //   try {
 //     const customerID = Number((req as any).user.id);

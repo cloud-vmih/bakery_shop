@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
 import toast from "react-hot-toast";
+import ChatBox from "../components/chat/ChatBox";
 // import "../styles/wishlist.css";
 
 export default function WishlistPage() {
@@ -38,6 +39,7 @@ export default function WishlistPage() {
   };
 
   const goToProductDetail = (itemId?: number) => {
+    toast.error(`Chức năng đang được phát triển!, ${ itemId }`);
     if (!itemId) return;
     navigate(`/product/${itemId}`);
   };
@@ -93,6 +95,7 @@ export default function WishlistPage() {
           ))}
         </div>
       )}
+      <ChatBox />
     </div>
   );
 }

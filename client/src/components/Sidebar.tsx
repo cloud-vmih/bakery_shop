@@ -22,7 +22,7 @@ export const AdminSidebar = () => {
         {to: "/admin/promotion", label: "Promotions", icon: "fas fa-tag", types: ['Admin']},
         {to: "/admin/reviews", label: "Customer Reviews", icon: "fas fa-star", types: ['Admin', 'Staff']},
         {to: "/admin/staff", label: "Staff Management", icon: "fas fa-users-cog", types: ['Admin']},
-        {to: "/admin/orders", label: "Orders", icon: "fas fa-shopping-bag", types: ['Admin', 'Staff']},
+        {to: "/admin/manage-orders", label: "Orders", icon: "fas fa-shopping-bag", types: ['Admin', 'Staff']},
     ];
 
     const menuItems = adminMenuItems.filter(item => {
@@ -106,7 +106,7 @@ export const AdminSidebar = () => {
                 <nav className="flex-1 overflow-y-auto p-4">
                     <div className="space-y-1">
                         {menuItems.map((item) => {
-                            const isActive = location.pathname === item.to || location.pathname.startsWith(item.to + '/');
+                            const isActive = location.pathname === item.to;
 
                             return (
                                 <Link

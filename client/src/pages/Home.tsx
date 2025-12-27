@@ -1,5 +1,4 @@
 // src/pages/Home.tsx
-import toast from "react-hot-toast";
 import { useUser } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import {
@@ -15,6 +14,7 @@ import {
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import "../styles/home.css";
 import { Header } from "../components/Header";
+import ChatBox from "../components/chat/ChatBox";
 import { AdminSidebar } from "../components/Sidebar";
 
 interface Banner {
@@ -207,8 +207,8 @@ const Home = () => {
   const prevBanner = () => setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
+    <>
     <div className="page">
-        <AdminSidebar />
       {/* ==================== 1. BANNER ==================== */}
       <section className="banner">
         <div className="bannerWrapper">
@@ -382,6 +382,8 @@ const Home = () => {
         </div>
       </section>
     </div>
+    <ChatBox />
+    </>
   );
 };
 

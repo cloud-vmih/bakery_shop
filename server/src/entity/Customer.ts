@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, TableInheritance, ChildEntity, OneToOne } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  TableInheritance,
+  ChildEntity,
+  OneToOne,
+} from "typeorm";
 import { ManyToOne, OneToMany, JoinColumn, CreateDateColumn } from "typeorm";
 import { Address } from "./Address";
 import { User } from "./User";
@@ -15,10 +23,10 @@ export class Customer extends User {
   @Column("int", { nullable: true })
   membershipPoints?: number; // tổng điểm hiện tại
 
-  @OneToMany(() => Address, (ad : Address) => ad.customer)
+  @OneToMany(() => Address, (ad: Address) => ad.customer)
   addresses?: Address[];
 
-  @OneToMany(() => Wishlist, w => w.customer)
+  @OneToMany(() => Wishlist, (w) => w.customer)
   wishlists!: Wishlist[];
 
   @OneToMany(() => Rating, (r: Rating) => r.customer)

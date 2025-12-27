@@ -32,9 +32,9 @@ export const updateBranchWithAddres = async (req: Request, res: Response) => {
     const branchId = Number(req.params.id);
     const payload = req.body;
 
-    await branchService.updateBranch(branchId, payload)
+    await branchService.updateBranch(branchId, payload);
 
-    res.status(201).json({message: "Update successfully!"});
+    res.status(201).json({ message: "Update successfully!" });
   } catch (err: any) {
     res.status(400).json({
       message: err.message || "Update branch failed",
@@ -45,12 +45,11 @@ export const updateBranchWithAddres = async (req: Request, res: Response) => {
 export const deleteBranch = async (req: Request, res: Response) => {
   try {
     const branchId = Number(req.params.id);
-    await branchService.deleteBranchService(branchId)
-    res.status(201).json({message: "Deleted successfully!"});
+    await branchService.deleteBranchService(branchId);
+    res.status(201).json({ message: "Deleted successfully!" });
   } catch (err: any) {
     res.status(400).json({
       message: err.message || "Update branch failed",
     });
   }
 };
-

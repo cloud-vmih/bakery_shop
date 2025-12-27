@@ -21,7 +21,6 @@ export default function MembershipPoints() {
     const loadPoints = async () => {
       try {
         const data = await getMyPoints();
-        toast.success(data)
         setTotalPoints(data.totalPoints);
         setHistory(data.history);
       } catch {

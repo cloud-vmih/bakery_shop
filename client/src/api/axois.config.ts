@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 
-const baseURL = process.env.NODE_ENV === "production"
-  ? process.env.REACT_APP_API_URL
-  : "http://localhost:5000/api";
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API_URL
+    : "http://localhost:5000/api";
 
 const API = axios.create({
   baseURL,
@@ -28,8 +29,8 @@ API.interceptors.request.use(
 );
 
 API.interceptors.response.use(
-  res => res,
-  async err => {
+  (res) => res,
+  async (err) => {
     const originalRequest = err.config;
 
     // Kiểm tra lỗi từ server
@@ -43,19 +44,23 @@ API.interceptors.response.use(
     }
 
     // 2. Token hết hạn (401 với code TOKEN_EXPIRED)
-    if (status === 401 && errorCode === "TOKEN_EXPIRED" && !originalRequest._retry) {
+    if (
+      status === 401 &&
+      errorCode === "TOKEN_EXPIRED" &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
-      
+
       try {
         // Thử refresh token
         const refreshRes = await API.post("/refresh_token");
         const newAccessToken = refreshRes.data.accessToken;
         // Lưu token mới
         localStorage.setItem("token", newAccessToken);
-        
+
         // Cập nhật header cho request gốc
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        
+
         // Thực hiện lại request gốc
         return API(originalRequest);
       } catch (refreshError) {

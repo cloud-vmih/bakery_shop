@@ -3,6 +3,7 @@ import { Customer } from "./Customer";
 import { Branch } from "./Branch";
 
 @Entity("address")
+@Index(["customer", "placeId"], { unique: true })
 export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
@@ -30,3 +31,4 @@ export class Address extends BaseEntity {
   @Column({ default: true })
   isDefault?: boolean;
 }
+

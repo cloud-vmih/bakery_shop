@@ -1,0 +1,326 @@
+/* src/styles/OrderManagement.css - Phiên bản hoàn chỉnh cuối cùng */
+
+/* Trang chính */
+.order-management-page {
+  padding: 20px;
+  background: #f8fff8;
+  min-height: 100vh;
+}
+
+/* Header Card */
+.header-card {
+  margin-bottom: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #f6ffed 0%, #e6f4ea 100%);
+  border: 1px solid #d9f7be;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-icon {
+  font-size: 52px;
+  color: #52c41a;
+}
+
+.header-title {
+  margin: 0;
+  color: #237804;
+  font-weight: 600;
+}
+
+.header-card .ant-typography-secondary {
+  color: #389e0d;
+  font-size: 15px;
+}
+
+/* Filter Card - Gọn gàng, tinh tế */
+.filter-card {
+  margin-bottom: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(82, 196, 26, 0.1);
+  background: #ffffff;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, #d9f7be, #95de64, #d9f7be);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.filter-card .ant-card-head {
+  background: linear-gradient(to right, #faf5e6, #fffaf0);
+  border-bottom: 1px solid #ffe7ba;
+  border-radius: 14px 14px 0 0;
+  padding: 12px 20px;
+}
+
+.filter-card .ant-card-head-title {
+  color: #7c2d12;
+  font-weight: 600;
+  font-size: 16.5px;
+}
+
+/* Filter Grid */
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 18px 20px;
+  align-items: end;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-item label {
+  font-weight: 600;
+  color: #237804;
+  margin-bottom: 6px;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.filter-item:hover label {
+  color: #52c41a;
+}
+
+/* Input, Select, Picker - Gọn + icon đẹp */
+.filter-item .ant-input,
+.filter-item .ant-select-selector,
+.filter-item .ant-picker {
+  height: 38px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1.5px solid #e0e8e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  padding-left: 40px !important;
+}
+
+.filter-item .ant-input:focus,
+.filter-item .ant-select-focused .ant-select-selector,
+.filter-item .ant-picker-focused {
+  border-color: #95de64 !important;
+  box-shadow: 0 0 0 3px rgba(149, 222, 100, 0.18) !important;
+}
+
+/* Icon prefix WOW */
+.filter-item .ant-input-prefix,
+.filter-item .ant-picker-prefix {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-item .ant-input-prefix > .anticon,
+.filter-item .ant-picker-prefix > .anticon {
+  font-size: 18px;
+  color: #52c41a;
+  background: linear-gradient(135deg, #f6ffed, #e6f4ea);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(82, 196, 26, 0.15);
+  transition: all 0.3s ease;
+}
+
+.filter-item:hover .ant-input-prefix > .anticon,
+.filter-item:hover .ant-picker-prefix > .anticon {
+  transform: scale(1.12);
+  background: linear-gradient(135deg, #95de64, #73d13d);
+  color: white;
+  box-shadow: 0 6px 16px rgba(82, 196, 26, 0.25);
+}
+
+/* Nút hành động trong filter */
+.filter-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: end;
+  gap: 12px;
+}
+
+.filter-actions .ant-btn-primary {
+  height: 40px;
+  padding: 0 26px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(to right, #52c41a, #95de64);
+  border: none;
+  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.22);
+  transition: all 0.3s ease;
+}
+
+.filter-actions .ant-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(82, 196, 26, 0.32);
+}
+
+.filter-actions .ant-btn:not(.ant-btn-primary) {
+  height: 40px;
+  padding: 0 22px;
+  font-size: 15px;
+  background: #faf5e6;
+  border: 1.5px solid #ffe7ba;
+  color: #d48806;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.filter-actions .ant-btn:not(.ant-btn-primary):hover {
+  background: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* Table Card */
+.table-card {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border: 1px solid #f0f5e9;
+}
+
+.table-card .ant-table {
+  font-size: 14px;
+}
+
+.table-card .ant-table-thead > tr > th {
+  background: #f6ffed;
+  color: #237804;
+  font-weight: 600;
+  border-bottom: 2px solid #d9f7be;
+}
+
+.table-card .ant-table-tbody > tr:hover > td {
+  background: #f0fdf4 !important;
+}
+
+/* Fix cột Hành động fixed right - KHÔNG CÒN MÉO */
+.ant-table-thead > tr > th.ant-table-column-fixed-right,
+.ant-table-tbody > tr > td.ant-table-column-fixed-right {
+  text-align: center !important;
+  background: white !important;
+}
+
+.ant-table-cell-fix-right-first {
+  background: white !important;
+  box-shadow: -6px 0 12px -6px rgba(0, 0, 0, 0.08);
+}
+
+.ant-table-ping-right .ant-table-cell-fix-right-first {
+  background: white;
+}
+
+/* Button trong cột Hành động */
+.ant-btn-circle.ant-btn-sm {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f6ffed;
+  border: 1px solid #d9f7be;
+  color: #389e0d;
+  transition: all 0.3s;
+}
+
+.ant-btn-circle.ant-btn-sm:hover {
+  background: #95de64;
+  border-color: #95de64;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Tag trạng thái */
+.ant-tag-success {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.ant-tag-warning {
+  background: #fffbe6;
+  border-color: #ffe58f;
+  color: #d48806;
+}
+
+.ant-tag-processing {
+  background: #f0f5ff;
+  border-color: #adc6ff;
+  color: #1d39c4;
+}
+
+.ant-tag-error {
+  background: #fff2f0;
+  border-color: #ffccc7;
+  color: #cf1322;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .filter-actions {
+    grid-column: span 2;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-management-page {
+    padding: 16px;
+  }
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  .filter-actions {
+    flex-direction: column;
+  }
+  .filter-actions .ant-btn {
+    width: 100%;
+  }
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.ant-card {
+  border-radius: 14px;
+}

@@ -1,23 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, Column, BaseEntity, OneToMany, OneToOne } from "typeorm";
-import { User } from "./User";          
-import { EOrderStatus, EPayStatus, ECancelStatus } from "./enum/enum";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+  OneToOne
+} from "typeorm";
+import { Customer } from "./Customer";
+import {
+  EOrderStatus,
+  ECancelStatus,
+} from "./enum/enum";
 import { OrderDetail } from "./OrderDetails";
+import { OrderInfo } from "./OrderInfo";
 import { Payment } from "./Payment";
+import { C } from "@upstash/redis/zmscore-DhpQcqpW";
 
 @Entity("orders")
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => Customer, { nullable: true })
   @JoinColumn({ name: "customerID" })
-  customer?: User;
+  customer?: Customer;
 
-  @Column({ type: "timestamp", nullable: true, default: () => "NOW()" })
+  @CreateDateColumn({ type: "timestamp" })
   createAt?: Date;
-
-  @Column({ type: "timestamp", nullable: true})
-  deliveryAt?: Date
 
   @Column({
     type: "enum",
@@ -26,6 +39,7 @@ export class Order extends BaseEntity {
   })
   status?: EOrderStatus;
 
+  // === THÊM CÁC TRƯỜNG MỚI (from QD feature)===
   @Column({
     type: "enum",
     enum: ECancelStatus,
@@ -33,8 +47,21 @@ export class Order extends BaseEntity {
   })
   cancelStatus?: ECancelStatus;
 
-  @OneToMany(() => OrderDetail, od => od.order)
+  @Column({ type: "text", nullable: true })
+  cancelReason?: string;
+
+  @Column({ type: "text", nullable: true })
+  cancelNote?: string;
+
+  @Column({ nullable: true })
+  cancelHandledBy?: string;
+
+  @OneToMany(() => OrderDetail, (od) => od.order, { cascade: true })
   orderDetails?: OrderDetail[];
+
+
+  @OneToOne(() => OrderInfo, (info) => info.order)
+  orderInfo?: OrderInfo;
 
   @OneToOne(() => Payment, (payment) => payment.order)
   payment?: Payment;

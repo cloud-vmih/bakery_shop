@@ -1,39 +1,40 @@
-import express from "express";
+import { Router } from "express";
+import { verifyToken } from "../middleware/verifyToken";
 import {
   getMyAddressesController,
-  addAddressController,
-  editAddressController,
+  createAddressController,
+  updateAddressController,
   setDefaultAddressController,
   deleteAddressController,
 } from "../controllers/address.controller";
-import { verifyToken } from "../middleware/verifyToken";
 
-const router = express.Router();
-
-/**
- * GET /addresses
- * Lấy danh sách địa chỉ của customer hiện tại
- */
-router.get("/address", verifyToken, getMyAddressesController);
+const router = Router();
 
 /**
- * POST /addresses
- * Thêm địa chỉ mới
+ * =======================
+ * ADDRESS ROUTES
+ * Base: /addresses
+ * =======================
  */
-router.post("/address", verifyToken, addAddressController);
 
-/**
- * PUT /addresses/:id
- * Chỉnh sửa địa chỉ
- */
-router.put("/address/:id", verifyToken, editAddressController);
+// 🔁 BACKWARD COMPAT (route cũ)
+// GET /addresses/my
+// router.get("/my", verifyToken, getMyAddressesController);
 
-/**
- * PUT /addresses/:id/default
- * Set địa chỉ mặc định
- */
-router.put("/address/:id/default", verifyToken, setDefaultAddressController);
+// ✅ ROUTE CHUẨN
+// GET /addresses
+router.get("/", verifyToken, getMyAddressesController);
 
-router.delete("/address/:id", verifyToken, deleteAddressController)
+// POST /addresses
+router.post("/", verifyToken, createAddressController);
+
+// PUT /addresses/:id
+router.put("/:id", verifyToken, updateAddressController);
+
+// PUT /addresses/:id/default
+router.put("/:id/default", verifyToken, setDefaultAddressController);
+
+// DELETE /addresses/:id
+router.delete("/:id", verifyToken, deleteAddressController);
 
 export default router;

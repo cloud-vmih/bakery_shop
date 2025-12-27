@@ -1,8 +1,13 @@
 {
   "dependencies": {
+    "@react-google-maps/api": "^2.18.1",
+    "antd": "^5.29.3",
     "@heroicons/react": "^2.2.0",
     "@react-google-maps/api": "^2.18.1",
     "lucide-react": "^0.556.0",
     "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/google.maps": "^3.58.1"
   }
 }

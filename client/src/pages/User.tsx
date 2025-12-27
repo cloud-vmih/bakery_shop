@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import '../styles/Profile.css';
 import {
   getMyAddresses,
-  addAddress,
+  createAddress,
   updateAddress,
   setDefaultAddress,
   Address,
@@ -221,7 +221,7 @@ const ProfilePage: React.FC = () => {
         ...(hasExistingAddresses && isDefaultAddress ? { isDefault: true } : {}),
       };
 
-      await addAddress(payload);
+      await createAddress(payload);
       toast.success('Thêm địa chỉ thành công');
       setShowAddAddressForm(false);
       setSelectedAddress(null);

@@ -183,12 +183,12 @@ export default function MyOrders() {
                     <div className="p-6 space-y-6">
                       {order.orderDetails && order.orderDetails.length > 0 ? (
                         order.orderDetails.map((detail, idx) => {
-                          const info = detail.itemInfo || {};
+                          const info = detail.item || {};
                           return (
                             <div key={idx} className="flex gap-6 items-start">
-                              {info.image ? (
+                              {info.imageURL ? (
                                 <img
-                                  src={info.image}
+                                  src={info.imageURL}
                                   alt={info.name}
                                   className="w-24 h-24 object-cover rounded-xl shadow border border-amber-100 flex-shrink-0"
                                 />
@@ -201,11 +201,6 @@ export default function MyOrders() {
                                 <h4 className="text-lg font-bold text-green-800 break-words">
                                   {info.name || "Bánh ngọt"}
                                 </h4>
-                                {detail.note && (
-                                  <p className="text-sm text-amber-900 bg-amber-50 px-4 py-2 rounded-lg mt-2">
-                                    Ghi chú: {detail.note}
-                                  </p>
-                                )}
                                 <p className="text-sm text-gray-700 mt-2">
                                   Số lượng: <span className="font-bold">{detail.quantity || 1}</span>
                                 </p>
@@ -218,6 +213,7 @@ export default function MyOrders() {
                           Chưa có thông tin sản phẩm
                         </p>
                       )}
+                      
                     </div>
 
                     {/* Footer - nhỏ gọn */}
@@ -230,7 +226,7 @@ export default function MyOrders() {
                             </span>
                           </p>
                           <p className="text-xl font-bold text-green-700 mt-2">
-                            Tổng tiền: {order.orderDetails?.reduce((sum, d) => sum + ((d.itemInfo?.price || 0) * (d.quantity || 1)), 0).toLocaleString("vi-VN")}đ
+                            Tổng tiền: {order.orderDetails?.reduce((sum, d) => sum + ((d.item?.price || 0) * (d.quantity || 1)), 0).toLocaleString("vi-VN")}đ
                           </p>
                         </div>
                         <Link

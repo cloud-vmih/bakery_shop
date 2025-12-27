@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import "../styles/menu.css";
 import toast from "react-hot-toast";
 import { getMenu } from "../services/menu.service";
-import { addToCart } from "../services/cart.service";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../context/AuthContext";
 import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
@@ -10,6 +9,8 @@ import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon
 import { getBranches } from "../services/branch.service";
 import { useInventory } from "../context/InventoryContext";
 import { PriceDisplay } from "../components/ItemPrice";
+import { useCart } from "../context/CartContext";
+import RequireAuthModal from "../components/RequireAuthModal";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -23,10 +24,12 @@ export default function MenuPage() {
   const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
   const itemsPerPage = 12;
 
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, setUser } = useUser();
   const [wishlist, setWishlist] = useState<number[]>([]);
   const navigate = useNavigate();
   const { getItemQuantity, branchId, setBranchId } = useInventory(); //gọi brandId để lưu brandId
+   const { addToCart } = useCart();
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -74,20 +77,18 @@ export default function MenuPage() {
     }
   }, [branches, selectedBranchId]);
 
-  const handleAddToCart = async (itemId: number) => {
+    const handleAddToCart = async (itemId: number) => {
     try {
-      await addToCart(itemId);
-      toast.success("Đã thêm vào giỏ hàng!");
+      await addToCart(itemId, 1);
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
-        navigate("/login")
-        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
+        setShowAuthModal(true);
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");
-      console.error("Lỗi thêm giỏ:", err);
     }
   };
+
   const handleToggleWishlist = async (itemId?: number) => {
     if (!itemId) return;
     if (!user) {

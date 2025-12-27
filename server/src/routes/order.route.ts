@@ -1,12 +1,10 @@
-// server/src/routes/order.routes.ts
-import { Router } from "express";
-import { OrderController } from "../controllers/order.controller";
+import express from "express";
 import { verifyToken } from "../middleware/verifyToken";
+import { OrderController } from "../controllers/order.controller";
 
-const router = Router();
-
+const router = express.Router();
 router.get("/my-orders", verifyToken, OrderController.getMyOrders);
 router.get("/:orderId/status", verifyToken, OrderController.getOrderStatus);
-// routes/order.routes.ts
 router.post("/:orderId/cancel", verifyToken, OrderController.cancelOrder);
-export default router;
+
+export default router

@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "module": "esnext", 
+    "module": "esnext",
     "target": "es2017",
     "moduleResolution": "node",
-    "strict": true
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

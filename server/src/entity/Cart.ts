@@ -1,6 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, OneToMany, BaseEntity } from "typeorm"
-import { User } from "./User"
-import { CartItem } from "./CartItem"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  Column,
+  OneToMany,
+  BaseEntity,
+} from "typeorm";
+import { User } from "./User";
+import { CartItem } from "./CartItem";
 
 @Entity("cart")
 export class Cart extends BaseEntity {
@@ -9,14 +17,16 @@ export class Cart extends BaseEntity {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "customerID" })
-  customer?: User;  
-    
+  customer?: User;
+
   @Column({ type: "timestamp", nullable: true })
   createAt?: Date;
 
   @Column({ type: "timestamp", nullable: true })
   updateAt?: Date;
 
-  @OneToMany(() => CartItem, (ci: CartItem) => ci.cart)
+  @OneToMany(() => CartItem, (ci) => ci.cart, {
+    cascade: true,
+  })
   items?: CartItem[];
 }

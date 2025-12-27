@@ -1,0 +1,126 @@
+// src/services/orders.service.ts
+import API from "../api/axois.config";
+
+/** ================= TYPES ================= */
+export type CreateOrderResponse = {
+  orderId: number;
+  orderStatus: "PENDING" | "CONFIRMED";
+  paymentMethod: "COD" | "VNPAY";
+};
+
+export type OrderDetailItem = {
+  itemInfo: {
+    image?: string;
+    name?: string;
+    price?: number;
+    flavor?: string;
+    [key: string]: any;
+  };
+  quantity: number;
+};
+
+export type OrderItem = {
+  id: number;
+  createAt: string;
+  status: string;            // PENDING, CONFIRMED, ...
+  payStatus: string;         // PENDING, PAID, REFUNDED
+  cancelStatus?: string;     // NONE, REQUESTED, APPROVED, REJECTED
+  orderDetails: OrderDetailItem[];
+};
+
+export type OrderSummary = {
+  message?: string;
+  orders: OrderItem[];
+};
+
+// Response chi tiết trạng thái đơn hàng
+export type OrderStatusResponse = {
+  orderId: number;
+  status: string;
+  statusText: string;
+  createdAt: string;
+  payStatus: string;                    // THÊM
+  cancelStatus?: string;                // THÊM
+  payment?: {
+    method: string;                     // COD, VNPAY, ...
+    status: string;                     // PENDING, PAID
+  } | null;
+  timeline: {
+    status?: string;
+    label: string;
+    completed: boolean;
+  }[];
+  items: OrderDetailItem[];   
+  note?: string | null;          
+};
+
+// Response khi hủy/yêu cầu hủy đơn
+export type CancelOrderResponse = {
+  message: string;
+  action?: "canceled_directly" | "cancel_requested";
+};
+
+/**
+ * ================= CREATE ORDER =================
+ * POST /api/orders
+ *
+ * - COD   → order CONFIRMED
+ * - VNPAY → order PENDING
+ */
+export const createOrder = async (
+  payload: any
+): Promise<CreateOrderResponse> => {
+  const res = await API.post("/orders", payload);
+  return res.data;
+};
+
+/**
+ * ================= GET ORDER BY ID =================
+ * GET /api/orders/:orderId
+ *
+ * - Dùng cho Success page
+ * - Source of truth từ DB
+ */
+export const getOrderById = async (orderId: number) => {
+  const res = await API.get(`/orders/${orderId}`);
+  return res.data;
+};
+
+export const orderService = {
+  // 1. Lấy danh sách đơn hàng của tôi
+  getMyOrders: async (): Promise<OrderSummary> => {
+    const res = await API.get("/orders/my-orders");
+    return res.data;
+  },
+
+  // 2. Xem trạng thái chi tiết một đơn hàng
+  getOrderStatus: async (orderId: number): Promise<OrderStatusResponse> => {
+    const res = await API.get(`/orders/${orderId}/status`);
+    return res.data;
+  },
+
+  // 3. Hủy hoặc yêu cầu hủy đơn hàng
+  cancelOrder: async (orderId: number): Promise<CancelOrderResponse> => {
+    const res = await API.post(`/orders/${orderId}/cancel`);
+    return res.data; // backend trả về { message, action? }
+  },
+};
+
+export const getOrders = (filters = {}) => {
+  return API.get("/manage-orders", { params: filters });
+};
+
+export const updateOrderStatus = (id: number, newStatus: string) => {
+  return API.patch(`/manage-orders/${id}/status`, { newStatus });
+};
+
+export const cancelOrder = (id: number, cancelReason: string) => {
+  return API.patch(`/manage-orders/${id}/cancel`, { cancelReason });
+};
+
+export const printInvoice = (id: number) => {
+  window.open(
+    `http://localhost:5000/api/manage-orders/${id}/print`,
+    "_blank"
+  );
+};

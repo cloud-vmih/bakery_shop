@@ -1,23 +1,21 @@
 import { Request, Response } from "express";
-import {
-  getMyAddresses,
-  addAddress,
-  editAddress,
-  setDefaultAddress,
-  removeAddress,
-} from "../services/address.service";
+import { AddressService } from "../services/address.service";
+
+const addressService = new AddressService();
 
 /**
  * GET /addresses
- * Lấy danh sách địa chỉ của customer hiện tại
+ * Lấy danh sách địa chỉ của user hiện tại
  */
-export async function getMyAddressesController(
-  req: Request,
-  res: Response
-) {
+export async function getMyAddressesController(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id;
-    const addresses = await getMyAddresses(userId);
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const addresses = await addressService.getAddressesByCustomer(userId);
 
     return res.status(200).json({
       success: true,
@@ -34,20 +32,28 @@ export async function getMyAddressesController(
 /**
  * POST /addresses
  * Thêm địa chỉ mới
+ * - Dùng cho profile + checkout + google autocomplete
  */
-export async function addAddressController(
-  req: Request,
-  res: Response
-) {
+export async function createAddressController(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id;
-    const payload = req.body;
+    const userId = (req as any).user?.id;
 
-    const address = await addAddress(userId, payload);
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
+    const address = await addressService.createAddress(userId, req.body);
+
+    /**
+     * Giữ response gọn cho FE checkout
+     * (nếu muốn full object thì đổi sau)
+     */
     return res.status(201).json({
       success: true,
-      data: address,
+      data: {
+        id: address.id,
+        fullAddress: address.fullAddress,
+      },
       message: "Thêm địa chỉ thành công",
     });
   } catch (error: any) {
@@ -60,18 +66,22 @@ export async function addAddressController(
 
 /**
  * PUT /addresses/:id
- * Chỉnh sửa địa chỉ
+ * Cập nhật địa chỉ
  */
-export async function editAddressController(
-  req: Request,
-  res: Response
-) {
+export async function updateAddressController(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user?.id;
     const addressId = Number(req.params.id);
-    const payload = req.body;
 
-    const address = await editAddress(userId, addressId, payload);
+    if (!userId || !addressId) {
+      return res.status(400).json({ message: "Thiếu thông tin" });
+    }
+
+    const address = await addressService.updateAddress(
+      userId,
+      addressId,
+      req.body
+    );
 
     return res.status(200).json({
       success: true,
@@ -88,17 +98,18 @@ export async function editAddressController(
 
 /**
  * PUT /addresses/:id/default
- * Set địa chỉ mặc định
+ * Đặt địa chỉ mặc định
  */
-export async function setDefaultAddressController(
-  req: Request,
-  res: Response
-) {
+export async function setDefaultAddressController(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user?.id;
     const addressId = Number(req.params.id);
 
-    const address = await setDefaultAddress(userId, addressId);
+    if (!userId || !addressId) {
+      return res.status(400).json({ message: "Thiếu thông tin" });
+    }
+
+    const address = await addressService.setDefaultAddress(userId, addressId);
 
     return res.status(200).json({
       success: true,
@@ -112,12 +123,21 @@ export async function setDefaultAddressController(
     });
   }
 }
+
+/**
+ * DELETE /addresses/:id
+ * Xóa địa chỉ
+ */
 export async function deleteAddressController(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user?.id;
     const addressId = Number(req.params.id);
 
-    await removeAddress(userId, addressId);
+    if (!userId || !addressId) {
+      return res.status(400).json({ message: "Thiếu thông tin" });
+    }
+
+    await addressService.deleteAddress(userId, addressId);
 
     return res.status(200).json({
       success: true,

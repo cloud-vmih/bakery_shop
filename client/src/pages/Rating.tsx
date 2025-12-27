@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { getRatingsByItem, addOrUpdateRating, deleteRating, Rating as RatingType } from "../services/rating.service";
 import toast from "react-hot-toast";
+import ChatBox from "../components/chat/ChatBox";
 
 interface Props {
   itemID: number;
@@ -98,6 +99,7 @@ export default function RatingPage({ itemID, currentUserID }: Props) {
           ))}
         </div>
       )}
+      <ChatBox />
     </div>
   );
 }

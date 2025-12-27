@@ -2,22 +2,25 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface JwtPayload {
-  accountId: any,
-  user: any
+  accountId: any;
+  user: any;
 }
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Lấy token từ header
   const authHeader = req.headers["authorization"];
   
   // Header kiểu: "Bearer <token>"
   const token = authHeader && authHeader.split(" ")[1];
-
   if (!token) {
     // Không có token = chưa đăng nhập
-    return res.status(401).json({ 
-      code: "NO_LOGIN", 
-      message: "Access denied. No token provided." 
+    return res.status(401).json({
+      code: "NO_LOGIN",
+      message: "Access denied. No token provided.",
     });
   }
 
@@ -25,6 +28,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     // Xác thực token
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as JwtPayload;
+    //console.log("Decoded JWT:", decoded);
 
     // Gắn thông tin user vào req
     (req as any).user = decoded.user;
@@ -33,20 +37,20 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     // Phân biệt các loại lỗi token
     if (err.name === "TokenExpiredError") {
       // Token đã hết hạn
-      return res.status(401).json({ 
-        code: "TOKEN_EXPIRED", 
-        message: "Token has expired. Please refresh or login again." 
+      return res.status(401).json({
+        code: "TOKEN_EXPIRED",
+        message: "Token has expired. Please refresh or login again.",
       });
     } else if (err.name === "JsonWebTokenError") {
       // Token không hợp lệ
-      return res.status(403).json({ 
-        code: "INVALID_TOKEN", 
-        message: "Invalid token." 
+      return res.status(403).json({
+        code: "INVALID_TOKEN",
+        message: "Invalid token.",
       });
     } else {
       // Lỗi khác
-      return res.status(403).json({ 
-        message: "Token verification failed." 
+      return res.status(403).json({
+        message: "Token verification failed.",
       });
     }
   }
@@ -57,16 +61,16 @@ export const verifyRole = (...allowedRoles: string[]) => {
     const user = (req as any).user;
 
     if (!user || !user.type) {
-      return res.status(401).json({ 
-        code: "NO_USER_INFO", 
-        message: "Access denied. User information not found." 
+      return res.status(401).json({
+        code: "NO_USER_INFO",
+        message: "Access denied. User information not found.",
       });
     }
 
     if (!allowedRoles.includes(user.type)) {
-      return res.status(403).json({ 
-        code: "FORBIDDEN", 
-        message: "Access denied. Insufficient permissions." 
+      return res.status(403).json({
+        code: "FORBIDDEN",
+        message: "Access denied. Insufficient permissions.",
       });
     }
 

@@ -1,21 +1,19 @@
 import API from "../api/axois.config"; // giả sử là axios instance
 
 export type OrderDetailItem = {
-  itemInfo: {
-    image?: string;
+  item: {
+    imageURL?: string;
     name?: string;
     price?: number;
     flavor?: string;
     [key: string]: any;
   };
-  note?: string | null;
   quantity: number;
 };
 
 export type OrderItem = {
   id: number;
   createAt: string;
-  deliveryAt?: string | null;
   status: string;            // PENDING, CONFIRMED, ...
   payStatus: string;         // PENDING, PAID, REFUNDED
   cancelStatus?: string;     // NONE, REQUESTED, APPROVED, REJECTED
@@ -33,7 +31,6 @@ export type OrderStatusResponse = {
   status: string;
   statusText: string;
   createdAt: string;
-  deliveryAt?: string | null;
   payStatus: string;                    // THÊM
   cancelStatus?: string;                // THÊM
   payment?: {
@@ -45,7 +42,8 @@ export type OrderStatusResponse = {
     label: string;
     completed: boolean;
   }[];
-  items: OrderDetailItem[];             // đổi tên từ orderDetails → items cho dễ dùng
+  items: OrderDetailItem[];   
+  note?: string;
 };
 
 // Response khi hủy/yêu cầu hủy đơn
@@ -59,19 +57,38 @@ export type CancelOrderResponse = {
 export const orderService = {
   // 1. Lấy danh sách đơn hàng của tôi
   getMyOrders: async (): Promise<OrderSummary> => {
-    const res = await API.get("/my-orders");
+    const res = await API.get("/order/my-orders");
     return res.data;
   },
 
   // 2. Xem trạng thái chi tiết một đơn hàng
   getOrderStatus: async (orderId: number): Promise<OrderStatusResponse> => {
-    const res = await API.get(`/${orderId}/status`);
+    const res = await API.get(`/order/${orderId}/status`);
     return res.data;
   },
 
   // 3. Hủy hoặc yêu cầu hủy đơn hàng
   cancelOrder: async (orderId: number): Promise<CancelOrderResponse> => {
-    const res = await API.post(`/${orderId}/cancel`);
+    const res = await API.post(`/order/${orderId}/cancel`);
     return res.data; // backend trả về { message, action? }
   },
+};
+
+export const getOrders = (filters = {}) => {
+  return API.get("/manage-orders", { params: filters });
+};
+
+export const updateOrderStatus = (id: number, newStatus: string) => {
+  return API.patch(`/manage-orders/${id}/status`, { newStatus });
+};
+
+export const cancelOrder = (id: number, cancelReason: string) => {
+  return API.patch(`/manage-orders/${id}/cancel`, { cancelReason });
+};
+
+export const printInvoice = (id: number) => {
+  window.open(
+    `http://localhost:5000/api/manage-orders/${id}/print`,
+    "_blank"
+  );
 };

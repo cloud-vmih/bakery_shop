@@ -13,7 +13,7 @@ export class Notification {
     @Column({ type: "text" })
     contents?: string;
         
-    @Column({ type: "timestamp" })
+    @Column({ type: "timestamp", default: () => "NOW()" })
     sentAt?: Date;
 
     @Column({ type: "boolean", default: false })

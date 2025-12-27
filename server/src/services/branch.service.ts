@@ -2,21 +2,26 @@ import { Branch } from "../entity/Branch";
 import { Address } from "../entity/Address";
 import * as branchRepo from "../db/branch.db";
 
-export const createBranch = async (name: string, placeId: string, formattedAddress?: string, latitude?: number, longitude?: number) => {
-  try{ 
+export const createBranch = async (
+  name: string,
+  placeId: string,
+  formattedAddress?: string,
+  latitude?: number,
+  longitude?: number
+) => {
+  try {
     const branch = new Branch();
     branch.name = name;
 
-    const address = new Address()
+    const address = new Address();
     address.placeId = placeId;
-    address.fullAddress = formattedAddress;
-    address.lat = latitude;
-    address.lng = longitude;
-    address.branch = branch
-    return await branchRepo.createBranchWithAddress(branch, address)
-  }
-  catch (err) {
-    throw err
+    address.fullAddress = formattedAddress!;
+    address.lat = latitude!;
+    address.lng = longitude!;
+    address.branch = branch;
+    return await branchRepo.createBranchWithAddress(branch, address);
+  } catch (err) {
+    throw err;
   }
 };
 
