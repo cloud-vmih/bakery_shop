@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Entity,
   ManyToOne,
@@ -7,9 +6,6 @@ import {
   BaseEntity,
   PrimaryColumn,
 } from "typeorm";
-=======
-import { Entity, ManyToOne, JoinColumn, Column, BaseEntity, PrimaryColumn } from "typeorm";
->>>>>>> feature/updateQuantity-v2
 import { Order } from "./Orders";
 import { Item } from "./Item";
 
@@ -29,15 +25,6 @@ export class OrderDetail extends BaseEntity {
   @JoinColumn({ name: "itemID" })
   item!: Item;
 
-<<<<<<< HEAD
   @Column({ type: "int" })
   quantity!: number;
 }
-=======
-  @Column({ nullable: true })
-  note?: string;
-
-  @Column()
-  quantity?: number
-}
->>>>>>> feature/updateQuantity-v2

@@ -3,11 +3,22 @@ import "../styles/menu.css";
 import toast from "react-hot-toast";
 import { getMenu } from "../services/menu.service";
 import { addToCart } from "../services/cart.service";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/AuthContext";
 import { Header } from "../components/Header";
-import { getWishlist, addToWishlist, removeFromWishlist, Item } from "../services/wishlist.service";
-import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, ChevronDownIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  Item,
+} from "../services/wishlist.service";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+  MapPinIcon,
+} from "@heroicons/react/24/outline";
 import { getBranches } from "../services/branch.service";
 import { useInventory } from "../context/InventoryContext";
 
@@ -20,7 +31,9 @@ export default function MenuPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedBranchId, setSelectedBranchId] = useState<number | null>(null);
-  const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
+  const [priceSort, setPriceSort] = useState<
+    "none" | "low-to-high" | "high-to-low"
+  >("none");
   const itemsPerPage = 12;
 
   const { user, setUser } = useUser();
@@ -45,10 +58,8 @@ export default function MenuPage() {
   useEffect(() => {
     if (!user) return;
 
-    getWishlist().then(data => {
-      setWishlist(
-        data.map(i => i.id!).filter(Boolean)
-      );
+    getWishlist().then((data) => {
+      setWishlist(data.map((i) => i.id!).filter(Boolean));
     });
   }, [user]);
 
@@ -74,7 +85,7 @@ export default function MenuPage() {
       toast.success("Đã thêm vào giỏ hàng!");
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
-        navigate("/login")
+        navigate("/login");
         toast.error("Vui lòng đăng nhập để thêm vào giỏ");
         return;
       }
@@ -93,11 +104,11 @@ export default function MenuPage() {
     try {
       if (wishlist.includes(itemId)) {
         await removeFromWishlist(itemId);
-        setWishlist(prev => prev.filter(id => id !== itemId));
+        setWishlist((prev) => prev.filter((id) => id !== itemId));
         toast.success("Đã xóa khỏi wishlist");
       } else {
         await addToWishlist(itemId);
-        setWishlist(prev => [...prev, itemId]);
+        setWishlist((prev) => [...prev, itemId]);
         toast.success("Đã thêm vào wishlist");
       }
     } catch (err: any) {
@@ -115,15 +126,16 @@ export default function MenuPage() {
 
     // Lọc tìm kiếm
     if (searchQuery.trim()) {
-      filtered = filtered.filter(item =>
-        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (item) =>
+          item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Lọc danh mục
     if (selectedCategory) {
-      filtered = filtered.filter(item => item.category === selectedCategory);
+      filtered = filtered.filter((item) => item.category === selectedCategory);
     }
 
     // Sắp xếp theo tồn kho nếu đã chọn chi nhánh
@@ -143,7 +155,14 @@ export default function MenuPage() {
     }
 
     return filtered;
-  }, [items, searchQuery, selectedCategory, selectedBranchId, priceSort, getItemQuantity]);
+  }, [
+    items,
+    searchQuery,
+    selectedCategory,
+    selectedBranchId,
+    priceSort,
+    getItemQuantity,
+  ]);
 
   // Tính toán phân trang
   const totalPages = Math.ceil(filteredAndSortedItems.length / itemsPerPage);
@@ -158,7 +177,7 @@ export default function MenuPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const categories = [
@@ -182,7 +201,9 @@ export default function MenuPage() {
               <div className="categoryList">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`categoryItem ${selectedCategory === null ? 'active' : ''}`}
+                  className={`categoryItem ${
+                    selectedCategory === null ? "active" : ""
+                  }`}
                 >
                   <span className="categoryIndicator"></span>
                   <span className="categoryLabel">Tất cả</span>
@@ -191,7 +212,9 @@ export default function MenuPage() {
                   <button
                     key={cat.value}
                     onClick={() => setSelectedCategory(cat.value)}
-                    className={`categoryItem ${selectedCategory === cat.value ? 'active' : ''}`}
+                    className={`categoryItem ${
+                      selectedCategory === cat.value ? "active" : ""
+                    }`}
                   >
                     <span className="categoryIndicator"></span>
                     <span className="categoryLabel">{cat.label}</span>
@@ -204,21 +227,27 @@ export default function MenuPage() {
                 <div className="priceSortOptions">
                   <button
                     onClick={() => setPriceSort("none")}
-                    className={`priceSortButton ${priceSort === "none" ? 'active' : ''}`}
+                    className={`priceSortButton ${
+                      priceSort === "none" ? "active" : ""
+                    }`}
                   >
                     <span className="priceSortIndicator"></span>
                     <span>Mặc định</span>
                   </button>
                   <button
                     onClick={() => setPriceSort("low-to-high")}
-                    className={`priceSortButton ${priceSort === "low-to-high" ? 'active' : ''}`}
+                    className={`priceSortButton ${
+                      priceSort === "low-to-high" ? "active" : ""
+                    }`}
                   >
                     <span className="priceSortIndicator"></span>
                     <span>Thấp → Cao</span>
                   </button>
                   <button
                     onClick={() => setPriceSort("high-to-low")}
-                    className={`priceSortButton ${priceSort === "high-to-low" ? 'active' : ''}`}
+                    className={`priceSortButton ${
+                      priceSort === "high-to-low" ? "active" : ""
+                    }`}
                   >
                     <span className="priceSortIndicator"></span>
                     <span>Cao → Thấp</span>
@@ -232,7 +261,9 @@ export default function MenuPage() {
               {/* Title và Subtitle */}
               <div className="mb-6">
                 <h2 className="menuPageTitle">Menu của chúng mình</h2>
-                <p className="menuPageSubtitle">Mời bạn ghé xem và chọn cho mình một chiếc bánh thật ngon nhé!</p>
+                <p className="menuPageSubtitle">
+                  Mời bạn ghé xem và chọn cho mình một chiếc bánh thật ngon nhé!
+                </p>
               </div>
 
               {/* Thanh search + dropdown chi nhánh */}
@@ -254,8 +285,12 @@ export default function MenuPage() {
                   <select
                     value={selectedBranchId ?? ""}
                     onChange={(e) => {
-                        setSelectedBranchId(e.target.value ? Number(e.target.value) : null);
-                        setBranchId(e.target.value ? Number(e.target.value) : null)
+                      setSelectedBranchId(
+                        e.target.value ? Number(e.target.value) : null
+                      );
+                      setBranchId(
+                        e.target.value ? Number(e.target.value) : null
+                      );
                     }}
                     className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
                   >
@@ -279,10 +314,11 @@ export default function MenuPage() {
                     <MapPinIcon className="branchInfoIcon" />
                     <div className="branchInfoText">
                       <span className="branchInfoName">
-                        {branches.find(b => b.id === selectedBranchId)?.name}
+                        {branches.find((b) => b.id === selectedBranchId)?.name}
                       </span>
                       <span className="branchInfoAddress">
-                        {branches.find(b => b.id === selectedBranchId)?.address?.fullAddress || "Chưa có địa chỉ"}
+                        {branches.find((b) => b.id === selectedBranchId)
+                          ?.address?.fullAddress || "Chưa có địa chỉ"}
                       </span>
                     </div>
                   </div>
@@ -290,8 +326,10 @@ export default function MenuPage() {
               )}
 
               {/* Loading & danh sách sản phẩm */}
-              {(loading || loadingBranches) ? (
-                <p className="text-center text-green-700 text-lg">Đang tải...</p>
+              {loading || loadingBranches ? (
+                <p className="text-center text-green-700 text-lg">
+                  Đang tải...
+                </p>
               ) : filteredAndSortedItems.length === 0 ? (
                 <p className="text-center text-gray-600 text-lg py-8">
                   Không tìm thấy sản phẩm nào
@@ -301,18 +339,26 @@ export default function MenuPage() {
                   <div className="menuGrid">
                     {currentItems.map((item: any) => {
                       // Kiểm tra tồn kho chỉ khi đã chọn chi nhánh
-                      const quantity = selectedBranchId !== null
-                        ? getItemQuantity(item.id, selectedBranchId)
-                        : Infinity; // Không chọn chi nhánh → coi như luôn có hàng
+                      const quantity =
+                        selectedBranchId !== null
+                          ? getItemQuantity(item.id, selectedBranchId)
+                          : Infinity; // Không chọn chi nhánh → coi như luôn có hàng
 
                       const isOutOfStock = quantity === 0;
-                      const isDisabled = selectedBranchId !== null && isOutOfStock;
+                      const isDisabled =
+                        selectedBranchId !== null && isOutOfStock;
 
                       return (
                         <div
                           key={item.id}
-                          className={`menuCard relative ${isOutOfStock ? 'out-of-stock opacity-80' : 'hover:-translate-y-1'}`}
-                          onClick={() => !isDisabled && navigate(`/product/${item.id}`)}
+                          className={`menuCard relative ${
+                            isOutOfStock
+                              ? "out-of-stock opacity-80"
+                              : "hover:-translate-y-1"
+                          }`}
+                          onClick={() =>
+                            !isDisabled && navigate(`/product/${item.id}`)
+                          }
                         >
                           {/* Wishlist button - giữ nguyên */}
                           <div className="absolute top-3 right-3 z-20">
@@ -324,13 +370,17 @@ export default function MenuPage() {
                               disabled={isDisabled}
                               className={`
                                 wishlistButton relative overflow-hidden
-                                ${wishlist.includes(item.id) ? 'liked' : ''}
-                                ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
+                                ${wishlist.includes(item.id) ? "liked" : ""}
+                                ${
+                                  isDisabled
+                                    ? "opacity-60 cursor-not-allowed"
+                                    : ""
+                                }
                               `}
                             >
                               {/* Icon tim */}
                               <span className="text-2xl block transition-all duration-300">
-                                {wishlist.includes(item.id) ? '❤️' : '🤍'}
+                                {wishlist.includes(item.id) ? "❤️" : "🤍"}
                               </span>
 
                               {/* Hiệu ứng khi đang thêm (chúng ta sẽ trigger bằng state tạm) */}
@@ -340,10 +390,16 @@ export default function MenuPage() {
                           {/* Hình ảnh */}
                           <div className="menuImageWrapper">
                             {item.imageURL ? (
-                              <img src={item.imageURL} alt={item.name} className="menuImage" />
+                              <img
+                                src={item.imageURL}
+                                alt={item.name}
+                                className="menuImage"
+                              />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                <span className="text-gray-400 text-sm">No image</span>
+                                <span className="text-gray-400 text-sm">
+                                  No image
+                                </span>
                               </div>
                             )}
                           </div>
@@ -353,7 +409,9 @@ export default function MenuPage() {
                             <div>
                               <h3 className="menuTitle">{item.name}</h3>
                               <p className="menuPrice mt-3">
-                                {item.price ? formatPrice(item.price) : "Liên hệ"}
+                                {item.price
+                                  ? formatPrice(item.price)
+                                  : "Liên hệ"}
                               </p>
                             </div>
 
@@ -374,9 +432,16 @@ export default function MenuPage() {
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
                                 >
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                                  />
                                 </svg>
-                                {isOutOfStock ? "Hết hàng" : "Thêm vào giỏ hàng"}
+                                {isOutOfStock
+                                  ? "Hết hàng"
+                                  : "Thêm vào giỏ hàng"}
                               </span>
                             </button>
                           </div>
@@ -391,7 +456,9 @@ export default function MenuPage() {
                       <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className={`paginationButton ${currentPage === 1 ? 'disabled' : 'inactive'}`}
+                        className={`paginationButton ${
+                          currentPage === 1 ? "disabled" : "inactive"
+                        }`}
                       >
                         <ChevronLeftIcon className="w-5 h-5" />
                       </button>
@@ -406,20 +473,31 @@ export default function MenuPage() {
                             <button
                               key={page}
                               onClick={() => handlePageChange(page)}
-                              className={`paginationButton ${currentPage === page ? 'active' : 'inactive'}`}
+                              className={`paginationButton ${
+                                currentPage === page ? "active" : "inactive"
+                              }`}
                             >
                               {page}
                             </button>
                           );
-                        } else if (page === currentPage - 2 || page === currentPage + 2) {
-                          return <span key={page} className="text-gray-400">...</span>;
+                        } else if (
+                          page === currentPage - 2 ||
+                          page === currentPage + 2
+                        ) {
+                          return (
+                            <span key={page} className="text-gray-400">
+                              ...
+                            </span>
+                          );
                         }
                         return null;
                       })}
                       <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className={`paginationButton ${currentPage === totalPages ? 'disabled' : 'inactive'}`}
+                        className={`paginationButton ${
+                          currentPage === totalPages ? "disabled" : "inactive"
+                        }`}
                       >
                         <ChevronRightIcon className="w-5 h-5" />
                       </button>

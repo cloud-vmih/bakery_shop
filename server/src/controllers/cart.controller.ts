@@ -1,18 +1,11 @@
-<<<<<<< HEAD
-=======
-// src/controller/cart.controller.ts
->>>>>>> feature/updateQuantity-v2
 import { Request, Response } from "express";
 import { CartService } from "../services/cart.service";
 
 const cartService = new CartService();
 
-<<<<<<< HEAD
 /**
  * ADD TO CART
  */
-=======
->>>>>>> feature/updateQuantity-v2
 export const addToCart = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
@@ -25,7 +18,6 @@ export const addToCart = async (req: any, res: Response) => {
     await cartService.addItem(userId, itemId, quantity);
     return res.json({ message: "Đã thêm vào giỏ hàng thành công!" });
   } catch (error: any) {
-<<<<<<< HEAD
     return res
       .status(400)
       .json({ message: error.message || "Lỗi khi thêm vào giỏ" });
@@ -35,12 +27,6 @@ export const addToCart = async (req: any, res: Response) => {
 /**
  * GET CART
  */
-=======
-    return res.status(400).json({ message: error.message || "Lỗi khi thêm vào giỏ" });
-  }
-};
-
->>>>>>> feature/updateQuantity-v2
 export const getCart = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
@@ -49,7 +35,6 @@ export const getCart = async (req: any, res: Response) => {
   } catch (error) {
     return res.status(500).json({ message: "Lỗi server" });
   }
-<<<<<<< HEAD
 };
 
 /**
@@ -98,6 +83,3 @@ export const clearCart = async (req: any, res: Response) => {
   await cartService.clearCart(userId);
   res.json({ message: "Đã xoá toàn bộ giỏ hàng" });
 };
-=======
-};
->>>>>>> feature/updateQuantity-v2

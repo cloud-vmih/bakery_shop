@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getProfile, updateProfile } from '../services/user.service';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getProfile, updateProfile } from "../services/user.service";
 import { Header } from "../components/Header";
-import { UserResponse, UpdateUserPayload } from '../services/user.service'; // Import types
-import { useUser } from '../context/AuthContext';
-import toast from 'react-hot-toast';
-import '../styles/Profile.css';
+import { UserResponse, UpdateUserPayload } from "../services/user.service"; // Import types
+import { useUser } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import "../styles/Profile.css";
 import {
   getMyAddresses,
-  addAddress,
+  createAddress,
   updateAddress,
   setDefaultAddress,
   Address,
   CreateAddressPayload,
   deleteAddress,
-} from '../services/address.service';
+} from "../services/address.service";
 import AddressAutocomplete, {
   AddressResult,
-} from '../components/AddressAutocomplete';
-import MapProvider from '../components/MapProvider';
+} from "../components/AddressAutocomplete";
+import MapProvider from "../components/MapProvider";
 import {
   UserCircleIcon,
   HomeIcon,
@@ -26,8 +26,7 @@ import {
   TrashIcon,
   LockClosedIcon,
   PlusIcon,
-} from '@heroicons/react/24/outline';
-
+} from "@heroicons/react/24/outline";
 
 const ProfilePage: React.FC = () => {
   const { user } = useUser();
@@ -36,26 +35,32 @@ const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deletingAddressId, setDeletingAddressId] = useState<number | null>(null);
+  const [deletingAddressId, setDeletingAddressId] = useState<number | null>(
+    null
+  );
 
   // Address management state
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState<AddressResult | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<AddressResult | null>(
+    null
+  );
   const [isDefaultAddress, setIsDefaultAddress] = useState(false);
   const [showDefaultConfirm, setShowDefaultConfirm] = useState(false);
 
   // Form state thủ công
   const [formData, setFormData] = useState<UpdateUserPayload>({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    avatar: '',
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    avatar: "",
   });
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof UpdateUserPayload, string>>>({});
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof UpdateUserPayload, string>>
+  >({});
 
   useEffect(() => {
     // if (!token) {
@@ -79,7 +84,7 @@ const ProfilePage: React.FC = () => {
           email: data.email,
           phoneNumber: data.phoneNumber,
           dateOfBirth: data.dateOfBirth,
-          avatar: data.avatar || '',
+          avatar: data.avatar || "",
         });
       }
     } catch (err: any) {
@@ -94,43 +99,46 @@ const ProfilePage: React.FC = () => {
     const errors: string[] = [];
 
     // fullName required
-    if (!data.fullName?.trim()) errors.push('Tên đầy đủ là bắt buộc');
+    if (!data.fullName?.trim()) errors.push("Tên đầy đủ là bắt buộc");
 
     // email required + valid
     if (!data.email?.trim()) {
-      errors.push('Email là bắt buộc');
+      errors.push("Email là bắt buộc");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      errors.push('Email không hợp lệ');
+      errors.push("Email không hợp lệ");
     }
 
     // phoneNumber required + 10-11 digits
     if (!data.phoneNumber?.trim()) {
-      errors.push('Số điện thoại là bắt buộc');
+      errors.push("Số điện thoại là bắt buộc");
     } else if (!/^\d{10,11}$/.test(data.phoneNumber)) {
-      errors.push('Số điện thoại phải 10-11 chữ số');
+      errors.push("Số điện thoại phải 10-11 chữ số");
     }
 
     // dateOfBirth required + YYYY-MM-DD format
     if (!data.dateOfBirth?.trim()) {
-      errors.push('Ngày sinh là bắt buộc');
+      errors.push("Ngày sinh là bắt buộc");
     } else if (!/^\d{4}-\d{2}-\d{2}$/.test(data.dateOfBirth)) {
-      errors.push('Định dạng ngày sinh: YYYY-MM-DD');
+      errors.push("Định dạng ngày sinh: YYYY-MM-DD");
     }
 
     // avatar optional + url nếu có
-    if (data.avatar && !/^https?:\/\/.*\.(png|jpg|jpeg|gif|webp)$/.test(data.avatar)) {
-      errors.push('Avatar phải là URL hợp lệ');
+    if (
+      data.avatar &&
+      !/^https?:\/\/.*\.(png|jpg|jpeg|gif|webp)$/.test(data.avatar)
+    ) {
+      errors.push("Avatar phải là URL hợp lệ");
     }
 
     // Set errors vào state
     const errorObj: Partial<Record<keyof UpdateUserPayload, string>> = {};
     errors.forEach((msg) => {
       // Map message to field (simplified, có thể cải thiện bằng object mapping)
-      if (msg.includes('Tên đầy đủ')) errorObj.fullName = msg;
-      if (msg.includes('Email')) errorObj.email = msg;
-      if (msg.includes('Số điện thoại')) errorObj.phoneNumber = msg;
-      if (msg.includes('Ngày sinh')) errorObj.dateOfBirth = msg;
-      if (msg.includes('Avatar')) errorObj.avatar = msg;
+      if (msg.includes("Tên đầy đủ")) errorObj.fullName = msg;
+      if (msg.includes("Email")) errorObj.email = msg;
+      if (msg.includes("Số điện thoại")) errorObj.phoneNumber = msg;
+      if (msg.includes("Ngày sinh")) errorObj.dateOfBirth = msg;
+      if (msg.includes("Avatar")) errorObj.avatar = msg;
     });
     setFormErrors(errorObj);
 
@@ -166,7 +174,7 @@ const ProfilePage: React.FC = () => {
         email: profile.email,
         phoneNumber: profile.phoneNumber,
         dateOfBirth: profile.dateOfBirth,
-        avatar: profile.avatar || '',
+        avatar: profile.avatar || "",
       });
       setFormErrors({});
     }
@@ -195,7 +203,7 @@ const ProfilePage: React.FC = () => {
       const data = await getMyAddresses();
       setAddresses(data);
     } catch (err: any) {
-      toast.error(err.message || 'Không thể tải danh sách địa chỉ');
+      toast.error(err.message || "Không thể tải danh sách địa chỉ");
     } finally {
       setIsLoadingAddresses(false);
     }
@@ -203,7 +211,7 @@ const ProfilePage: React.FC = () => {
 
   const handleAddAddress = async () => {
     if (!selectedAddress) {
-      toast.error('Vui lòng chọn địa chỉ');
+      toast.error("Vui lòng chọn địa chỉ");
       return;
     }
 
@@ -214,23 +222,25 @@ const ProfilePage: React.FC = () => {
       // Backend tự động xử lý: địa chỉ đầu tiên sẽ tự động là mặc định
       // Từ địa chỉ thứ 2: chỉ gửi isDefault nếu user chọn
       const payload: CreateAddressPayload = {
-        placeId: selectedAddress.placeId || '',
+        placeId: selectedAddress.placeId || "",
         fullAddress: selectedAddress.fullAddress,
         lat: selectedAddress.lat,
         lng: selectedAddress.lng,
         // Chỉ gửi isDefault nếu đã có địa chỉ và user chọn set làm mặc định
-        ...(hasExistingAddresses && isDefaultAddress ? { isDefault: true } : {}),
+        ...(hasExistingAddresses && isDefaultAddress
+          ? { isDefault: true }
+          : {}),
       };
 
-      await addAddress(payload);
-      toast.success('Thêm địa chỉ thành công');
+      await createAddress(payload);
+      toast.success("Thêm địa chỉ thành công");
       setShowAddAddressForm(false);
       setSelectedAddress(null);
       setIsDefaultAddress(false);
       setShowDefaultConfirm(false);
       fetchAddresses();
     } catch (err: any) {
-      toast.error(err.message || 'Không thể thêm địa chỉ');
+      toast.error(err.message || "Không thể thêm địa chỉ");
     } finally {
       setIsLoadingAddresses(false);
     }
@@ -247,23 +257,26 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleEditAddress = async (addressId: number, updatedAddress: AddressResult) => {
+  const handleEditAddress = async (
+    addressId: number,
+    updatedAddress: AddressResult
+  ) => {
     try {
       setIsLoadingAddresses(true);
       const payload: Partial<CreateAddressPayload> = {
-        placeId: updatedAddress.placeId || '',
+        placeId: updatedAddress.placeId || "",
         fullAddress: updatedAddress.fullAddress,
         lat: updatedAddress.lat,
         lng: updatedAddress.lng,
       };
 
       await updateAddress(addressId, payload);
-      toast.success('Cập nhật địa chỉ thành công');
+      toast.success("Cập nhật địa chỉ thành công");
       setEditingAddressId(null);
       setSelectedAddress(null);
       fetchAddresses();
     } catch (err: any) {
-      toast.error(err.message || 'Không thể cập nhật địa chỉ');
+      toast.error(err.message || "Không thể cập nhật địa chỉ");
     } finally {
       setIsLoadingAddresses(false);
     }
@@ -273,10 +286,10 @@ const ProfilePage: React.FC = () => {
     try {
       setIsLoadingAddresses(true);
       await setDefaultAddress(addressId);
-      toast.success('Đã đặt địa chỉ mặc định');
+      toast.success("Đã đặt địa chỉ mặc định");
       fetchAddresses();
     } catch (err: any) {
-      toast.error(err.message || 'Không thể đặt địa chỉ mặc định');
+      toast.error(err.message || "Không thể đặt địa chỉ mặc định");
     } finally {
       setIsLoadingAddresses(false);
     }
@@ -286,8 +299,14 @@ const ProfilePage: React.FC = () => {
     return addresses.find((addr) => addr.isDefault) || null;
   };
 
-  if (isLoading) return <div className="loading">Đang tải thông tin hồ sơ...</div>;
-  if (error) return <div className="error">Lỗi: {error} <button onClick={fetchProfile}>Thử lại</button></div>;
+  if (isLoading)
+    return <div className="loading">Đang tải thông tin hồ sơ...</div>;
+  if (error)
+    return (
+      <div className="error">
+        Lỗi: {error} <button onClick={fetchProfile}>Thử lại</button>
+      </div>
+    );
 
   const defaultAddress = getDefaultAddress();
 
@@ -305,22 +324,24 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-
   return (
     <MapProvider>
-        <Header />
+      <Header />
       <div className="profile-page">
         <div className="profile-container">
           <div className="profile-header">
             <h1 className="profile-header-title">Hồ sơ cá nhân</h1>
-            <p className="profile-header-desc">Quản lý thông tin cá nhân và sổ địa chỉ của bạn</p>
+            <p className="profile-header-desc">
+              Quản lý thông tin cá nhân và sổ địa chỉ của bạn
+            </p>
           </div>
 
           {!isEditing ? (
             <div className="profile-card">
               <div className="profile-card-header">
                 <h2 className="profile-card-header-title">
-                  <UserCircleIcon className="profile-card-icon" /> Thông tin cá nhân
+                  <UserCircleIcon className="profile-card-icon" /> Thông tin cá
+                  nhân
                 </h2>
               </div>
 
@@ -328,7 +349,7 @@ const ProfilePage: React.FC = () => {
                 <div className="profile-info">
                   <div className="profile-avatar-wrapper">
                     <img
-                      src={profile?.avatar || '/default-avatar.png'}
+                      src={profile?.avatar || "/default-avatar.png"}
                       alt="Avatar"
                       className="profile-avatar"
                     />
@@ -338,26 +359,38 @@ const ProfilePage: React.FC = () => {
                     <div className="profile-grid">
                       <div>
                         <label className="profile-field-label">Họ và tên</label>
-                        <p className="profile-name-value">{profile?.fullName}</p>
+                        <p className="profile-name-value">
+                          {profile?.fullName}
+                        </p>
                       </div>
                       <div>
                         <label className="profile-field-label">Email</label>
                         <p className="profile-field-value">{profile?.email}</p>
                       </div>
                       <div>
-                        <label className="profile-field-label">Số điện thoại</label>
-                        <p className="profile-field-value">{profile?.phoneNumber}</p>
+                        <label className="profile-field-label">
+                          Số điện thoại
+                        </label>
+                        <p className="profile-field-value">
+                          {profile?.phoneNumber}
+                        </p>
                       </div>
                       <div>
                         <label className="profile-field-label">Ngày sinh</label>
-                        <p className="profile-field-value">{profile?.dateOfBirth}</p>
+                        <p className="profile-field-value">
+                          {profile?.dateOfBirth}
+                        </p>
                       </div>
                     </div>
 
                     {defaultAddress && (
                       <div className="default-address">
-                        <label className="default-address-label">Địa chỉ mặc định</label>
-                        <p className="default-address-value">{defaultAddress.fullAddress}</p>
+                        <label className="default-address-label">
+                          Địa chỉ mặc định
+                        </label>
+                        <p className="default-address-value">
+                          {defaultAddress.fullAddress}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -367,7 +400,10 @@ const ProfilePage: React.FC = () => {
                   <button onClick={handleEdit} className="edit-profile-btn">
                     <PencilIcon className="btn-icon" /> Chỉnh sửa hồ sơ
                   </button>
-                  <button onClick={() => navigate('/change-password')} className="change-password-btn">
+                  <button
+                    onClick={() => navigate("/change-password")}
+                    className="change-password-btn"
+                  >
                     <LockClosedIcon className="btn-icon" /> Đổi mật khẩu
                   </button>
                 </div>
@@ -377,33 +413,61 @@ const ProfilePage: React.FC = () => {
             <div className="edit-form">
               <h2 className="edit-form-title">Chỉnh sửa thông tin</h2>
               <form onSubmit={handleUpdate} className="edit-form-content">
-                {(['fullName', 'email', 'phoneNumber', 'dateOfBirth', 'avatar'] as const).map((field) => (
+                {(
+                  [
+                    "fullName",
+                    "email",
+                    "phoneNumber",
+                    "dateOfBirth",
+                    "avatar",
+                  ] as const
+                ).map((field) => (
                   <div key={field} className="form-group">
                     <label className="form-group-label">
-                      {field === 'fullName' && 'Họ và tên'}
-                      {field === 'email' && 'Email'}
-                      {field === 'phoneNumber' && 'Số điện thoại'}
-                      {field === 'dateOfBirth' && 'Ngày sinh'}
-                      {field === 'avatar' && 'Link ảnh đại diện (tùy chọn)'}
+                      {field === "fullName" && "Họ và tên"}
+                      {field === "email" && "Email"}
+                      {field === "phoneNumber" && "Số điện thoại"}
+                      {field === "dateOfBirth" && "Ngày sinh"}
+                      {field === "avatar" && "Link ảnh đại diện (tùy chọn)"}
                     </label>
                     <input
-                      type={field === 'dateOfBirth' ? 'date' : field === 'email' ? 'email' : 'text'}
+                      type={
+                        field === "dateOfBirth"
+                          ? "date"
+                          : field === "email"
+                          ? "email"
+                          : "text"
+                      }
                       name={field}
                       value={formData[field]}
                       onChange={handleInputChange}
-                      placeholder={field === 'avatar' ? 'https://example.com/avatar.jpg' : ''}
+                      placeholder={
+                        field === "avatar"
+                          ? "https://example.com/avatar.jpg"
+                          : ""
+                      }
                       className="form-group-input"
                     />
-                    {formErrors[field] && <p className="form-error">{formErrors[field]}</p>}
+                    {formErrors[field] && (
+                      <p className="form-error">{formErrors[field]}</p>
+                    )}
                   </div>
                 ))}
 
                 <div className="form-actions">
-                  <button type="button" onClick={handleCancel} className="cancel-edit-btn">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="cancel-edit-btn"
+                  >
                     Hủy
                   </button>
-                  <button type="submit" disabled={isLoading} className="submit-edit-btn">
-                    {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="submit-edit-btn"
+                  >
+                    {isLoading ? "Đang lưu..." : "Lưu thay đổi"}
                   </button>
                 </div>
               </form>
@@ -431,27 +495,45 @@ const ProfilePage: React.FC = () => {
               {isLoadingAddresses ? (
                 <p className="addresses-loading">Đang tải địa chỉ...</p>
               ) : addresses.length === 0 ? (
-                <p className="addresses-empty">Chưa có địa chỉ nào. Hãy thêm địa chỉ giao hàng của bạn!</p>
+                <p className="addresses-empty">
+                  Chưa có địa chỉ nào. Hãy thêm địa chỉ giao hàng của bạn!
+                </p>
               ) : (
                 <div className="addresses-grid">
                   {addresses.map((addr) => (
                     <div
                       key={addr.id}
-                      className={`address-item ${addr.isDefault ? 'address-item-default' : 'address-item-normal'}`}
+                      className={`address-item ${
+                        addr.isDefault
+                          ? "address-item-default"
+                          : "address-item-normal"
+                      }`}
                     >
                       <div className="address-info">
                         <div className="address-details">
-                          <h4 className="address-title">{addr.fullAddress.split(',')[0]}</h4>
-                          <p className="address-description">{addr.fullAddress.split(',').slice(1).join(', ')}</p>
+                          <h4 className="address-title">
+                            {addr.fullAddress.split(",")[0]}
+                          </h4>
+                          <p className="address-description">
+                            {addr.fullAddress.split(",").slice(1).join(", ")}
+                          </p>
                         </div>
-                        {addr.isDefault && <span className="default-badge">Mặc định</span>}
+                        {addr.isDefault && (
+                          <span className="default-badge">Mặc định</span>
+                        )}
                       </div>
 
                       <div className="address-actions">
-                        <button onClick={() => setEditingAddressId(addr.id!)} className="edit-address-btn">
+                        <button
+                          onClick={() => setEditingAddressId(addr.id!)}
+                          className="edit-address-btn"
+                        >
                           <PencilIcon className="edit-icon" /> Sửa
                         </button>
-                        <button onClick={() => setDeletingAddressId(addr.id!)} className="delete-address-btn">
+                        <button
+                          onClick={() => setDeletingAddressId(addr.id!)}
+                          className="delete-address-btn"
+                        >
                           <TrashIcon className="edit-icon" /> Xóa
                         </button>
                       </div>
@@ -460,9 +542,14 @@ const ProfilePage: React.FC = () => {
                         <div className="mt-4">
                           <AddressAutocomplete
                             placeholder="Cập nhật địa chỉ..."
-                            onSelect={(newAddr) => handleEditAddress(addr.id!, newAddr)}
+                            onSelect={(newAddr) =>
+                              handleEditAddress(addr.id!, newAddr)
+                            }
                           />
-                          <button onClick={() => setEditingAddressId(null)} className="mt-2 px-4 py-2 bg-gray-500 text-white text-sm rounded-lg">
+                          <button
+                            onClick={() => setEditingAddressId(null)}
+                            className="mt-2 px-4 py-2 bg-gray-500 text-white text-sm rounded-lg"
+                          >
                             Hủy
                           </button>
                         </div>
@@ -482,12 +569,26 @@ const ProfilePage: React.FC = () => {
 
                   {showDefaultConfirm && selectedAddress && (
                     <div className="default-confirm">
-                      <p className="default-confirm-desc">Bạn có muốn đặt địa chỉ này làm mặc định không?</p>
+                      <p className="default-confirm-desc">
+                        Bạn có muốn đặt địa chỉ này làm mặc định không?
+                      </p>
                       <div className="default-confirm-actions">
-                        <button onClick={() => { setIsDefaultAddress(true); setShowDefaultConfirm(false); }} className="default-yes-btn">
+                        <button
+                          onClick={() => {
+                            setIsDefaultAddress(true);
+                            setShowDefaultConfirm(false);
+                          }}
+                          className="default-yes-btn"
+                        >
                           Có
                         </button>
-                        <button onClick={() => { setIsDefaultAddress(false); setShowDefaultConfirm(false); }} className="default-no-btn">
+                        <button
+                          onClick={() => {
+                            setIsDefaultAddress(false);
+                            setShowDefaultConfirm(false);
+                          }}
+                          className="default-no-btn"
+                        >
                           Không
                         </button>
                       </div>
@@ -497,13 +598,19 @@ const ProfilePage: React.FC = () => {
                   {selectedAddress && (
                     <div className="selected-address">
                       <p className="selected-address-label">Đã chọn:</p>
-                      <p className="selected-address-value">{selectedAddress.fullAddress}</p>
+                      <p className="selected-address-value">
+                        {selectedAddress.fullAddress}
+                      </p>
                     </div>
                   )}
 
                   <div className="add-form-actions">
-                    <button onClick={handleAddAddress} disabled={!selectedAddress || isLoadingAddresses} className="save-address-btn">
-                      {isLoadingAddresses ? 'Đang lưu...' : 'Lưu địa chỉ'}
+                    <button
+                      onClick={handleAddAddress}
+                      disabled={!selectedAddress || isLoadingAddresses}
+                      className="save-address-btn"
+                    >
+                      {isLoadingAddresses ? "Đang lưu..." : "Lưu địa chỉ"}
                     </button>
                     <button
                       onClick={() => {
@@ -525,15 +632,27 @@ const ProfilePage: React.FC = () => {
             <div className="delete-modal">
               <div className="delete-modal-content">
                 <h3 className="delete-modal-title">Xác nhận xóa</h3>
-                <p className="delete-modal-desc">Bạn có chắc chắn muốn xóa địa chỉ này không?</p>
+                <p className="delete-modal-desc">
+                  Bạn có chắc chắn muốn xóa địa chỉ này không?
+                </p>
                 <div className="delete-address-display">
-                  {addresses.find(a => a.id === deletingAddressId)?.fullAddress}
+                  {
+                    addresses.find((a) => a.id === deletingAddressId)
+                      ?.fullAddress
+                  }
                 </div>
                 <div className="delete-actions">
-                  <button onClick={() => handleDeleteAddress(deletingAddressId)} disabled={isLoadingAddresses} className="confirm-delete-btn">
-                    {isLoadingAddresses ? 'Đang xóa...' : 'Xóa'}
+                  <button
+                    onClick={() => handleDeleteAddress(deletingAddressId)}
+                    disabled={isLoadingAddresses}
+                    className="confirm-delete-btn"
+                  >
+                    {isLoadingAddresses ? "Đang xóa..." : "Xóa"}
                   </button>
-                  <button onClick={() => setDeletingAddressId(null)} className="cancel-delete-btn">
+                  <button
+                    onClick={() => setDeletingAddressId(null)}
+                    className="cancel-delete-btn"
+                  >
                     Hủy
                   </button>
                 </div>
@@ -544,5 +663,5 @@ const ProfilePage: React.FC = () => {
       </div>
     </MapProvider>
   );
-}
+};
 export default ProfilePage;

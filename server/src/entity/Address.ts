@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,9 +8,6 @@ import {
   BaseEntity,
   Index,
 } from "typeorm";
-=======
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, OneToOne, Index } from "typeorm";
->>>>>>> feature/updateQuantity-v2
 import { Customer } from "./Customer";
 import { Branch } from "./Branch";
 
@@ -21,7 +17,6 @@ export class Address extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-<<<<<<< HEAD
   /* ========================
      GOOGLE GOOGLE MAP DATA
   ======================== */
@@ -68,28 +63,4 @@ export class Address extends BaseEntity {
 
   @Column({ default: false })
   isDefault!: boolean;
-=======
-  @Column()
-  placeId!: string;
-
-  @ManyToOne(() => Customer, c => c.addresses)
-  @JoinColumn({ name: "customerID" })
-  customer?: Customer;
-
-  @OneToOne(() => Branch, b => b.address, { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
-  @JoinColumn({name: "branchID"})
-  branch?: Branch
-
-  @Column()
-  fullAddress?: string;
-
-  @Column("decimal", { precision: 10, scale: 7 })
-  lat?: number;
-
-  @Column("decimal", { precision: 10, scale: 7 })
-  lng?: number;
-
-  @Column({ default: true })
-  isDefault?: boolean;
->>>>>>> feature/updateQuantity-v2
 }

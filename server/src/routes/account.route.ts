@@ -1,18 +1,16 @@
 import { Router } from "express";
-<<<<<<< HEAD
 import {
   register,
   login,
   getUserInfo,
-  authController,
+  googleLogin,
+  verifyOTP,
+  sendOTP,
+  resetPassword,
 } from "../controllers/account.controller";
 import { verifyEmail } from "../controllers/verifyEmail.controller";
-=======
-import { register, login, getUserInfo, googleLogin, verifyOTP, sendOTP, resetPassword } from "../controller/account.controller";
-import {verifyEmail} from "../controller/verifyEmail.controller";
->>>>>>> feature/updateQuantity-v2
 import { verifyToken } from "../middleware/verifyToken";
-import { refresh } from "../controller/refreshToken";
+import { refresh } from "../controllers/refreshToken";
 
 const router = Router();
 
@@ -26,14 +24,10 @@ router.get("/token", verifyToken, (req, res) => {
     user: (req as any).user,
     message: "Token valid",
   });
-<<<<<<< HEAD
 }); // để tạm trong route nha, nữa suy nghĩ lại có nên bỏ qua controller hong hì
-=======
-});// để tạm trong route nha, nữa suy nghĩ lại có nên bỏ qua controller hong hì
-router.post("/refresh_token", refresh)
-router.post("/sendOtp", sendOTP)
-router.post("/verifyOtp", verifyOTP)
-router.post("/resetPassword", resetPassword)
->>>>>>> feature/updateQuantity-v2
+router.post("/refresh_token", refresh);
+router.post("/sendOtp", sendOTP);
+router.post("/verifyOtp", verifyOTP);
+router.post("/resetPassword", resetPassword);
 
 export default router;

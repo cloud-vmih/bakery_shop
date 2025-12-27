@@ -38,17 +38,9 @@ export enum ECategory {
   OTHER = "OTHER",
 }
 
-<<<<<<< HEAD
-export enum EAddressType {
-  HOME = "HOME",
-  OFFICE = "OFFICE",
-  SCHOOL = "SCHOOL",
-}
-=======
 export enum ECancelStatus {
-  NONE = "NONE",           // Không có yêu cầu hủy nào
+  NONE = "NONE", // Không có yêu cầu hủy nào
   REQUESTED = "REQUESTED", // Khách hàng đã yêu cầu hủy
-  APPROVED = "APPROVED",   // Shop chấp thuận hủy
-  REJECTED = "REJECTED",   // Shop từ chối hủy
+  APPROVED = "APPROVED", // Shop chấp thuận hủy
+  REJECTED = "REJECTED", // Shop từ chối hủy
 }
->>>>>>> feature/updateQuantity-v2

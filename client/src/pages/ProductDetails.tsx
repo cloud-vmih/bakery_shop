@@ -8,14 +8,13 @@ const ProductDetails = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    
   }, [user]);
 
   return (
     <>
       <div>Chi tiết sản phẩm</div>;
     </>
-  )
+  );
 };
 
 export default ProductDetails;
