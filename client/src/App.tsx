@@ -19,7 +19,8 @@ import MenuPage from "./pages/MenuPage";
 import ChangePassword from "./pages/ChangePassword";
 import ProductDetails from "./pages/ProductDetails";
 import NearestBranch from "./pages/NearestBranch";
-import User from "./pages/User";
+import User from "./pages/User"; // cho admin & staff
+import ProfilePage from "./pages/Profile"; // cho cus
 import ManageBranch from "./pages/ManageBranch";
 import MenuManagement from "./pages/MenuManagement";
 import MyOrders from "./pages/MyOrders";
@@ -31,6 +32,7 @@ import ManageReviews from "./pages/review";
 import MembershipPoints from "./pages/MembershipPoints";
 import { AdminLayout } from "./layout/AdminLayout";
 import { MainLayout } from "./layout/CustomerLayout";
+
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -60,7 +62,7 @@ export default function App() {
                                     {/* Trang chính sau khi login */}
                                     <Route path="/changePW" element={<ChangePassword />} />
                                     <Route element={<MainLayout />}>
-                                        <Route path="/profile" element={<User />} />
+                                        <Route path="/profile" element={<ProfilePage/>} />
                                         <Route path="/*" element={<Home />} />
                                         <Route path="/verify" element={<VerifyEmail />} />
                                         <Route path="/menu" element={<MenuPage />} />
@@ -104,6 +106,7 @@ export default function App() {
                                             path="/admin/manage-orders"
                                             element={<OrderManagement />}
                                         />
+                                        <Route path="/profile" element={<User />} />
                                     </Route>
                                 </Routes>
                             </BrowserRouter>
