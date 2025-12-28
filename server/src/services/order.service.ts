@@ -1,6 +1,8 @@
 // server/src/services/order.service.ts
 import { orderRepo } from "../db/order.db";
 import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
+import { emailService } from "../helpers/sendEmail"
+import { getUserById } from "../db/user.db"
 
 
 interface CancelResult {
@@ -170,6 +172,9 @@ export const cancelOrder = async (
     // Giữ nguyên status (PENDING/CONFIRMED) để admin có thể xử lý tiếp
 
     await orderRepo.save(order);
+
+    const customer = await getUserById(userId)
+    await emailService.sendRefundForm(customer!.email, customer!.fullName, String(orderId) ,'https://docs.google.com/forms/d/e/1FAIpQLSf-Yh0jF8aH-G-JCGDnmHkMAcBE6XP_SUvDK4CsxnbBDrB-vQ/viewform?usp=header');
 
     // TODO: Gửi thông báo cho admin (notification, email, dashboard alert...)
     // await notifyAdminCancelRequest(order);

@@ -70,6 +70,7 @@ export const findUserByEmail = async (email: string) => {
   return user ?? null;
 };
 
+
 export const isPhoneNumberTaken = async (phoneNumber: string) => {
   const repo = AppDataSource.getRepository(User);
   const user = await repo.findOne({

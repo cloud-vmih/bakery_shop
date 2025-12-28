@@ -58,7 +58,7 @@ export default function App() {
                                     <Route path="/verify" element={<VerifyEmail />} />
 
                                     {/* Trang chính sau khi login */}
-                                    <Route path="/changePW" element={<ChangePassword />} />
+                                    <Route path="/change-password" element={<ChangePassword />} />
                                     <Route element={<MainLayout />}>
                                         <Route path="/profile" element={<User />} />
                                         <Route path="/*" element={<Home />} />
