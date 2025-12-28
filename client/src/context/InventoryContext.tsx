@@ -1,4 +1,3 @@
-// context/InventoryContext.tsx
 import {
   createContext,
   useState,
@@ -45,7 +44,6 @@ const InventoryContext = createContext<InventoryContextType | undefined>(
 export const InventoryProvider = ({ children }: { children: ReactNode }) => {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [branchId, setBranchId] = useState<number | null>(null);
   const [branchId, setBranchId] = useState<number | null>(() => {
     const saved = localStorage.getItem("selectedBranchId");
     return saved ? Number(saved) : null;
@@ -98,16 +96,6 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Get quantity for specific item in specific branch
-  // const getItemQuantity = useCallback(
-  //   (itemId: number, branchId: number): number => {
-  //     const item = inventory.find(
-  //       (i) => i.itemId === itemId && i.branchId === branchId
-  //     );
-  //     return item?.stockQuantity || 0;
-  //   },
-  //   [inventory]
-  // );
   const getItemQuantity = useCallback(
     (itemId: number, branchId: number): number => {
       const item = inventory.find(

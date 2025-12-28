@@ -10,7 +10,7 @@ export const addToCart = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
     const { itemId, quantity = 1 } = req.body;
-    console.log("itemId", itemId);
+
     if (!itemId) {
       return res.status(400).json({ message: "Thiếu itemId" });
     }

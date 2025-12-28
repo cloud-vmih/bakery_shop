@@ -8,8 +8,8 @@ export class MembershipService {
     if (orderAmount < 100000) return 0;
 
     const thresholds = [
-      100000, 200000, 300000, 400000, 500000,
-      600000, 700000, 800000, 900000, 1000000
+      100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+      1000000,
     ];
     const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -22,7 +22,11 @@ export class MembershipService {
   }
 
   // Tích điểm sau khi thanh toán thành công
-  static async accumulatePoints(customerId: number, orderId: number, orderAmount: number) {
+  static async accumulatePoints(
+    customerId: number,
+    orderId: number,
+    orderAmount: number
+  ) {
     const earnedPoints = this.calculatePoints(orderAmount);
 
     const note =
@@ -32,7 +36,7 @@ export class MembershipService {
 
     // Ghi lịch sử
     await MembershipPointDB.addPointRecord({
-      id:customerId,
+      user: { id: customerId },
       orderId,
       orderAmount,
       earnedPoints,
@@ -41,10 +45,16 @@ export class MembershipService {
 
     // Cập nhật tổng điểm trong Customer
     const customerRepo = AppDataSource.getRepository(Customer);
-    await customerRepo.increment({ id: customerId }, "membershipPoints", earnedPoints);
+    await customerRepo.increment(
+      { id: customerId },
+      "membershipPoints",
+      earnedPoints
+    );
 
     // Lấy tổng điểm mới
-    const updatedCustomer = await customerRepo.findOne({ where: { id: customerId } });
+    const updatedCustomer = await customerRepo.findOne({
+      where: { id: customerId },
+    });
     const totalPoints = updatedCustomer?.membershipPoints || 0;
 
     return {
