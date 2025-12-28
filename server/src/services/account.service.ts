@@ -7,7 +7,7 @@ import {
   verify,
   isEmailVerified,
 } from "../db/verify.db";
-import { sendEmail } from "../helpers/sendEmail";
+import { sendEmail, emailService } from "../helpers/sendEmail";
 import {
   createAccount,
   findAccountByUsername,
@@ -68,15 +68,17 @@ export const registerUser = async (
 
     const verifyLink = `${process.env.CLIENT_URL}/verify?token=${token}`;
 
-    await sendEmail(
-      user.email!,
-      "Verify your email",
-      `
-      <h2>Verify your account</h2>
-      <p>Click the link below:</p>
-      <a href="${verifyLink}">${verifyLink}</a>
-    `
-    );
+    // await sendEmail(
+    //   user.email!,
+    //   "Verify your email",
+    //   `
+    //   <h2>Verify your account</h2>
+    //   <p>Click the link below:</p>
+    //   <a href="${verifyLink}">${verifyLink}</a>
+    // `
+    // );
+
+    await emailService.sendVerifyEmail(user.email!, user.fullName!, verifyLink)
 
     return { message: "Registered successfully. Check your email to verify." };
   } catch (err) {
@@ -198,6 +200,7 @@ export const googleService = {
 export const changePassword = {
   sendOTP: async (email: string) => {
     if (!(await isEmailVerified(email))) throw new Error("Email not verified");
+    const user = await findUserByEmail(email);
 
     const OTP_TTL = 300; // 5 phút
     const COOLDOWN_TTL = 30; // 30 giây
@@ -212,12 +215,14 @@ export const changePassword = {
       await redis.set(`otp:${email}`, otp, { ex: OTP_TTL });
       await redis.set(cooldownKey, "1", { ex: COOLDOWN_TTL });
 
-      const html = `
-      <h2>Verify your OTP</h2>
-      <p>Your OTP:</p>
-      <a>${otp}</a>
-    `;
-      sendEmail(email, "Verify your OTP", html);
+    //   const html = `
+    //   <h2>Verify your OTP</h2>
+    //   <p>Your OTP:</p>
+    //   <a>${otp}</a>
+    // `;
+    //   await sendEmail(email, "Verify your OTP", html);
+
+      await emailService.sendOTP(email, user!.fullName!, otp)
       return { message: "The OTP send successfully, please check it." };
     } catch (err) {
       throw err;
@@ -249,7 +254,7 @@ export const changePassword = {
     try {
       const hash = await bcrypt.hash(newPassword, 10);
       await updatePassword(hash, user?.account?.id!);
-      return { message: "Password has changed succesfully!" };
+      return { message: "Password has changed successfully!" };
     } catch (err) {
       throw new Error("Change password failed!");
     }

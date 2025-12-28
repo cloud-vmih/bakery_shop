@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import itemService from "../services/items.service";
 import { toast } from "react-toastify";
 import {Item} from "../services/items.service";
-import { Header } from "../components/Header";
-import { AdminSidebar } from "../components/Sidebar";
 
 type CakeType = "CHEESECAKE" | "BIRTHDAYCAKE" | "MOUSSE";
 
