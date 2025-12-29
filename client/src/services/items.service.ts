@@ -31,6 +31,7 @@ export interface Item {
   flourType?: string;
   weight?: number;
   manufacturingDate?: string;
+  expiryDays?: number;
   itemDetail?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;

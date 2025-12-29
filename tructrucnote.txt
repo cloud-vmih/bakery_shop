@@ -1,4 +1,4 @@
-INSERT INTO item (name, description, price, "imageURL", category, "itemDetail", "shelfLifeDays")
+INSERT INTO item (name, description, price, "imageURL", category, "itemDetail")
 VALUES
 ('Chocolate Cheesecake', 'Bánh cheesecake chocolate béo, mềm mịn', 65000, 'https://i.pinimg.com/736x/8d/12/ae/8d12aeb2dc3370699cbdd135823448d6.jpg', 'CAKE', '{}'),
 ('Matcha Cookie', 'Cookie trà xanh giòn nhẹ, thơm matcha', 25000, 'https://i.pinimg.com/1200x/e9/d2/e9/e9d2e9ef327f3681048277dc708f04fc.jpg', 'COOKIE', '{}'),
