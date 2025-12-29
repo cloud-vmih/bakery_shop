@@ -14,7 +14,7 @@ const User: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user || (user.role !== 'Admin' && user.role !== 'Staff')) {
+    if (!user || (user.type !== 'Admin' && user.type !== 'Staff')) {
       toast.error('Bạn không có quyền truy cập trang này');
       navigate('/profile');
       return;
