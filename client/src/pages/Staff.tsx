@@ -9,22 +9,20 @@ import {
 } from "../services/staff.service";
 import toast from "react-hot-toast";
 import "../styles/auth.css";
-// Helper function
 const formatDateForInput = (date: string | Date | undefined): string => {
   if (!date) return '';
   const d = new Date(date);
   return isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
 };
 
-// 🔹 Định nghĩa interface cho typing
 interface Staff {
   id: number;
   fullName: string;
   email: string;
   phoneNumber: string;
-  role: "staff" | "manager";
-  dateOfBirth?: string | Date; // Backend có thể return string hoặc Date
-  status?: "locked" | "active"; // Giả định status
+  role: "staff";
+  dateOfBirth?: string | Date; 
+  status?: "locked" | "active"; 
 }
 
 interface FormData {
@@ -32,7 +30,7 @@ interface FormData {
   fullName: string;
   email: string;
   phoneNumber: string;
-  role: "staff" | "manager";
+  role: "staff";
   dateOfBirth: string;
 }
 
@@ -40,7 +38,7 @@ export default function StaffPage() {
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // 🔹 Thêm loading
+  const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState<FormData>({
     id: "",
@@ -51,7 +49,6 @@ export default function StaffPage() {
     dateOfBirth: "",
   });
 
-  // 🔹 Debounce search (gọi load sau 300ms không gõ)
   const debouncedSearch = useMemo(
     () => {
       let timeoutId: NodeJS.Timeout;
@@ -67,16 +64,15 @@ export default function StaffPage() {
   setIsLoading(true);
   try {
     const res = await getAllStaff(searchKey);
-    console.log("API Response (raw):", res);  // ← Debug: Xem structure nested
+    console.log("API Response (raw):", res); 
 
-    // Map nested → flat, safe với fallback
     const flatList: Staff[] = res.map((item: any) => {
-      const user = item.account?.user;  // ← Access user từ join
-      console.log("Mapping item:", item, "User:", user);  // ← Debug từng item
+      const user = item.account?.user; 
+      console.log("Mapping item:", item, "User:", user);  
 
       return {
         id: item.id || 0,
-        fullName: user?.fullName || 'Không có tên',  // ← Fallback nếu null
+        fullName: user?.fullName || 'Không có tên', 
         email: user?.email || 'Không có email',
         phoneNumber: user?.phoneNumber || 'Không có SĐT',
         role: item.role || 'staff',
@@ -84,11 +80,11 @@ export default function StaffPage() {
         status: item.status || 'active',
       };
     });
-    console.log("Flat List:", flatList);  // ← Debug final list
+    console.log("Flat List:", flatList);  
 
     setStaffList(flatList);
   } catch (error) {
-    console.error("Load error:", error);  // ← Log nếu API fail
+    console.error("Load error:", error);
     toast.error("Không thể tải danh sách nhân viên");
   } finally {
     setIsLoading(false);
@@ -99,7 +95,6 @@ export default function StaffPage() {
     load();
   }, [load]);
 
-  // 🔹 Search onChange với debounce
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeyword(value);
@@ -109,7 +104,6 @@ export default function StaffPage() {
   const handleSubmit = async (e: FormEvent) => {
   e.preventDefault();
 
-  // 🔹 Cải thiện validation email (regex đơn giản hơn)
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) || !/^\d{10,11}$/.test(form.phoneNumber)) {
     toast.error("Email hoặc SĐT không hợp lệ");
     return;
@@ -121,24 +115,20 @@ export default function StaffPage() {
     return;
   }
 
-  // 🔹 Thêm check id khi editing
   if (isEditing && !form.id) {
     toast.error("ID nhân viên không hợp lệ");
     return;
   }
 
-  // 🔹 Disable button tạm (nếu có ref)
-  // const submitBtn = document.querySelector('button[type="submit"]') as HTMLButtonElement;
-  // submitBtn.disabled = true;
 
   try {
     const payload = {
-      fullName: form.fullName,
-      email: form.email,
-      phoneNumber: form.phoneNumber,
-      role: form.role,
-      dateOfBirth: form.dateOfBirth || undefined,
-    };
+  fullName: form.fullName,
+  email: form.email,
+  phoneNumber: form.phoneNumber,
+  role: "staff",
+  dateOfBirth: form.dateOfBirth || undefined,
+};
 
     if (isEditing) {
       await updateStaff(Number(form.id), payload);
@@ -152,17 +142,15 @@ export default function StaffPage() {
     setIsEditing(false);
     load(keyword);
   } catch (err: any) {
-    // 🔹 Fix chính: Parse axios error đúng (response.data.error từ backend)
     let errorMessage = "Có lỗi xảy ra";
     if (err.response?.data?.error) {
-      errorMessage = err.response.data.error;  // "Email đã tồn tại" từ controller
+      errorMessage = err.response.data.error; 
     } else if (err.message) {
-      errorMessage = err.message;  // Fallback generic
+      errorMessage = err.message; 
     }
     toast.error(errorMessage);
   } finally {
-    // 🔹 Re-enable button
-    // submitBtn.disabled = false;
+
   }
 };
 
@@ -172,9 +160,9 @@ export default function StaffPage() {
     id: staff.id?.toString() || "",
     fullName: staff.fullName || "",
     email: staff.email || "",
-    phoneNumber: (staff.phoneNumber || "").toString().trim(),  // Trim + handle undefined
-    role: staff.role || "staff",
-    dateOfBirth: formatDateForInput(staff.dateOfBirth),  // Safe format
+    phoneNumber: (staff.phoneNumber || "").toString().trim(),  
+    role: "staff",
+    dateOfBirth: formatDateForInput(staff.dateOfBirth), 
   });
 };
 
@@ -184,7 +172,7 @@ export default function StaffPage() {
     try {
       await deleteStaff(id);
       toast.success("Xóa nhân viên thành công!");
-      load(keyword); // 🔹 Giữ search
+      load(keyword); 
     } catch {
       toast.error("Xóa thất bại");
     }
@@ -217,14 +205,12 @@ export default function StaffPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Header */}
+    <div className="w-full min-h-screen px-6 py-6">
       <h1 className="text-3xl font-bold mb-6 text-emerald-800 text-center">
         Quản lý nhân viên
       </h1>
 
-      {/* Form Add/Edit */}
-      <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-2xl shadow-lg mb-8">
+      <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-2xl shadow-lg mb-8 w-full">
         <h2 className="text-xl font-semibold text-gray-700 mb-4 text-center">
           {isEditing ? "Chỉnh sửa nhân viên" : "Thêm nhân viên mới"}
         </h2>
@@ -277,13 +263,12 @@ export default function StaffPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Vai trò</label>
             <select
-              className="w-full rounded-lg border-gray-300 shadow-sm p-2 focus:ring-emerald-300 focus:border-emerald-500"
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value as "staff" | "manager" })}
-            >
-              <option value="staff">Nhân viên</option>
-              <option value="manager">Quản lý</option>
-            </select>
+  value={form.role}
+  disabled
+  className="w-full rounded-lg border-gray-300 bg-gray-100 shadow-sm p-2"
+>
+  <option value="staff">Nhân viên</option>
+</select>
           </div>
 
           <button
@@ -296,7 +281,6 @@ export default function StaffPage() {
         </form>
       </div>
 
-      {/* Search */}
       <input
         className="w-full mb-4 p-2 rounded-lg border border-gray-300 shadow-sm focus:ring-emerald-300 focus:border-emerald-500"
         placeholder="Tìm theo tên, email hoặc SĐT..."
@@ -310,13 +294,13 @@ export default function StaffPage() {
       ) : staffList.length === 0 ? (
         <p className="text-center py-6 text-gray-500">Không có nhân viên nào.</p>
       ) : (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {staffList.map((staff) => {
             const dobDisplay = staff.dateOfBirth ? new Date(staff.dateOfBirth).toLocaleDateString("vi-VN") : "";
             return (
               <div
                 key={staff.id}
-                className="bg-white p-4 rounded-2xl shadow hover:shadow-md transition flex justify-between items-center"
+                className="bg-white p-4 rounded-2xl shadow hover:shadow-md transition flex flex-col gap-4"
               >
                 <div>
                   <p className="font-medium text-gray-800">{staff.fullName}</p>

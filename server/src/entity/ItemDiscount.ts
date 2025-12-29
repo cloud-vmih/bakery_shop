@@ -2,8 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { Item } from "./Item";
 
@@ -11,18 +11,19 @@ import { Item } from "./Item";
 export class ItemsDiscount {
   @PrimaryGeneratedColumn()
   id!: number;
+@ManyToMany(() => Item, {
+  eager: true,
+  cascade: false, 
+})
+@JoinTable({ name: "items_discount_items" })
+items!: Item[];
 
-
-  @ManyToOne(() => Item, { eager: true, onDelete: "CASCADE" })
-  @JoinColumn({ name: "item_id" })  // Hoặc "itemId" nếu schema dùng camelCase
-  item!: Item;
 
   @Column({ type: "text", nullable: true })
   title?: string | null;
-@Column("decimal", { precision: 5, scale: 2, nullable: true })
-discountAmount?: number | null;
 
-
+  @Column("decimal", { precision: 5, scale: 2, nullable: true })
+  discountAmount?: number | null;
 
   @Column({ type: "timestamp", nullable: true })
   startAt?: Date | null;
@@ -30,6 +31,4 @@ discountAmount?: number | null;
   @Column({ type: "timestamp", nullable: true })
   endAt?: Date | null;
 
-  // Loại bỏ: isActive, deletedAt, type, createdAt, updatedAt – Không tồn tại trong schema DB
-  // Nếu cần sau, migrate add column trước
 }

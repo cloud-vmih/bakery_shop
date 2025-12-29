@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
-import { Item } from "./Item";  // Adjust path nếu cần
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
+import { Item } from "./Item"; 
 
-@Entity("membership_discount")
+@Entity("membership_discounts")  
 export class MembershipDiscount {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -15,12 +15,9 @@ export class MembershipDiscount {
   @Column("int")
   minPoints!: number;
 
-  @ManyToOne(() => Item, { nullable: true })
-  @JoinColumn({ name: "itemId" })
-  item?: Item;  // Optional relation
-
-  @Column({ type: "int", nullable: true })
-  itemId?: number;
+  @ManyToMany(() => Item, { nullable: true })  
+  @JoinTable({ name: "membership_discount_items" })
+  items?: Item[]; 
 
   @Column({ type: "timestamp", nullable: true })
   startAt?: Date;
