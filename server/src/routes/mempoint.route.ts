@@ -4,10 +4,10 @@ import { verifyToken } from "../middleware/verifyToken";
 
 const router = Router();
 
-// Tích điểm (gọi từ order controller hoặc webhook sau thanh toán)
-router.post("/accumulate", MembershipController.accumulatePoints);
+// // Tích điểm – orderId từ params, orderAmount từ body
+// router.post("/accumulate/:orderId", verifyToken, MembershipController.accumulatePoints);
 
-// Lấy thông tin điểm của khách hàng
+// Lấy thông tin điểm của user hiện tại (từ token)
 router.get("/membership/info", verifyToken, MembershipController.getPointsInfo);
 // Hoặc nếu có auth: router.get("/my-points", authMiddleware, MembershipController.getPointsInfo);
 

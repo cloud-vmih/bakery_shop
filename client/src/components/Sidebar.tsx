@@ -161,7 +161,7 @@ export const AdminSidebar = () => {
                 <div className="p-4 border-t border-emerald-100 bg-white sticky bottom-0 z-10">
                     <div className="space-y-2">
                         <Link
-                            to="/profile"
+                            to="/admin/profile"
                             className="flex items-center gap-3 px-4 py-3 rounded-xl text-emerald-700 hover:bg-emerald-50 transition-colors"
                         >
                             <span className="fas fa-user-circle text-emerald-500"></span>

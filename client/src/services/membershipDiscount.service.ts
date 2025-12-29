@@ -2,23 +2,20 @@ import API from "../api/axois.config";
 import { AxiosError } from "axios";
 export interface MembershipDiscount {
   id: number;
-  // code: string;  // ← XÓA: Bỏ code hoàn toàn
   title: string;
   discountAmount: number;
   minPoints: number;
-  itemId?: number;  // ← THÊM: Optional, undefined = áp dụng toàn bộ menu
+  itemIds?: number[];  
   startAt?: string;
   endAt?: string;
   isActive: boolean;
 }
 
-// Nếu có MembershipDiscountPayload, cũng thêm itemId?: number; vào đó
 export interface MembershipDiscountPayload {
-  // code: string;  // ← XÓA: Bỏ code hoàn toàn
   title: string;
   discountAmount: number;
   minPoints: number;
-  itemId?: number;  // ← THÊM optional
+  itemIds?: number[]; 
   startAt?: string;
   endAt?: string;
   isActive: boolean;
@@ -28,22 +25,13 @@ export type CreateMembershipDiscountPayload = Omit<
   "id" | "createdAt" | "updatedAt"
 >;
 
-// Payload dùng cho UPDATE
 export type UpdateMembershipDiscountPayload =
   Partial<CreateMembershipDiscountPayload>;
 
-// Error response từ backend
 interface ApiErrorResponse {
   message: string;
 }
 
-/**
- * ======================
- * API FUNCTIONS
- * ======================
- */
-
-// Lấy danh sách chương trình thành viên
 export const getAllMembershipDiscounts = async (): Promise<
   MembershipDiscount[]
 > => {
@@ -59,7 +47,6 @@ export const getAllMembershipDiscounts = async (): Promise<
   }
 };
 
-// Tạo chương trình thành viên
 export const createMembershipDiscount = async (
   payload: CreateMembershipDiscountPayload
 ): Promise<MembershipDiscount> => {
@@ -75,7 +62,6 @@ export const createMembershipDiscount = async (
   }
 };
 
-// Cập nhật chương trình thành viên
 export const updateMembershipDiscount = async (
   id: number,
   payload: UpdateMembershipDiscountPayload
@@ -92,7 +78,6 @@ export const updateMembershipDiscount = async (
   }
 };
 
-// Xóa chương trình thành viên
 export const deleteMembershipDiscount = async (id: number): Promise<void> => {
   try {
     await API.delete(`/promotion/member-discounts/${id}`);

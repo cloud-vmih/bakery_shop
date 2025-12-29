@@ -2,19 +2,22 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { Item } from "./Item";
 
 @Entity("itemsDiscount")
-export class ItemsDiscount  {
+export class ItemsDiscount {
   @PrimaryGeneratedColumn()
   id!: number;
+@ManyToMany(() => Item, (item) => item.discounts, {
+  eager: true,
+  cascade: false, 
+})
+@JoinTable({ name: "items_discount_items" })
+items!: Item[];
 
-  @ManyToOne(() => Item, i => i.discounts, { eager: true, onDelete: "CASCADE" })
-  @JoinColumn({ name: "item_id" })  // Hoặc "itemId" nếu schema dùng camelCase
-  item!: Item;
 
   @Column({ type: "text", nullable: true })
   title?: string | null;

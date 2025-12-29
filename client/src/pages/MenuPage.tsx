@@ -78,6 +78,9 @@ export default function MenuPage() {
       }
       setSelectedBranchId(branches[0].id);
     }
+    if (branches.length === 1) {
+        setBranchId(branches[0].id);
+    }
   }, [branches, selectedBranchId]);
 
     const handleAddToCart = async (itemId: number) => {

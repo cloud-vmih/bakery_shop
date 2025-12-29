@@ -65,7 +65,7 @@ export default function OrderStatus() {
         setActionMessage({ text: "Đơn hàng đã được hủy thành công!", type: "success" });
       } else if (res.action === "cancel_requested") {
         setActionMessage({
-          text: "Yêu cầu hủy đơn hàng đã được gửi thành công! Chúng tôi sẽ xử lý và phản hồi sớm nhất.",
+          text: "Yêu cầu hủy đơn hàng đã được gửi thành công! Vui lòng điền Form được gửi vào Mail nếu khách hàng đã thanh toán. Chúng tôi sẽ xử lý và phản hồi sớm nhất.",
           type: "info",
         });
       }
@@ -149,7 +149,7 @@ export default function OrderStatus() {
                 {cancelStatus === "REJECTED" && "Yêu cầu hủy đã bị từ chối"}
               </p>
               <p className="text-base text-amber-800 mt-4">
-                {cancelStatus === "REQUESTED" && "Chúng tôi đang xem xét yêu cầu của bạn. Bạn sẽ nhận thông báo sớm nhất."}
+                {cancelStatus === "REQUESTED" && "Vui lòng điền thông tin vào FORM được gửi qua mail để nhận hoàn tiền."}
                 {cancelStatus === "APPROVED" && "Số tiền sẽ được hoàn về trong vòng 3-7 ngày làm việc."}
                 {cancelStatus === "REJECTED" && "Đơn hàng đã bị từ chối huỷ."}
               </p>

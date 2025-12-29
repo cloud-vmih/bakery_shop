@@ -48,6 +48,6 @@ export class Item extends BaseEntity {
   @OneToMany(() => Inventory, (i: Inventory) => i.item)
   inventory?: Inventory[];
 
-  @OneToMany(() => ItemsDiscount, (i: ItemsDiscount)=> i.item)
+  @ManyToMany(() => ItemsDiscount, (i: ItemsDiscount)=> i.items)
   discounts?: ItemsDiscount[];
 }

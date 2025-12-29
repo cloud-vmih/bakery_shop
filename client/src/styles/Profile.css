@@ -39,6 +39,9 @@
 .profile-card-header-title {
   @apply text-2xl font-bold text-green-800 flex items-center gap-3;
 }
+.profile-header-icon {
+    @apply w-20 h-20 text-green-800 flex items-center;
+}
 
 .profile-card-icon {
   @apply w-8 h-8 text-green-800;

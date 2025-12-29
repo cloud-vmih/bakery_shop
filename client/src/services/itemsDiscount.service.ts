@@ -3,17 +3,14 @@ import { AxiosError } from "axios";
 
 export interface ItemsDiscount {
   id: number;
-  itemId: number;
+  itemIds: number[];  
   title?: string;
   discountAmount: number;
   startAt?: string;
   endAt?: string;
 }
 
-// 👇 Dùng cho CREATE / UPDATE
 export type ItemsDiscountPayload = Omit<ItemsDiscount, "id">;
-
-
 
 export const getAllItemsDiscount = async (): Promise<ItemsDiscount[]> => {
   try {
@@ -47,7 +44,6 @@ export const updateItemsDiscount = async (
   const res = await API.put(`/items-discount/${id}`, payload);
   return res.data;
 };
-
 
 export const deleteItemsDiscount = async (id: number) => {
   try {

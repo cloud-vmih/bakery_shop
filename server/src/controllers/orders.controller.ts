@@ -91,7 +91,7 @@ export const createOrder = async (req: any, res: Response) => {
        2️⃣ TẠO ORDER (PENDING)
     ========================= */
     const order = await ordersService.createOrder(userId, req.body);
-
+  
     /* =========================
        3️⃣ COD FLOW
     ========================= */
@@ -119,6 +119,8 @@ export const createOrder = async (req: any, res: Response) => {
        - chờ callback xử lý tiếp
     ========================= */
     await paymentService.createPayment(order.id!, EPayment.VNPAY);
+
+    //
 
     return res.status(201).json({
       success: true,
@@ -154,3 +156,6 @@ export const getOrderById = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+

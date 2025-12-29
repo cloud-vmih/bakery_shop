@@ -1,15 +1,15 @@
 import { MembershipDiscountDB } from "../db/membershipDiscount.db";
 
 interface CreatePayload {
-  // code: string;  // ← XÓA: Bỏ code hoàn toàn
   title: string;
   discountAmount: number;
   minPoints: number;
-  itemId?: number;  // ← THÊM: Optional cho sản phẩm cụ thể
+  itemIds?: number[];   
   startAt?: string;
   endAt?: string;
   isActive?: boolean;
 }
+
 const normalizeDate = (value?: string) => {
   return value ? new Date(value) : undefined;
 };
@@ -20,27 +20,25 @@ export const MembershipDiscountService = {
   },
 
   async create(payload: CreatePayload) {
-    const {
-      discountAmount,
-      startAt,
-      endAt,
-    } = payload;
+    const { discountAmount, itemIds, startAt, endAt } = payload;
 
     if (discountAmount < 0 || discountAmount > 100) {
       throw new Error("INVALID_DISCOUNT_AMOUNT");
+    }
+
+    if (itemIds !== undefined && itemIds.length === 0) {
+      throw new Error("ITEMS_NOT_FOUND");
     }
 
     if (startAt && endAt && new Date(endAt) <= new Date(startAt)) {
       throw new Error("INVALID_DATE");
     }
 
-    // const existed = await MembershipDiscountDB.findByCode(code);  // ← XÓA: Bỏ check code existed
-    // if (existed) {
-    //   throw new Error("CODE_EXISTED");
-    // }
-
     return MembershipDiscountDB.create({
-      ...payload,
+      title: payload.title,
+      discountAmount: payload.discountAmount,
+      minPoints: payload.minPoints,
+      itemIds,
       startAt: normalizeDate(startAt),
       endAt: normalizeDate(endAt),
       isActive: payload.isActive ?? true,
@@ -60,6 +58,10 @@ export const MembershipDiscountService = {
       throw new Error("INVALID_DISCOUNT_AMOUNT");
     }
 
+    if (payload.itemIds !== undefined && payload.itemIds.length === 0) {
+      throw new Error("ITEMS_NOT_FOUND");
+    }
+
     if (
       payload.startAt &&
       payload.endAt &&
@@ -68,11 +70,19 @@ export const MembershipDiscountService = {
       throw new Error("INVALID_DATE");
     }
 
-    return MembershipDiscountDB.update(id, {
-      ...payload,
+    const dbPayload = {
+      title: payload.title,
+      discountAmount: payload.discountAmount,
+      minPoints: payload.minPoints,
       startAt: normalizeDate(payload.startAt),
       endAt: normalizeDate(payload.endAt),
-    });
+    };
+
+    return MembershipDiscountDB.update(
+      id,
+      dbPayload,
+      payload.itemIds 
+    );
   },
 
   async remove(id: number) {

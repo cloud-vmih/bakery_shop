@@ -3,24 +3,26 @@ import { MembershipService } from "../services/mempoint.service";
 
 export class MembershipController {
   // Gọi sau thanh toán thành công
-  static async accumulatePoints(req: Request, res: Response) {
-    try {
-      const { customerId, orderId, orderAmount } = req.body;
-
-      if (!customerId || !orderId || orderAmount == null) {
-        return res.status(400).json({ message: "Thiếu thông tin: customerId, orderId, orderAmount" });
-      }
-
-      const result = await MembershipService.accumulatePoints(customerId, orderId, orderAmount);
-
-      return res.status(200).json({
-        success: true,
-        data: result,
-      });
-    } catch (error: any) {
-      return res.status(500).json({ message: error.message || "Lỗi tích điểm" });
-    }
-  }
+  // static async accumulatePoints(req: Request, res: Response) {
+  //   try {
+  //     const orderId = Number(req.params.orderId);
+  //     const { orderAmount } = req.body;
+  //     const customerId = Number((req as any).user.id)
+  //
+  //     if (!customerId || !orderId || orderAmount == null) {
+  //       return res.status(400).json({ message: "Thiếu thông tin: customerId, orderId, orderAmount" });
+  //     }
+  //
+  //     const result = await MembershipService.accumulatePoints(customerId, orderId, orderAmount);
+  //
+  //     return res.status(200).json({
+  //       success: true,
+  //       data: result,
+  //     });
+  //   } catch (error: any) {
+  //     return res.status(500).json({ message: error.message || "Lỗi tích điểm" });
+  //   }
+  // }
 
   // Xem lịch sử và tổng điểm
   static async getPointsInfo(req: Request, res: Response) {

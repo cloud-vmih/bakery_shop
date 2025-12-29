@@ -59,7 +59,7 @@ export const createVNPayPayment = async (req: Request, res: Response) => {
    GET /api/payment/vnpay/return
 ===================================================== */
 export const vnpayReturn = async (req: Request, res: Response) => {
-  console.log("🔥 VNPAY CALLBACK HIT", req.query);
+    const { amount } = req.body;
 
   try {
     /* =========================
