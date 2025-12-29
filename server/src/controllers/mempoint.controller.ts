@@ -5,7 +5,9 @@ export class MembershipController {
   // Gọi sau thanh toán thành công
   static async accumulatePoints(req: Request, res: Response) {
     try {
-      const { customerId, orderId, orderAmount } = req.body;
+      const orderId = Number(req.params.orderId);
+      const { orderAmount } = req.body;
+      const customerId = Number((req as any).user.id)
 
       if (!customerId || !orderId || orderAmount == null) {
         return res.status(400).json({ message: "Thiếu thông tin: customerId, orderId, orderAmount" });

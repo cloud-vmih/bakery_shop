@@ -23,3 +23,13 @@ export const getMyPoints = async (): Promise<MembershipPointsResponse> => {
     throw new Error("Lấy thông tin thất bại");
   }
 };
+
+export const updatePoint = async (totalPoints: number) => {
+  try {
+    const res = await API.get(`/membership/:id/update`);
+    return res.data;
+  } catch (error) {
+    toast.error("Không tải được thông tin điểm thành viên");
+    throw new Error("Lấy thông tin thất bại");
+  }
+}

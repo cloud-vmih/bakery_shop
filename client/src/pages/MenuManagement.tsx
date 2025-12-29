@@ -2,13 +2,11 @@
 import { useEffect, useState } from "react";
 import itemService from "../services/items.service";
 import { toast } from "react-toastify";
-import {Item} from "../services/items.service";
+import { Item } from "../services/items.service";
 import { Header } from "../components/Header";
 import { AdminSidebar } from "../components/Sidebar";
 
 type CakeType = "CHEESECAKE" | "BIRTHDAYCAKE" | "MOUSSE";
-
-
 
 const categoryTitles: Record<string, string> = {
   BREAD: "BÁNH MÌ",
@@ -39,7 +37,7 @@ export default function MenuManagement() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  // Không còn quantity trong formData nữa vì không cho sửa
+  // THÊM expiryDays vào formData
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -52,6 +50,7 @@ export default function MenuManagement() {
     flourType: "",
     weight: 200,
     manufacturingDate: "",
+    expiryDays: 7, // ← THÊM MỚI: Hạn sử dụng mặc định 7 ngày
   });
 
   // FETCH
@@ -101,10 +100,11 @@ export default function MenuManagement() {
       flourType: "",
       weight: 200,
       manufacturingDate: "",
+      expiryDays: 7, // ← THÊM MỚI
     });
   };
 
-  // EDIT – chỉ điền các field được phép sửa
+  // EDIT – THÊM expiryDays
   const openEdit = (item: Item) => {
     const d = item.itemDetail || {};
     setEditingItem(item);
@@ -120,11 +120,12 @@ export default function MenuManagement() {
       flourType: d.flourType || "",
       weight: d.weight ?? 200,
       manufacturingDate: d.manufacturingDate?.slice(0, 10) || "",
+      expiryDays: d.expiryDays ?? 7, // ← THÊM MỚI: Lấy từ itemDetail hoặc mặc định 7
     });
     setShowModal(true);
   };
 
-  // SUBMIT
+  // SUBMIT – THÊM expiryDays vào payload
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -137,7 +138,6 @@ export default function MenuManagement() {
       return;
     }
 
-    // Lấy quantity hiện tại (nếu đang sửa) hoặc mặc định 0 (nếu thêm mới)
     const currentQuantity = editingItem?.itemDetail?.quantity ?? 0;
 
     const payload: any = {
@@ -147,7 +147,8 @@ export default function MenuManagement() {
       imageURL: formData.imageURL.trim(),
       category: formData.category,
       itemDetail: {
-        quantity: currentQuantity, // ← Luôn giữ quantity cũ hoặc 0 nếu thêm mới
+        quantity: currentQuantity,
+        expiryDays: formData.expiryDays, // ← THÊM MỚI: Gửi expiryDays
         ...(formData.category === "CAKE" && {
           cakeType: formData.cakeType || null,
           size: formData.size || null,
@@ -283,6 +284,7 @@ export default function MenuManagement() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {visible.map((item) => {
                     const quantity = item.itemDetail?.quantity ?? 0;
+                    const expiryDays = item.itemDetail?.expiryDays ?? 7; // ← THÊM MỚI
 
                     return (
                       <div
@@ -304,10 +306,15 @@ export default function MenuManagement() {
                               {item.price.toLocaleString()}đ
                             </p>
 
-                            {/* VẪN HIỂN THỊ SỐ LƯỢNG CHO ADMIN XEM */}
-                            <p className={`mt-2 text-sm font-medium ${quantity > 0 ? "text-green-600" : "text-red-600"}`}>
-                              Tồn kho: {quantity} cái
-                            </p>
+                            {/* HIỂN THỊ SỐ LƯỢNG VÀ HẠN SỬ DỤNG */}
+                            <div className="mt-2 space-y-1">
+                              <p className={`text-sm font-medium ${quantity > 0 ? "text-green-600" : "text-red-600"}`}>
+                                Tồn kho: {quantity} cái
+                              </p>
+                              <p className="text-xs text-orange-600">
+                                HSD: {expiryDays} ngày
+                              </p>
+                            </div>
 
                             <div className="flex gap-2 mt-4">
                               <button
@@ -345,7 +352,7 @@ export default function MenuManagement() {
           })
         )}
 
-        {/* MODAL – ĐÃ ẨN FIELD QUANTITY */}
+        {/* MODAL – THÊM FIELD EXPIRY DAYS */}
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-emerald-100">
@@ -389,7 +396,6 @@ export default function MenuManagement() {
                     </select>
                   </div>
                 </div>
-
 
                 {/* CÁC FIELD RIÊNG THEO LOẠI */}
                 {formData.category === "CAKE" && (
@@ -488,6 +494,26 @@ export default function MenuManagement() {
                   </div>
                 )}
 
+                {/* THÊM FIELD EXPIRY DAYS – HẠN SỬ DỤNG */}
+                <div>
+                  <label className="block text-sm font-medium text-emerald-800 mb-1">
+                    Hạn sử dụng (ngày) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    max="365"
+                    value={formData.expiryDays}
+                    onChange={(e) =>
+                      setFormData({ ...formData, expiryDays: Number(e.target.value) || 7 })
+                    }
+                    placeholder="7"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Số ngày từ ngày sản xuất đến khi hết hạn (1-365 ngày)</p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-emerald-800 mb-1">
                     Mô tả
@@ -528,13 +554,6 @@ export default function MenuManagement() {
                     />
                   </div>
                 </div>
-
-                {/* Ghi chú nhỏ cho admin biết quantity mặc định là 0 */}
-                {!editingItem && (
-                  <p className="text-xs text-gray-500 text-center">
-                    Lưu ý: Số lượng tồn kho mặc định là <strong>0</strong>. Bạn có thể cập nhật sau trong phần quản lý kho.
-                  </p>
-                )}
 
                 <div className="flex justify-end gap-3 pt-4 border-t">
                   <button
