@@ -1,4 +1,3 @@
-// src/db/promotion.db.ts
 import { AppDataSource } from "../config/database";
 import { ItemsDiscount } from "../entity/ItemDiscount";
 import { Item } from "../entity/Item";
@@ -8,39 +7,56 @@ const itemRepo = AppDataSource.getRepository(Item);
 
 export const findAllItemsDiscount = async () => {
   return await repo.find({
-    relations: ["item"], // ✅ BẮT BUỘC
+    relations: ["items"],
   });
 };
 
 export const findItemsDiscountById = async (id: number) => {
   return await repo.findOne({
     where: { id },
-    relations: ["item"], // ✅ BẮT BUỘC
+    relations: ["items"], 
   });
 };
 
 export const createItemsDiscountDB = async (data: {
-  itemId: number;
+  itemIds: number[];
   title?: string;
   discountAmount: number;
   startAt: Date | null;
   endAt: Date | null;
 }) => {
-  const item = await itemRepo.findOne({ where: { id: data.itemId } });
-  if (!item) return null;
+  const items = await itemRepo.findByIds(data.itemIds);
+  if (items.length !== data.itemIds.length) return null; 
 
   const discount = repo.create({
-    item,
+    items,
     title: data.title,
     discountAmount: data.discountAmount,
     startAt: data.startAt,
     endAt: data.endAt,
   });
 
-  return await repo.save(discount);
+  return await repo.save(discount);  
 };
 
-export const updateItemsDiscountDB = async (entity: ItemsDiscount) => {
+import { In } from "typeorm";
+
+export const updateItemsDiscountDB = async (
+  entity: ItemsDiscount,
+  newItemIds?: number[]
+) => {
+  if (newItemIds !== undefined) {
+    const items = newItemIds.length
+      ? await itemRepo.findBy({ id: In(newItemIds) })
+      : [];
+
+    if (newItemIds.length && items.length !== newItemIds.length) {
+      return null;
+    }
+
+    entity.items = items;
+  }
+
   return await repo.save(entity);
 };
 

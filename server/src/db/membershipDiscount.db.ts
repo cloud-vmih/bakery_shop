@@ -3,20 +3,19 @@ import { MembershipDiscount } from "../entity/MembershipDiscount";
 import { Item } from "../entity/Item";
 
 const repo = AppDataSource.getRepository(MembershipDiscount);
-const itemRepo = AppDataSource.getRepository(Item);
 
 export const MembershipDiscountDB = {
   async findAll() {
-    return await repo.find({
-      relations: ["item"], // Load relation
+    return repo.find({
+      relations: ["items"],
       order: { createdAt: "DESC" },
     });
   },
 
   async findById(id: number) {
-    return await repo.findOne({
+    return repo.findOne({
       where: { id },
-      relations: ["item"],
+      relations: ["items"],
     });
   },
 
@@ -24,46 +23,50 @@ export const MembershipDiscountDB = {
     title: string;
     discountAmount: number;
     minPoints: number;
-    itemId?: number;
-    startAt?: Date | null;
-    endAt?: Date | null;
+    itemIds?: number[];
+    startAt?: Date;
+    endAt?: Date;
     isActive?: boolean;
   }) {
-    let item: Item | undefined = undefined; // FIX: undefined thay vì null
-    if (data.itemId) {
-      item = await itemRepo.findOne({ where: { id: data.itemId } }) ?? undefined;
-      if (!item) return null;
-    }
-
     const discount = repo.create({
-      item, // TS ok vì field item optional
       title: data.title,
       discountAmount: data.discountAmount,
       minPoints: data.minPoints,
-      startAt: data.startAt ?? undefined,
-      endAt: data.endAt ?? undefined,
+      startAt: data.startAt,
+      endAt: data.endAt,
       isActive: data.isActive ?? true,
+      items: data.itemIds
+        ? data.itemIds.map(id => ({ id } as Item))
+        : [],
     });
 
-    return await repo.save(discount);
+    return repo.save(discount);
   },
 
-  async update(id: number, data: Partial<MembershipDiscount>) {
-    const existed = await repo.findOne({ where: { id } });
+  async update(
+    id: number,
+    data: Partial<MembershipDiscount>,
+    itemIds?: number[]
+  ) {
+    const existed = await repo.findOne({
+      where: { id },
+      relations: ["items"],
+    });
+
     if (!existed) {
       throw new Error("DISCOUNT_NOT_FOUND");
     }
 
-    if (data.itemId !== undefined) {
-      const item = data.itemId ? await itemRepo.findOne({ where: { id: data.itemId } }) ?? undefined : undefined;
-      if (data.itemId && !item) return null;
-      data.item = item; // TS ok: Item | undefined
+    Object.assign(existed, data);
+
+    if (itemIds !== undefined) {
+      existed.items = itemIds.map(id => ({ id } as Item));
     }
 
-    return await repo.update(id, data);
+    return repo.save(existed);
   },
 
   async remove(id: number) {
-    return await repo.delete(id);
+    return repo.delete(id);
   },
 };
