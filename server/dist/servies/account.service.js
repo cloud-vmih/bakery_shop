@@ -65,7 +65,11 @@ const loginUser = async (username, password) => {
     const userInfo = await (0, db_account_1.findUserByAccountId)(acc.id);
     console.log("User type:", userInfo.type);
     const token = jsonwebtoken_1.default.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET, {
+<<<<<<< HEAD
         expiresIn: "15m",
+=======
+        expiresIn: "1h",
+>>>>>>> origin/master
     });
     const refresh_token = jsonwebtoken_1.default.sign({ id: acc.id, user: userInfo }, process.env.JWT_SECRET, {
         expiresIn: "7d",

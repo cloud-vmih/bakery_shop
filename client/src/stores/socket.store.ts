@@ -3,8 +3,11 @@ import { io, type Socket } from "socket.io-client";
 import { getSocketAuth } from "../services/socket.service";
 import { SocketState } from "../types/store.type";
 import { useNotificationStore } from "../stores/notification.store";
-const baseURL = "http://localhost:5000";
 
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API_URL
+    : "http://localhost:5000/api";
 
 export const useSocketStore = create<SocketState>((set, get) => ({
     socket: null,

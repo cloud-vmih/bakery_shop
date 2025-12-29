@@ -4,7 +4,10 @@ const express_1 = require("express");
 const account_controller_1 = require("../controller/account.controller");
 const verifyEmail_controller_1 = require("../controller/verifyEmail.controller");
 const verifyToken_1 = require("../middleware/verifyToken");
+<<<<<<< HEAD
 const refreshToken_1 = require("../controller/refreshToken");
+=======
+>>>>>>> origin/master
 const router = (0, express_1.Router)();
 router.post("/register", account_controller_1.register);
 router.post("/login", account_controller_1.login);
@@ -17,8 +20,11 @@ router.get("/token", verifyToken_1.verifyToken, (req, res) => {
         message: "Token valid",
     });
 }); // để tạm trong route nha, nữa suy nghĩ lại có nên bỏ qua controller hong hì
+<<<<<<< HEAD
 router.post("/refresh_token", refreshToken_1.refresh);
 router.post("/sendOtp", account_controller_1.sendOTP);
 router.post("/verifyOtp", account_controller_1.verifyOTP);
 router.post("/resetPassword", account_controller_1.resetPassword);
+=======
+>>>>>>> origin/master
 exports.default = router;

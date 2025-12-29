@@ -8,6 +8,10 @@ const CartItem_1 = require("../entity/CartItem");
 const Item_1 = require("../entity/Item");
 // Thêm lại hàm này (đã mất)
 const getCartByUserId = async (userId) => {
+<<<<<<< HEAD
+=======
+    console.log(userId);
+>>>>>>> origin/master
     return await database_1.AppDataSource.getRepository(Cart_1.Cart).findOne({
         where: { customer: { id: userId } },
         relations: ["items", "items.item"],
