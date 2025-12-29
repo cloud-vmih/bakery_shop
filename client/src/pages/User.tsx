@@ -14,7 +14,8 @@ const User: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user || (user.role !== 'Admin' && user.role !== 'Staff')) {
+      toast.error(user.type)
+    if (!user || (user.type !== 'Admin' && user.type !== 'Staff')) {
       toast.error('Bạn không có quyền truy cập trang này');
       navigate('/profile');
       return;
@@ -31,7 +32,7 @@ const User: React.FC = () => {
       <div className="profile-container">
         <div className="profile-header">
           <h1 className="profile-header-title">
-            <ShieldCheckIcon className="profile-header-icon" /> Hồ sơ 
+            <ShieldCheckIcon className="profile-header-icon" /> Hồ sơ
           </h1>
           <p className="profile-header-desc">Quản lý thông tin cá nhân</p>
         </div>

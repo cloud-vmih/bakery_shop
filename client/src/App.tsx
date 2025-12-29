@@ -106,7 +106,7 @@ export default function App() {
                                             path="/admin/manage-orders"
                                             element={<OrderManagement />}
                                         />
-                                        <Route path="/profile" element={<User />} />
+                                        <Route path="/admin/profile" element={<User />} />
                                     </Route>
                                 </Routes>
                             </BrowserRouter>
