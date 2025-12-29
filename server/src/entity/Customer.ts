@@ -20,7 +20,7 @@ export class Customer extends User {
   @OneToMany(() => MembershipPoint, (point) => point.user)
   points?: MembershipPoint[];
 
-  @Column("int", { nullable: true })
+  @Column("int", { default: 0 })
   membershipPoints?: number; // tổng điểm hiện tại
 
   @OneToMany(() => Address, (ad: Address) => ad.customer)

@@ -6,6 +6,7 @@ type VNPayCreateUrlInput = {
   orderInfo?: string;
   returnUrl: string;
   ipAddr: string;
+  userId: number;
 };
 
 /**
@@ -22,6 +23,7 @@ export const createVNPayUrl = ({
   orderInfo,
   returnUrl,
   ipAddr,
+  userId
 }: VNPayCreateUrlInput) => {
   const vnp_TmnCode = process.env.VNPAY_TMN_CODE!;
   const vnp_HashSecret = process.env.VNPAY_HASH_SECRET!;
@@ -34,7 +36,7 @@ export const createVNPayUrl = ({
   // ===== 1. TẠO THỜI GIAN (YYYYMMDDHHmmss) =====
   const createDate = formatDateVN(new Date());
 
-  const txnRef = `${orderId}_${Date.now()}`;
+  const txnRef = `${orderId}_${userId}_${Date.now()}`;
 
   // ===== 2. PARAMS GỐC (CHƯA KÝ) =====
   const vnp_Params: Record<string, string> = {
@@ -50,6 +52,7 @@ export const createVNPayUrl = ({
     vnp_ReturnUrl: returnUrl,
     vnp_IpAddr: ipAddr === "::1" ? "127.0.0.1" : ipAddr,
     vnp_CreateDate: createDate,
+
   };
 
   // ===== 3. SORT KEY A → Z (GIỐNG SERVLET) =====

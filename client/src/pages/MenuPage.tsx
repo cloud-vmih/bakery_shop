@@ -73,6 +73,9 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (branches.length > 0 && selectedBranchId === null) {
+      if (branches.length === 1) {
+        setBranchId(branches[0].id);
+      }
       setSelectedBranchId(branches[0].id);
     }
   }, [branches, selectedBranchId]);

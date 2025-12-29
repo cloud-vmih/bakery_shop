@@ -24,6 +24,7 @@ import itemsDiscountRoutes from "./routes/itemsDiscount.route";
 import staffRoutes from "./routes/staff.route";
 import reviewRoutes from "./routes/review.route";
 import membershipDiscountRoutes from "./routes/membershipDiscount.route";
+import mempointRoutes from "./routes/mempoint.route";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -56,6 +57,7 @@ app.use('/api', profileRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/chat", messageRouters);
+app.use("/api", mempointRoutes);
 
 app.use("/addresses", addressRoutes); // cho FE mới
 app.use("/api/addresses", addressRoutes); // cho API cũ / thống nhất

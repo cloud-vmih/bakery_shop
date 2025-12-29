@@ -1,6 +1,7 @@
 import { MembershipPointDB } from "../db/mempoint.db";
 import { AppDataSource } from "../config/database";
 import { Customer } from "../entity/Customer";
+import { getCustomerByID } from "../db/user.db";
 
 export class MembershipService {
   // Tính điểm theo bậc thang
@@ -24,15 +25,17 @@ export class MembershipService {
   // Tích điểm sau khi thanh toán thành công
   static async accumulatePoints(customerId: number, orderId: number, orderAmount: number) {
     const earnedPoints = this.calculatePoints(orderAmount);
-
+    console.log(`Tính được ${earnedPoints} điểm cho đơn hàng #${orderId} (tổng ${orderAmount}đ)`);
     const note =
       earnedPoints > 0
         ? `Tích ${earnedPoints} điểm từ đơn hàng #${orderId}`
         : "Đơn hàng dưới 100.000đ nên chưa được tích điểm lần này.";
 
+    const customer = await getCustomerByID(customerId);
+    console.log("customer:", customer);
     // Ghi lịch sử
     await MembershipPointDB.addPointRecord({
-      id:customerId,
+      user: customer!,
       orderId,
       orderAmount,
       earnedPoints,

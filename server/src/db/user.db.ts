@@ -1,6 +1,7 @@
 // db/user.ts (cho các operations với single user)
 import { AppDataSource } from '../config/database';
 import { User } from '../entity/User';
+import { Customer } from '../entity/Customer';
 
 // Interface cho User (dữ liệu trả về từ DB, không bao gồm password, khớp với entity fields có sẵn)
 export interface UserResponse {
@@ -95,4 +96,11 @@ export async function getRawUserByID(userId: number) {
   return await userRepository.findOne(
     {where: {id: userId}}
   );
-} 
+}
+
+export async function getCustomerByID(userId: number) {
+  const customerRepository = AppDataSource.getRepository(Customer);
+  return await customerRepository.findOne(
+    {where: {id: userId}}
+  );
+}
