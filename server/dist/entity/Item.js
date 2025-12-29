@@ -14,7 +14,8 @@ const typeorm_1 = require("typeorm");
 const enum_1 = require("./enum/enum");
 const Wishlist_1 = require("./Wishlist");
 const Rating_1 = require("./Rating");
-const CartItem_1 = require("./CartItem");
+const ItemDiscount_1 = require("./ItemDiscount");
+const Inventory_1 = require("./Inventory");
 let Item = class Item extends typeorm_1.BaseEntity {
 };
 exports.Item = Item;
@@ -51,17 +52,21 @@ __decorate([
     __metadata("design:type", Object)
 ], Item.prototype, "itemDetail", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Wishlist_1.Wishlist, w => w.item),
+    (0, typeorm_1.OneToMany)(() => Wishlist_1.Wishlist, w => w.item),
     __metadata("design:type", Array)
-], Item.prototype, "wishlist", void 0);
+], Item.prototype, "wishlists", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Rating_1.Rating, r => r.item),
+    (0, typeorm_1.OneToMany)(() => Rating_1.Rating, (r) => r.item),
     __metadata("design:type", Array)
 ], Item.prototype, "ratings", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => CartItem_1.CartItem, (ci) => ci.cart),
+    (0, typeorm_1.OneToMany)(() => Inventory_1.Inventory, (i) => i.item),
     __metadata("design:type", Array)
-], Item.prototype, "items", void 0);
+], Item.prototype, "inventory", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => ItemDiscount_1.ItemsDiscount, (i) => i.items),
+    __metadata("design:type", Array)
+], Item.prototype, "discounts", void 0);
 exports.Item = Item = __decorate([
     (0, typeorm_1.Entity)("item")
 ], Item);

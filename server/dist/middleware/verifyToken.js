@@ -14,18 +14,15 @@ const verifyToken = (req, res, next) => {
         // Không có token = chưa đăng nhập
         return res.status(401).json({
             code: "NO_LOGIN",
-            message: "Access denied. No token provided."
+            message: "Access denied. No token provided.",
         });
     }
     try {
         // Xác thực token
         const secret = process.env.JWT_SECRET;
         const decoded = jsonwebtoken_1.default.verify(token, secret);
-<<<<<<< HEAD
+        //console.log("Decoded JWT:", decoded);
         // Gắn thông tin user vào req
-=======
-        // Gắn thông tin user vào req (để các route sau có thể dùng)
->>>>>>> origin/master
         req.user = decoded.user;
         next(); // Cho đi tiếp
     }
@@ -35,20 +32,20 @@ const verifyToken = (req, res, next) => {
             // Token đã hết hạn
             return res.status(401).json({
                 code: "TOKEN_EXPIRED",
-                message: "Token has expired. Please refresh or login again."
+                message: "Token has expired. Please refresh or login again.",
             });
         }
         else if (err.name === "JsonWebTokenError") {
             // Token không hợp lệ
             return res.status(403).json({
                 code: "INVALID_TOKEN",
-                message: "Invalid token."
+                message: "Invalid token.",
             });
         }
         else {
             // Lỗi khác
             return res.status(403).json({
-                message: "Token verification failed."
+                message: "Token verification failed.",
             });
         }
     }
@@ -60,13 +57,13 @@ const verifyRole = (...allowedRoles) => {
         if (!user || !user.type) {
             return res.status(401).json({
                 code: "NO_USER_INFO",
-                message: "Access denied. User information not found."
+                message: "Access denied. User information not found.",
             });
         }
         if (!allowedRoles.includes(user.type)) {
             return res.status(403).json({
                 code: "FORBIDDEN",
-                message: "Access denied. Insufficient permissions."
+                message: "Access denied. Insufficient permissions.",
             });
         }
         next();

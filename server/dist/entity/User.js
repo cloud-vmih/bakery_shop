@@ -39,7 +39,7 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "dateOfBirth", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Account_1.Account, a => a.user, {
+    (0, typeorm_1.OneToOne)(() => Account_1.Account, (a) => a.user, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     }),
@@ -55,11 +55,11 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "joinAt", void 0);
 __decorate([
-    (0, typeorm_2.OneToMany)(() => Message_1.Message, msg => msg.sender),
+    (0, typeorm_2.OneToMany)(() => Message_1.Message, (msg) => msg.senderUser),
     __metadata("design:type", Array)
 ], User.prototype, "messages", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Notification_1.Notification, noti => noti.users),
+    (0, typeorm_1.ManyToMany)(() => Notification_1.Notification, (noti) => noti.users),
     __metadata("design:type", Array)
 ], User.prototype, "notifications", void 0);
 __decorate([

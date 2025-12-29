@@ -21,7 +21,9 @@ __decorate([
     __metadata("design:type", Number)
 ], CartItem.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Cart_1.Cart, c => c.items),
+    (0, typeorm_1.ManyToOne)(() => Cart_1.Cart, (c) => c.items, {
+        onDelete: "CASCADE",
+    }),
     (0, typeorm_1.JoinColumn)({ name: "cartID" }),
     __metadata("design:type", Cart_1.Cart)
 ], CartItem.prototype, "cart", void 0);

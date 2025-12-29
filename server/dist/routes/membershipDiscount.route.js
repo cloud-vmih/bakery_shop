@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+console.log(">>> membershipDiscount.routes LOADED");
+const express_1 = require("express");
+const membershipDiscount_controller_1 = require("../controllers/membershipDiscount.controller");
+const router = (0, express_1.Router)();
+router.get("/member-discounts", membershipDiscount_controller_1.getAllMembershipDiscounts);
+router.post("/member-discounts", membershipDiscount_controller_1.createMembershipDiscount);
+router.put("/member-discounts/:id", membershipDiscount_controller_1.updateMembershipDiscount);
+router.delete("/member-discounts/:id", membershipDiscount_controller_1.removeMembershipDiscount);
+exports.default = router;
