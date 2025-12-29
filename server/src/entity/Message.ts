@@ -11,10 +11,10 @@ export class Message {
   @Column()
   senderId!: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user: User) => user.messages)
   senderUser?: User;
   
-  @ManyToOne(() => Conversation, conv => conv.messages, {
+  @ManyToOne(() => Conversation, (conv: Conversation) => conv.messages, {
     onDelete: "CASCADE",
   })
   conversation?: Conversation;

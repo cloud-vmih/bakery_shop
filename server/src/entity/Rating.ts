@@ -9,15 +9,15 @@ export class Rating extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne(() => Item, (i) => i.ratings)
+  @ManyToOne(() => Item, (i: Item) => i.ratings)
   @JoinColumn({ name: "itemID" })
   item?: Item;
 
-  @ManyToOne(() => Customer, (c) => c.ratings)
+  @ManyToOne(() => Customer, (c: Customer) => c.ratings)
   @JoinColumn({ name: "customerID" })
   customer?: Customer;
 
-  @OneToMany(() => ResponseRating, (responseRating) => responseRating.rating)
+  @OneToMany(() => ResponseRating, (responseRating: ResponseRating) => responseRating.rating)
   responses?: ResponseRating[];
 
   @Column()

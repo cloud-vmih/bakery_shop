@@ -25,7 +25,7 @@ export class Notification {
     })
     notiType?: ENotiType;
 
-    @ManyToMany(() => User, user => user.notifications)
+    @ManyToMany(() => User, (user: User) => user.notifications)
     @JoinTable({
     name: "notification_user",
     joinColumn: { name: "notificationID" },

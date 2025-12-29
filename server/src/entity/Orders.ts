@@ -56,7 +56,7 @@ export class Order extends BaseEntity {
   @Column({ nullable: true })
   cancelHandledBy?: string;
 
-  @OneToMany(() => OrderDetail, (od) => od.order, { cascade: true })
+  @OneToMany(() => OrderDetail, (od: OrderDetail) => od.order, { cascade: true })
   orderDetails?: OrderDetail[];
 
 
