@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { getOrderById } from "../services/orders.service";
 import { getPaymentByOrder } from "../services/payment.service";
 
+import { getMyPoints } from "../services/memberpoint.service";
+import type { MembershipPointsResponse } from "../services/memberpoint.service";
+
 export default function SuccessPage() {
   const { orderId } = useParams<{ orderId: string }>();
 
@@ -12,18 +15,32 @@ export default function SuccessPage() {
   const [payment, setPayment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const [pointsInfo, setPointsInfo] = useState<MembershipPointsResponse | null>(
+    null
+  );
+
+  const [earnedPoints, setEarnedPoints] = useState<number>(0);
+
   useEffect(() => {
     if (!orderId) return;
 
     const fetchData = async () => {
       try {
-        const [orderData, paymentData] = await Promise.all([
+        const [orderData, paymentData, pointsData] = await Promise.all([
           getOrderById(Number(orderId)),
           getPaymentByOrder(Number(orderId)),
+          getMyPoints(),
         ]);
 
         setOrder(orderData);
         setPayment(paymentData);
+        setPointsInfo(pointsData);
+
+        const pointOfThisOrder = pointsData.history.find(
+          (h) => h.orderId === Number(orderId)
+        );
+
+        setEarnedPoints(pointOfThisOrder?.earnedPoints ?? 0);
       } catch (err) {
         console.error("FETCH SUCCESS DATA FAILED", err);
       } finally {
@@ -112,6 +129,55 @@ export default function SuccessPage() {
               </span>
             </div>
           </div>
+
+          {/* MEMBERSHIP POINTS */}
+          {pointsInfo && (
+            <div className="mt-6 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5">
+              <h4 className="text-sm font-semibold text-emerald-700 mb-4 tracking-wide">
+                Phần thưởng thành viên
+              </h4>
+
+              {/* Earned points */}
+              <div className="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm border border-emerald-100">
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-500">
+                    Điểm nhận từ đơn hàng
+                  </span>
+                  <span className="text-lg font-bold text-emerald-700">
+                    +{earnedPoints} điểm
+                  </span>
+                </div>
+
+                <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                  {/* lucide icon – Award */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-emerald-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12l2 2 4-4M12 2l2.39 4.85L20 8l-4 3.9.95 5.5L12 15.77 7.05 17.4 8 12 4 8l5.61-.15L12 2z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Total points */}
+              <div className="mt-3 flex items-center justify-between px-2">
+                <span className="text-sm text-gray-600">
+                  Tổng điểm tích lũy hiện tại
+                </span>
+                <span className="text-sm font-semibold text-gray-900">
+                  {pointsInfo.totalPoints} điểm
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* NOTE */}
           <div className="mt-6 text-xs text-gray-500 italic">

@@ -101,6 +101,7 @@ export const findOrderFullByIdDB = async (orderId: number) => {
     relations: {
       orderInfo: true,
       orderDetails: { item: true },
+      customer: true,
     },
   });
 };

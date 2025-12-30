@@ -7,6 +7,7 @@ import {
   commitInventoryForOrder,
   rollbackInventoryForOrder,
 } from "../services/inventory.service";
+
 import { MembershipService } from "../services/mempoint.service";
 
 const paymentService = new PaymentService();
@@ -137,6 +138,19 @@ export const vnpayReturn = async (req: Request, res: Response) => {
 
       // 3️⃣ confirm order
       await ordersService.confirmOrder(orderId);
+
+      // 3️⃣ confirm order
+      await ordersService.confirmOrder(orderId);
+
+      // 4️⃣ 🔥 TÍCH ĐIỂM THÀNH VIÊN (VNPay)
+      const vnpAmountRaw = vnp_Params["vnp_Amount"];
+      const totalAmount = Number(vnpAmountRaw) / 100;
+
+      await MembershipService.accumulatePoints(
+        order.customer?.id!, // customerId
+        orderId, // orderId
+        totalAmount // orderAmount
+      );
 
       return res.redirect(
         `${process.env.CLIENT_URL}/payment/vnpay/return?` +

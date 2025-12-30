@@ -8,7 +8,7 @@ const router = Router();
 router.post("/accumulate", verifyToken, MembershipController.accumulatePoints);
 
 // Lấy thông tin điểm của khách hàng
-router.get("/membership/info", verifyToken, MembershipController.getPointsInfo);
+router.get("/info", verifyToken, MembershipController.getPointsInfo);
 // Hoặc nếu có auth: router.get("/my-points", authMiddleware, MembershipController.getPointsInfo);
 
 export default router;

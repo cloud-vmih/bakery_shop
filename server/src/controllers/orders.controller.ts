@@ -7,6 +7,8 @@ import {
 } from "../services/inventory.service";
 import { EPayment } from "../entity/enum/enum";
 
+import { MembershipService } from "../services/mempoint.service";
+
 const ordersService = new OrdersService();
 const paymentService = new PaymentService();
 
@@ -24,9 +26,8 @@ export const createOrder = async (req: any, res: Response) => {
       paymentMethod,
       branchId,
       items, // [{ itemId, quantity }]
+      totalAmount,
     } = req.body;
-
-    const totalAmount = req.body.totalAmount;
 
     const inventoryItems = items.map((i: any) => ({
       itemId: i.item?.id,
@@ -56,6 +57,12 @@ export const createOrder = async (req: any, res: Response) => {
 
       // confirm order
       await ordersService.confirmOrder(order.id!);
+
+      await MembershipService.accumulatePoints(
+        userId, // customerId
+        order.id!, // orderId
+        totalAmount // orderAmount
+      );
 
       return res.status(201).json({
         success: true,

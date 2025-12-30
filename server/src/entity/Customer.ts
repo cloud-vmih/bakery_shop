@@ -16,12 +16,11 @@ import { MembershipPoint } from "./MembershipPoint";
 
 @ChildEntity()
 export class Customer extends User {
-
   @OneToMany(() => MembershipPoint, (point) => point.user)
   points?: MembershipPoint[];
 
-  @Column("int", { nullable: true })
-  membershipPoints?: number; // tổng điểm hiện tại
+  @Column("int", { default: 0 })
+  membershipPoints!: number;
 
   @OneToMany(() => Address, (ad: Address) => ad.customer)
   addresses?: Address[];

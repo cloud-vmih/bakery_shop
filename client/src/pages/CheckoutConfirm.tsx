@@ -114,6 +114,7 @@ export default function CheckoutConfirm() {
       const order = await createOrder({
         ...payload,
         branchId,
+        totalAmount: totals.total,
       });
 
       // 3️⃣ COD
