@@ -1,4 +1,5 @@
 // src/server.ts
+import { Resend } from "resend";
 import express from "express";
 import cookieParser from 'cookie-parser';
 import cors from "cors";
@@ -72,6 +73,7 @@ app.use("/api/promotion", membershipDiscountRoutes);
 app.get("/api/__ping", (req, res) => {
   res.send("OK");
 });
+
 
 // export đặt CUỐI CÙNG
 export default app;
