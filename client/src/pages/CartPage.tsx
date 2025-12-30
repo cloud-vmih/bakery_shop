@@ -51,7 +51,8 @@ export default function Cart() {
 
   const selectedItems = items.filter((i) => checkedItems.includes(i.id));
 
-  const { subtotal, vat, total } = calculateOrderTotals(selectedItems);
+  const { subtotal, vat, total, discount } =
+    calculateOrderTotals(selectedItems);
 
   const [highlight, setHighlight] = useState(false);
   useEffect(() => {
@@ -230,7 +231,7 @@ export default function Cart() {
             {/* SUBTOTAL */}
             <div className="mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex justify-between">
-                <span className="text-gray-600">Tạm tính</span>
+                <span className="text-gray-600">Tạm tính (sau ưu đãi)</span>{" "}
                 <span className="font-medium">{formatVND(subtotal)} </span>
               </div>
 
@@ -239,6 +240,20 @@ export default function Cart() {
                 <span className="font-medium">{formatVND(vat)}</span>
               </div>
             </div>
+
+            {/* TIẾT KIỆM – HIGHLIGHT */}
+            {discount > 0 && (
+              <div className="mt-3 px-4 py-2 rounded-lg bg-emerald-50 border border-emerald-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-emerald-700">
+                    Bạn đã tiết kiệm
+                  </span>
+                  <span className="text-base font-bold text-emerald-800">
+                    {formatVND(discount)}
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* DIVIDER */}
             <hr className="my-5 border-gray-200" />

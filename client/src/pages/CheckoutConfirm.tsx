@@ -60,7 +60,6 @@ export default function CheckoutConfirm() {
   const totals = useMemo(() => {
     return calculateOrderTotals(payload.items, {
       shippingFee: payload.shippingFee ?? 0,
-      discount: payload.discount ?? 0,
       membershipDiscount: payload.membershipDiscount ?? 0,
     });
   }, [payload]);
@@ -219,7 +218,6 @@ export default function CheckoutConfirm() {
               <OrderSummary
                 items={payload.items}
                 shippingFee={payload.shippingFee}
-                discount={payload.discount}
                 membershipDiscount={payload.membershipDiscount}
               />
             </div>
@@ -270,10 +268,18 @@ export default function CheckoutConfirm() {
                   <span>{formatVND(totals.shippingFee)}</span>
                 </div>
 
-                <div className="order-row text-green-600">
-                  <span>Giảm giá</span>
-                  <span>-{formatVND(totals.discount)}</span>
-                </div>
+                {totals.discount > 0 && (
+                  <div className="mt-2 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-emerald-700">
+                        Bạn đã tiết kiệm
+                      </span>
+                      <span className="font-bold text-emerald-800">
+                        {formatVND(totals.discount)}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 <div className="order-row text-green-600">
                   <span>Giảm giá thành viên</span>

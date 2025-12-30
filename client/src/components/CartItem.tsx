@@ -1,5 +1,6 @@
 import { Minus, Plus, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { getEffectivePrice, getActiveDiscount } from "../utils/pricing";
 
 type Props = {
   item: any;
@@ -20,17 +21,26 @@ export default function CartItem({
   onDecrease,
   onRemove,
 }: Props) {
-  const totalPrice = item.item.price * item.quantity;
+  const product = item.item;
+
+  const basePrice = product.price ?? 0;
+  const effectivePrice = getEffectivePrice(product);
+  const activeDiscount = getActiveDiscount(product);
+
+  /**
+   * ✅ TOTAL = GIÁ ĐÃ GIẢM × SỐ LƯỢNG
+   */
+  const totalPrice = effectivePrice * item.quantity;
 
   const isOverStock = available !== Infinity && item.quantity > available;
 
   return (
     <div
       className={`
-    flex items-center py-5 border-b gap-4 transition
-    ${isOverStock ? "bg-red-50" : ""}
-    hover:bg-gray-50 hover:shadow-sm
-  `}
+        flex items-center py-5 border-b gap-4 transition
+        ${isOverStock ? "bg-red-50" : ""}
+        hover:bg-gray-50 hover:shadow-sm
+      `}
     >
       {/* CHECKBOX */}
       <input
@@ -42,33 +52,49 @@ export default function CartItem({
 
       {/* IMAGE */}
       <img
-        src={item.item.imageURL}
-        alt={item.item.name}
+        src={product.imageURL}
+        alt={product.name}
         className="w-16 h-16 object-cover rounded-md border"
       />
 
       {/* NAME + PRICE */}
       <div className="flex-1">
         <h4 className="font-semibold text-cyan-800 hover:underline cursor-pointer">
-          {item.item.name}
+          {product.name}
         </h4>
 
-        <p className="text-sm text-gray-500 mt-1">
-          {item.item.price.toLocaleString()} VND
-        </p>
+        {/* PRICE DISPLAY */}
+        <div className="mt-1 flex items-center gap-2">
+          {activeDiscount && (
+            <span className="text-sm text-gray-400 line-through">
+              {basePrice.toLocaleString()} VND
+            </span>
+          )}
+
+          <span className="text-sm font-semibold text-red-600">
+            {effectivePrice.toLocaleString()} VND
+          </span>
+
+          {activeDiscount && (
+            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
+              -{activeDiscount.discountAmount}%
+            </span>
+          )}
+        </div>
 
         {/* STOCK INFO */}
         {available !== Infinity && (
           <span
-            className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium
-      ${
-        available === 0
-          ? "bg-red-100 text-red-700"
-          : isOverStock
-          ? "bg-yellow-100 text-yellow-700"
-          : "bg-green-100 text-green-700"
-      }
-    `}
+            className={`
+              inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium
+              ${
+                available === 0
+                  ? "bg-red-100 text-red-700"
+                  : isOverStock
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700"
+              }
+            `}
           >
             {available === 0
               ? "Hết hàng"
@@ -80,7 +106,6 @@ export default function CartItem({
 
         {/* QUANTITY CONTROL */}
         <div className="flex items-center gap-2 mt-2">
-          {/* MINUS */}
           <button
             onClick={onDecrease}
             className="w-7 h-7 flex items-center justify-center border rounded hover:bg-gray-100"
@@ -96,7 +121,6 @@ export default function CartItem({
             {item.quantity}
           </span>
 
-          {/* PLUS */}
           <button
             onClick={() => {
               if (available !== Infinity && item.quantity >= available) {
@@ -105,7 +129,7 @@ export default function CartItem({
               }
               onIncrease();
             }}
-            className="w-7 h-7 flex items-center justify-center border rounded transition hover:bg-gray-100"
+            className="w-7 h-7 flex items-center justify-center border rounded hover:bg-gray-100"
             title="Tăng số lượng"
           >
             <Plus size={14} />

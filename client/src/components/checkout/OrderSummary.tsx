@@ -1,30 +1,26 @@
 import { calculateOrderTotals } from "../../utils/orderCalculator";
 import { formatVND } from "../../utils/formatCurrency";
+import { getEffectivePrice } from "../../utils/pricing";
 
 type Props = {
   items: any[];
 
-  // 🔥 MỞ RỘNG TỪ TỪ
   shippingFee?: number;
-  discount?: number;
-  vatRate?: number;
   membershipDiscount?: number;
+  vatRate?: number;
 
-  // Tuỳ chọn hiển thị
-  showDetails?: boolean; // ẩn list sản phẩm nếu cần
+  showDetails?: boolean;
 };
 
 export default function OrderSummary({
   items,
   shippingFee = 0,
-  discount = 0,
   membershipDiscount = 0,
   vatRate = 0.1,
   showDetails = true,
 }: Props) {
-  const { subtotal, vat, total } = calculateOrderTotals(items, {
+  const { subtotal, vat, total, discount } = calculateOrderTotals(items, {
     shippingFee,
-    discount,
     membershipDiscount,
     vatRate,
   });
@@ -36,28 +32,32 @@ export default function OrderSummary({
       {/* ===== LIST ITEMS ===== */}
       {showDetails && (
         <div className="order-list">
-          {items.map((ci: any) => (
-            <div key={ci.id} className="order-item">
-              <div className="order-image">
-                <img src={ci.item.imageURL} alt={ci.item.name} />
-                <span className="order-qty">{ci.quantity}</span>
-              </div>
+          {items.map((ci: any) => {
+            const price = getEffectivePrice(ci.item);
 
-              <div className="order-info">
-                <div className="order-name">{ci.item.name}</div>
-                <div className="order-desc">
-                  {ci.item.itemDetail?.size}
-                  {ci.item.itemDetail?.sugar
-                    ? ` / ${ci.item.itemDetail.sugar}`
-                    : ""}
+            return (
+              <div key={ci.id} className="order-item">
+                <div className="order-image">
+                  <img src={ci.item.imageURL} alt={ci.item.name} />
+                  <span className="order-qty">{ci.quantity}</span>
+                </div>
+
+                <div className="order-info">
+                  <div className="order-name">{ci.item.name}</div>
+                  <div className="order-desc">
+                    {ci.item.itemDetail?.size}
+                    {ci.item.itemDetail?.sugar
+                      ? ` / ${ci.item.itemDetail.sugar}`
+                      : ""}
+                  </div>
+                </div>
+
+                <div className="order-price">
+                  {formatVND(price * ci.quantity)}
                 </div>
               </div>
-
-              <div className="order-price">
-                {formatVND(ci.item.price * ci.quantity)}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -74,19 +74,31 @@ export default function OrderSummary({
         <span>{formatVND(vat)}</span>
       </div>
 
-      <div className="order-row">
-        <span>Phí giao hàng</span>
-        <span>{formatVND(shippingFee)}</span>
-      </div>
+      {shippingFee > 0 && (
+        <div className="order-row">
+          <span>Phí giao hàng</span>
+          <span>{formatVND(shippingFee)}</span>
+        </div>
+      )}
 
-      <div className="order-row text-green-600">
-        <span>Giảm giá</span>
-        <span>-{formatVND(discount)}</span>
-      </div>
+      {/* ===== SAVINGS (DISPLAY ONLY) ===== */}
+      {discount > 0 && (
+        <div className="mt-2 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-emerald-700">
+              Bạn đã tiết kiệm
+            </span>
+            <span className="font-bold text-emerald-800">
+              {formatVND(discount)}
+            </span>
+          </div>
+        </div>
+      )}
 
-      {membershipDiscount >= 0 && (
-        <div className="order-row text-green-600">
-          <span>Giảm giá thành viên</span>
+      {/* ===== MEMBERSHIP DISCOUNT (REAL) ===== */}
+      {membershipDiscount > 0 && (
+        <div className="order-row text-emerald-600">
+          <span>Ưu đãi thành viên</span>
           <span>-{formatVND(membershipDiscount)}</span>
         </div>
       )}

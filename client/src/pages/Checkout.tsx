@@ -217,7 +217,6 @@ export default function Checkout() {
       items: selectedItems,
       note,
       shippingFee: 10000, //thay đổi biến ở đây
-      discount: 10000, //thay đổi biến ở đây
       membershipDiscount: 0,
     };
 
@@ -278,7 +277,6 @@ export default function Checkout() {
         <div className="space-y-6">
           <OrderSummary
             items={selectedItems}
-            discount={10000} //Thêm biến ở đây
             shippingFee={10000} //Thêm biến ở đây
             membershipDiscount={0} //Thêm biến ở đây
           />
