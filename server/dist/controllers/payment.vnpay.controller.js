@@ -55,7 +55,6 @@ exports.createVNPayPayment = createVNPayPayment;
    GET /api/payment/vnpay/return
 ===================================================== */
 const vnpayReturn = async (req, res) => {
-    const { amount } = req.body;
     try {
         /* =========================
            1️⃣ VERIFY SIGNATURE
