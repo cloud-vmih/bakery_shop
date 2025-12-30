@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
+
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST || "localhost",
@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME ,
   //url: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, 
-  synchronize: true, 
+  synchronize: false,
   entities: [path.join(__dirname, "../entity/**/*.js")],
   migrations: [path.join(__dirname, "../migration/*.js")],
   logging: ["error"],

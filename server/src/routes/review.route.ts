@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { getReviewsController, replyReviewController, deleteReviewController } from '../controllers/review.controller';
-import { verifyToken } from '../middleware/verifyToken';
-// Giả sử có auth middleware
-// import { authenticateAdminOrStaff } from '../middleware/auth'; // Implement riêng
+import { verifyToken, verifyAdminOrStaff } from '../middleware/verifyToken';
+
 
 const router = Router();
 
-router.get('/', getReviewsController);
-router.post('/:id/reply', verifyToken, replyReviewController);
-router.delete(`/:id`, deleteReviewController);
+router.get('/', verifyToken, verifyAdminOrStaff, getReviewsController);
+router.post('/:id/reply', verifyToken, verifyAdminOrStaff, replyReviewController);
+router.delete(`/:id`, verifyToken, verifyAdminOrStaff, deleteReviewController);
 
 export default router;
 

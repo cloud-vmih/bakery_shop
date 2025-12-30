@@ -214,13 +214,7 @@ export const changePassword = {
       }
       await redis.set(`otp:${email}`, otp, { ex: OTP_TTL });
       await redis.set(cooldownKey, "1", { ex: COOLDOWN_TTL });
-
-    //   const html = `
-    //   <h2>Verify your OTP</h2>
-    //   <p>Your OTP:</p>
-    //   <a>${otp}</a>
-    // `;
-    //   await sendEmail(email, "Verify your OTP", html);
+      console.log("OTP saved to Redis");
 
       await emailService.sendOTP(email, user!.fullName!, otp)
       return { message: "The OTP send successfully, please check it." };

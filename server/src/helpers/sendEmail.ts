@@ -1,25 +1,35 @@
-// utils/emailService.ts
 import nodemailer from 'nodemailer';
+import { Resend } from "resend";
 import { emailTemplates } from '../templates/emailTemplate';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(
     email: string,
     subject: string,
     html: string
 ) {
-    const transport = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+    // const transport = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL_USER,
+    //         pass: process.env.EMAIL_PASS,
+    //     },
+    // });
 
-    await transport.sendMail({
-        from: `MyBakery <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: subject,
-        html: html,
+    // await transport.sendMail({
+    //     from: `MyBakery <${process.env.EMAIL_USER}>`,
+    //     to: email,
+    //     subject: subject,
+    //     html: html,
+    // });
+    await resend.emails.send({
+      from: `MyBakery <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject,
+      html,
     });
 }
 

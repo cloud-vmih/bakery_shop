@@ -5,53 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_12_2025_8_23_AM_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/config/database.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/config/redis.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/ProductUpdate.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/account.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/address.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/branch.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/cart.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/category.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/refreshToken.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controller/user.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.ProductUpdate.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.account.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.address.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.branch.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.cart.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.category.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/db.user.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/db/verify.db.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/Address.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/Branch.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/CartItem.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/Item.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/OrderDetails.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/Rating.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/entity/User.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/helper/sendEmail.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/middleware/verifyToken.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/migration/1766216743244-AddIsDefaultToAddress.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/ProductUpdate.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/account.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/address.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/branch.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/cart.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/category.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/routes/user.routes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/ProductUpdate.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/account.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/address.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/branch.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/cart.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/category.service.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/servies/user.service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/dist/controllers/account.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/controllers/account.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/dist/helpers/sendEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/helpers/sendEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/config/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/config/database.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/staff.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/staff.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/helpers/sendEmail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/helpers/sendEmail.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/branch.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/branch.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/dashboard.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/dashboard.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/manageOrder.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/manageOrder.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/review.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/review.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/staff.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/staff.route.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +35,7 @@
     <setting file="file://$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -81,22 +46,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/cake-filling",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "D:\\LTWEB\\Exercise\\IntelliJ IDEA 2025.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/cake-filling&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\LTWEB\\Exercise\\IntelliJ IDEA 2025.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\CNPM\BakeryShop\server\src\services" />
@@ -129,7 +94,8 @@
       <workItem from="1766816230148" duration="11907000" />
       <workItem from="1766909540635" duration="9999000" />
       <workItem from="1766935669837" duration="4094000" />
-      <workItem from="1766997489549" duration="6405000" />
+      <workItem from="1766997489549" duration="11372000" />
+      <workItem from="1767020769017" duration="6333000" />
     </task>
     <servers />
   </component>

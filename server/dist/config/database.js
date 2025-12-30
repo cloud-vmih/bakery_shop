@@ -11,7 +11,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 if (process.env.NODE_ENV !== "production") {
     dotenv_1.default.config();
 }
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "postgres",
     host: process.env.DB_HOST || "localhost",
@@ -21,7 +20,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB_NAME,
     //url: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
-    synchronize: true,
+    synchronize: false,
     entities: [path_1.default.join(__dirname, "../entity/**/*.js")],
     migrations: [path_1.default.join(__dirname, "../migration/*.js")],
     logging: ["error"],

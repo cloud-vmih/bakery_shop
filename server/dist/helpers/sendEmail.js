@@ -1,26 +1,31 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailService = void 0;
 exports.sendEmail = sendEmail;
-// utils/emailService.ts
-const nodemailer_1 = __importDefault(require("nodemailer"));
+const resend_1 = require("resend");
 const emailTemplate_1 = require("../templates/emailTemplate");
+const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 async function sendEmail(email, subject, html) {
-    const transport = nodemailer_1.default.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-    await transport.sendMail({
+    // const transport = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL_USER,
+    //         pass: process.env.EMAIL_PASS,
+    //     },
+    // });
+    // await transport.sendMail({
+    //     from: `MyBakery <${process.env.EMAIL_USER}>`,
+    //     to: email,
+    //     subject: subject,
+    //     html: html,
+    // });
+    await resend.emails.send({
         from: `MyBakery <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: subject,
-        html: html,
+        subject,
+        html,
     });
 }
 exports.emailService = {
