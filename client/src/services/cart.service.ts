@@ -1,4 +1,3 @@
-// src/services/cart.services.ts
 import API from "../api/axois.config";
 
 /** ===== TYPES ===== */

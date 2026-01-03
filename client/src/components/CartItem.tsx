@@ -124,7 +124,7 @@ export default function CartItem({
           <button
             onClick={() => {
               if (available !== Infinity && item.quantity >= available) {
-                toast.error("Không thể tăng quá số lượng có sẵn hiện tại");
+                toast.error("Không thể tăng quá số lượng có sẵn");
                 return;
               }
               onIncrease();

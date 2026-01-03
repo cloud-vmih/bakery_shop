@@ -297,7 +297,7 @@ export default function Cart() {
     }
   `}
             >
-              Tiến hành thanh toán
+              Tiến hành đặt hàng
             </button>
           </div>
         </div>
