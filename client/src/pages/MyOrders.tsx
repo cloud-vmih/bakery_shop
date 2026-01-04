@@ -4,7 +4,6 @@ import { orderService, OrderItem } from "../services/order.service";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import { useInventory } from "../context/InventoryContext";
-import { toast } from "react-toastify";
 
 type TabKey =
   | "all"
@@ -32,7 +31,7 @@ export default function MyOrders() {
   const [activeTab, setActiveTab] = useState<TabKey>("all");
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const { branchId } = useInventory()
+  const { branchId } = useInventory();
 
   useEffect(() => {
     orderService
@@ -88,17 +87,20 @@ export default function MyOrders() {
 
   if (loading) {
     return (
+      <>
         <div className="flex items-center justify-center min-h-screen bg-green-50">
           <div className="text-2xl text-green-700 font-medium animate-pulse">
             Đang tải đơn hàng...
           </div>
         </div>
+      </>
     );
   }
 
   return (
+    <>
       <div className="min-h-screen bg-green-50 py-12 px-4">
-        <div className="max-w-4xl mx-auto"> {/* Giảm max-width một chút để gọn hơn */}
+        <div className="max-w-4xl mx-auto">
           {/* Tiêu đề trang */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-green-700 mb-3">
@@ -126,6 +128,7 @@ export default function MyOrders() {
             ))}
           </div>
 
+
           {/* Không có đơn hàng */}
           {totalItems === 0 ? (
             <div className="bg-white rounded-3xl shadow-xl border border-amber-200 p-16 text-center">
@@ -142,109 +145,123 @@ export default function MyOrders() {
             </div>
           ) : (
             <>
-              {/* Danh sách đơn hàng - khung nhỏ gọn hơn */}
+              {/* Danh sách đơn hàng */}
               <div className="space-y-10">
-                {paginatedOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="bg-white rounded-3xl shadow-lg border border-amber-200 overflow-hidden"
-                  >
-                    {/* Header - vàng nhạt */}
-                    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-5 border-b border-amber-200">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div>
-                          <h3 className="text-xl font-bold text-green-800">
-                            Đơn hàng {order.id}
-                          </h3>
-                          <p className="text-sm text-amber-900 mt-1">
-                            Ngày đặt: {new Date(order.createAt).toLocaleString("vi-VN", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              weekday: "long",
-                              day: "numeric",
-                              month: "numeric",
-                              year: "numeric",
-                            })}
-                          </p>
-                        </div>
-                        <span
-                          className={`px-6 py-2 rounded-full text-sm font-medium
-                            ${isOrderCanceled(order)
-                              ? "bg-pink-100 text-pink-700"
-                              : "bg-green-100 text-green-700"
-                            }`}
-                        >
-                          {getDisplayStatus(order)}
-                        </span>
-                      </div>
-                    </div>
+                {paginatedOrders.map((order) => {
+                  // Tính tổng tiền gộp (tạm tính + VAT + phí ship - giảm giá)
+                  const subtotal = order.orderDetails?.reduce(
+                    (sum, d) => sum + ((d.item?.price || 0) * (d.quantity || 1)),
+                    0
+                  ) || 0;
 
-                    {/* Nội dung sản phẩm - gọn hơn */}
-                    <div className="p-6 space-y-6">
-                      {order.orderDetails && order.orderDetails.length > 0 ? (
-                        order.orderDetails.map((detail, idx) => {
-                          const info = detail.item || {};
-                          return (
-                            <div key={idx} className="flex gap-6 items-start">
-                              {info.imageURL ? (
-                                <img
-                                  src={info.imageURL}
-                                  alt={info.name}
-                                  className="w-24 h-24 object-cover rounded-xl shadow border border-amber-100 flex-shrink-0"
-                                />
-                              ) : (
-                                <div className="w-24 h-24 bg-gray-100 rounded-xl flex items-center justify-center text-4xl border border-amber-100 flex-shrink-0">
-                                  🍰
+                  const vat = Math.round(subtotal * 0.1);
+                  const shipping = 30000;
+                  const discount = 50000;
+                  const grandTotal = subtotal + vat + shipping - discount;
+
+                  return (
+                    <div
+                      key={order.id}
+                      className="bg-white rounded-3xl shadow-lg border border-amber-200 overflow-hidden"
+                    >
+                      {/* Header */}
+                      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-5 border-b border-amber-200">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                          <div>
+                            <h3 className="text-xl font-bold text-green-800">
+                              Đơn hàng {order.id}
+                            </h3>
+                            <p className="text-sm text-amber-900 mt-1">
+                              Ngày đặt: {new Date(order.createAt).toLocaleDateString("vi-VN", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              })}{" "}
+                              lúc {new Date(order.createAt).toLocaleTimeString("vi-VN", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                          </div>
+                          <span
+                            className={`px-6 py-2 rounded-full text-sm font-medium
+                              ${isOrderCanceled(order)
+                                ? "bg-pink-100 text-pink-700"
+                                : "bg-green-100 text-green-700"
+                              }`}
+                          >
+                            {getDisplayStatus(order)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Sản phẩm */}
+                      <div className="p-6 space-y-6">
+                        {order.orderDetails && order.orderDetails.length > 0 ? (
+                          order.orderDetails.map((detail, idx) => {
+                            const info = detail.item || {};
+                            return (
+                              <div key={idx} className="flex gap-6 items-start">
+                                {info.imageURL ? (
+                                  <img
+                                    src={info.imageURL}
+                                    alt={info.name}
+                                    className="w-24 h-24 object-cover rounded-xl shadow border border-amber-100 flex-shrink-0"
+                                  />
+                                ) : (
+                                  <div className="w-24 h-24 bg-gray-100 rounded-xl flex items-center justify-center text-4xl border border-amber-100 flex-shrink-0">
+                                    🍰
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-lg font-bold text-green-800 break-words">
+                                    {info.name || "Bánh ngọt"}
+                                  </h4>
+                                  <p className="text-sm text-gray-700 mt-2">
+                                    Số lượng: <span className="font-bold">{detail.quantity || 1}</span>
+                                  </p>
                                 </div>
-                              )}
-                              <div className="flex-1 min-w-0">
-                                <h4 className="text-lg font-bold text-green-800 break-words">
-                                  {info.name || "Bánh ngọt"}
-                                </h4>
-                                <p className="text-sm text-gray-700 mt-2">
-                                  Số lượng: <span className="font-bold">{detail.quantity || 1}</span>
-                                </p>
                               </div>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <p className="text-center text-gray-500 py-6 text-sm italic">
-                          Chưa có thông tin sản phẩm
-                        </p>
-                      )}
-                      
-                    </div>
+                            );
+                          })
+                        ) : (
+                          <p className="text-center text-gray-500 py-6 text-sm italic">
+                            Chưa có thông tin sản phẩm
+                          </p>
+                        )}
+                      </div>
 
-                    {/* Footer - nhỏ gọn */}
-                    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-6 border-t border-amber-200">
-                      <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-                        <div className="text-center sm:text-left">
-                          <p className="text-sm text-gray-700">
-                            Tổng số lượng: <span className="font-bold text-green-800">
-                              {order.orderDetails?.reduce((sum, d) => sum + (d.quantity || 1), 0) || 0}
-                            </span>
-                          </p>
-                          <p className="text-xl font-bold text-green-700 mt-2">
-                            Tổng tiền: {order.orderDetails?.reduce((sum, d) => sum + ((d.item?.price || 0) * (d.quantity || 1)), 0).toLocaleString("vi-VN")}đ
-                          </p>
+                      {/* Footer - Chỉ in tổng tiền gộp */}
+                      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-6 border-t border-amber-200">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+                          <div className="text-center sm:text-left">
+                            <p className="text-sm text-gray-700">
+                              Tổng số lượng: <span className="font-bold text-green-800">
+                                {order.orderDetails?.reduce((sum, d) => sum + (d.quantity || 1), 0) || 0}
+                              </span>
+                            </p>
+                            <p className="text-xl font-bold text-green-700 mt-2">
+                              Tổng tiền: {grandTotal.toLocaleString("vi-VN")} VND
+                            </p>
+                          </div>
+                          <Link
+                            to={`/orderDetails/${order.id}`}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-medium rounded-full hover:bg-green-700 transition-all shadow-md"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Xem chi tiết đơn
+                          </Link>
                         </div>
-                        <Link
-                          to={`/orderDetails/${order.id}`}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-full hover:bg-green-700 transition-all shadow"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                          Xem chi tiết đơn
-                        </Link>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
-              {/* Phân trang - nhỏ gọn */}
+              {/* Phân trang */}
               <div className="mt-12 flex justify-center items-center gap-3">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -301,5 +318,6 @@ export default function MyOrders() {
           )}
         </div>
       </div>
+    </>
   );
 }

@@ -24,7 +24,7 @@ const allowedTransitions: Record<EOrderStatus, EOrderStatus[]> = {
 // Admin / Staff hủy trực tiếp (mọi trạng thái trừ đang giao & hoàn thành)
 export const cancelOrder = async (
   orderId: number,
-  cancelReason: string,
+  cancelNote: string,
   handledBy: string = "ADMIN_OR_STAFF"
 ) => {
   const order = await findOrderById(orderId);
@@ -36,14 +36,26 @@ export const cancelOrder = async (
     throw new Error("Không thể hủy khi đơn đang giao hoặc đã hoàn thành");
   }
 
-  if (!cancelReason?.trim()) {
+  if (!cancelNote?.trim()) {
     throw new Error("Vui lòng nhập lý do hủy");
   }
 
   order.status = EOrderStatus.CANCELED;
   order.cancelStatus = ECancelStatus.APPROVED;
-  order.cancelReason = cancelReason;
+  order.cancelNote = cancelNote.trim();
   order.cancelHandledBy = handledBy;
+
+
+  // Ghi lịch sử vào orderInfo.note (nếu cần)
+  if (order.orderInfo) {
+    const historyNote = `Admin hủy đơn: ${cancelNote.trim()}`;
+    if (order.orderInfo.note) {
+      order.orderInfo.note += ` | ${historyNote}`;
+    } else {
+      order.orderInfo.note = historyNote;
+    }
+    await saveOrderInfo(order.orderInfo);
+  }
 
   // if (order.orderDetails?.[0]) {
   //   order.orderDetails[0].note = `Admin/Staff hủy: ${cancelReason}`;
@@ -77,9 +89,7 @@ export const requestCancelOrder = async (
     throw new Error("Đã có yêu cầu hủy đang xử lý");
   }
 
-  if (!reason?.trim()) {
-    throw new Error("Vui lòng nhập lý do hủy");
-  }
+  
 
   order.cancelStatus = ECancelStatus.REQUESTED;
   order.cancelReason = reason;
@@ -138,6 +148,7 @@ export const getOrderList = async (filters: any) => {
     .createQueryBuilder("order")
     .leftJoinAndSelect("order.customer", "customer")
     .leftJoinAndSelect("order.orderDetails", "orderDetail")
+    .leftJoinAndSelect("orderDetail.item", "item")
     .orderBy("order.createAt", "DESC");
 
   if (filters.status) {
