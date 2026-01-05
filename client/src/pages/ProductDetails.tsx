@@ -10,6 +10,7 @@ import { ClockIcon } from "lucide-react";
 import { PriceDisplay } from "../components/ItemPrice";
 import { useUser } from "../context/AuthContext";
 import { addToWishlist, removeFromWishlist, getWishlist } from "../services/wishlist.service";
+import RatingView from "../components/RatingView";
 
 const formatPrice = (price?: number) => {
   if (price === undefined || price === null) return "Liên hệ";
@@ -295,6 +296,8 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
+        {/* Hiển thị đánh giá */}
+        {item?.id && <RatingView itemID={item.id} />}
       </div>
   );
 };

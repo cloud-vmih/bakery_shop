@@ -105,7 +105,8 @@ export default function OrderStatus() {
   };
 
   const handleReview = () => {
-    alert("Chuyển đến trang đánh giá đơn hàng...");
+    if (!orderId) return;
+    window.open(`/rating/${orderId}`, "_blank");
   };
 
   if (loading) {
