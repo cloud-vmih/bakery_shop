@@ -11,6 +11,8 @@ import { useInventory } from "../context/InventoryContext";
 import { PriceDisplay } from "../components/ItemPrice";
 import { useCart } from "../context/CartContext";
 import RequireAuthModal from "../components/RequireAuthModal";
+import { getMyAddresses } from "../services/address.service";
+import { getDistanceKm } from "../utils/distance";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -71,14 +73,68 @@ export default function MenuPage() {
     loadBranches();
   }, []);
 
+  // Tự động chọn chi nhánh gần nhất dựa trên địa chỉ của khách hàng
   useEffect(() => {
-    if (branches.length > 0 && selectedBranchId === null) {
-      setSelectedBranchId(branches[0].id);
+    if (branches.length === 0) return;
+
+    const selectNearestBranch = async () => {
+      try {
+        // Nếu user đã đăng nhập, thử lấy địa chỉ mặc định
+        if (user) {
+          try {
+            const addresses = await getMyAddresses();
+            const defaultAddress = addresses.find(addr => addr.isDefault) || addresses[0];
+
+            if (defaultAddress && defaultAddress.lat && defaultAddress.lng) {
+              // Tính khoảng cách từ địa chỉ user đến tất cả chi nhánh
+              const branchesWithDistance = branches
+                .filter(branch => branch.lat && branch.lng)
+                .map(branch => ({
+                  ...branch,
+                  distance: getDistanceKm(
+                    defaultAddress.lat,
+                    defaultAddress.lng,
+                    branch.lat,
+                    branch.lng
+                  )
+                }))
+                .sort((a, b) => a.distance - b.distance); // Sắp xếp theo khoảng cách tăng dần
+
+              if (branchesWithDistance.length > 0) {
+                // Chọn chi nhánh gần nhất
+                const nearestBranch = branchesWithDistance[0];
+                setSelectedBranchId(nearestBranch.id);
+                setBranchId(nearestBranch.id);
+                return;
+              }
+            }
+          } catch (err) {
+            // Nếu không lấy được địa chỉ, fallback về chi nhánh đầu tiên
+            console.log("Không thể lấy địa chỉ của khách hàng:", err);
+          }
+        }
+
+        // Nếu user chưa đăng nhập hoặc chưa có địa chỉ: chọn chi nhánh cũ nhất (id nhỏ nhất)
+        const sortedBranches = [...branches].sort((a, b) => (a.id || 0) - (b.id || 0));
+        const oldestBranch = sortedBranches[0];
+        setSelectedBranchId(oldestBranch.id);
+        if (branches.length === 1) {
+          setBranchId(oldestBranch.id);
+        }
+      } catch (err) {
+        console.error("Lỗi khi chọn chi nhánh:", err);
+        // Fallback: chọn chi nhánh đầu tiên
+        const sortedBranches = [...branches].sort((a, b) => (a.id || 0) - (b.id || 0));
+        const oldestBranch = sortedBranches[0];
+        setSelectedBranchId(oldestBranch.id);
+      }
+    };
+
+    // Chỉ chạy khi chưa có chi nhánh được chọn
+    if (selectedBranchId === null) {
+      selectNearestBranch();
     }
-    if (branches.length === 1) {
-        setBranchId(branches[0].id);
-    }
-  }, [branches, selectedBranchId]);
+  }, [branches, user, selectedBranchId]);
 
     const handleAddToCart = async (itemId: number) => {
     try {
@@ -267,7 +323,7 @@ export default function MenuPage() {
                         setSelectedBranchId(e.target.value ? Number(e.target.value) : null);
                         setBranchId(e.target.value ? Number(e.target.value) : null)
                     }}
-                    className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
+                    className="w-full px-4 py-2.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
                   >
 
                     {branches.map((branch: any) => (
@@ -292,11 +348,11 @@ export default function MenuPage() {
                         {branches.find(b => b.id === selectedBranchId)?.name}
                       </span>
                       <span className="branchInfoAddress">
-                        {branches.find(b => b.id === selectedBranchId)?.address?.fullAddress || "Chưa có địa chỉ"}
+                        {branches.find(b => b.id === selectedBranchId)?.address || "Chưa có địa chỉ"}
                       </span>
                       <p className="mt-2 text-sm text-gray-500 italic">
                         Vui lòng chọn chi nhánh gần bạn nhất để hệ thống tính phí giao hàng phù hợp.
-                        Nếu chưa biết mình gần chi nhánh nào, bạn có thể sử dụng tiện ích "<strong>Tìm chi nhánh gần nhất</strong>" của tiệm để tham khảo nhé!
+                        Bạn có thể sử dụng tiện ích "<strong>Tìm chi nhánh gần nhất</strong>" của tiệm để tham khảo nhé!
                       </p>
                     </div>
                   </div>

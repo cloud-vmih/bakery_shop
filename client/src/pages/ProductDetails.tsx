@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import itemService, { Item } from "../services/items.service";
-import { addToCart } from "../services/cart.service";
 import { useInventory } from "../context/InventoryContext";
+import { useCart } from "../context/CartContext";
+import RequireAuthModal from "../components/RequireAuthModal";
 import "../styles/productDetails.css";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
 import { ClockIcon } from "lucide-react";
@@ -44,7 +45,9 @@ const ProductDetails = () => {
 
   const [item, setItem] = useState<Item | null>(null);
   const [loadingItem, setLoadingItem] = useState<boolean>(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { getItemQuantity, loadInventory } = useInventory();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -131,12 +134,10 @@ const ProductDetails = () => {
   const handleAddToCart = async () => {
     if (!item?.id) return;
     try {
-      await addToCart(item.id);
-      toast.success("Đã thêm vào giỏ hàng!");
+      await addToCart(item.id, 1);
     } catch (err: any) {
       if (err?.message === "NEED_LOGIN") {
-        navigate("/login");
-        toast.error("Vui lòng đăng nhập để thêm vào giỏ");
+        setShowAuthModal(true);
         return;
       }
       toast.error("Thêm thất bại, vui lòng thử lại");
@@ -243,6 +244,7 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
+        <RequireAuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </div>
   );
 };
