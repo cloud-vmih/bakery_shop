@@ -26,13 +26,21 @@ export const useAdminConversationChatStore = create<ConversationChatState>((set,
 
     socket.emit("admin:joinConversation", { conversationId });
 
-    const messages = (await loadMessages(conversationId)).items;
+    const page = await loadMessages(conversationId);
 
-    set({
-      conversationId,
-      messages,
-    });
-  },
+      const messages = page.items.map((msg: any) => ({
+        ...msg,
+        // FIX CỐT LÕI
+        createdAt:
+          msg.createdAt ??
+          (msg.sentAt ? new Date(msg.sentAt).toISOString() : null),
+      }));
+
+      set({
+        conversationId,
+        messages,
+      });
+    },
 
   leave: () => {
     const socket = useSocketStore.getState().socket;

@@ -3,7 +3,6 @@ import { getRawUserByID } from "../db/user.db";
 import { ENotiType } from "../entity/enum/enum";
 import { Message } from "../entity/Message";
 import { User } from "../entity/User";
-import { sendNotification } from "./notification.service";
 
 export const updateChat = async (
   conversationId: number,
@@ -68,8 +67,18 @@ export const getMessagesByConversation = async (
   cursor?: string,
   limit = 20
 ) => {
-  return await chatDB.getMessages(conversationId, cursor, limit);
+  const result = await chatDB.getMessages(conversationId, cursor, limit);
 
+  return {
+    items: result.items.map((m) => ({
+      id: m.id!,
+      conversationId: m.conversation?.id!,
+      senderId: m.senderId,
+      content: m.content!,
+      createdAt: m.sentAt!.toISOString(),
+    })),
+    nextCursor: result.nextCursor,
+  };
 };
 
 export const getConversationsSummary = async () => {

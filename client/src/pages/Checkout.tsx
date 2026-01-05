@@ -18,8 +18,6 @@ import ConfirmOrderButton from "../components/checkout/ConfirmOrderButton";
 import MapProvider from "../components/MapProvider";
 import { AddressResult } from "../components/AddressAutocomplete";
 
-import { Header } from "../components/Header";
-
 import "../styles/checkout.css";
 
 /* ===============================
@@ -228,7 +226,6 @@ export default function Checkout() {
     /* ================= RENDER ================= */
     return (
         <>
-            <Header />
             <div
                 className="min-h-screen"
                 style={{ backgroundColor: "var(--page-bg)" }}

@@ -12,28 +12,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderDetail = void 0;
 const typeorm_1 = require("typeorm");
 const Orders_1 = require("./Orders");
+const Item_1 = require("./Item");
 let OrderDetail = class OrderDetail extends typeorm_1.BaseEntity {
 };
 exports.OrderDetail = OrderDetail;
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({ name: "orderID", type: "bigint" }),
+    (0, typeorm_1.PrimaryColumn)({ name: "orderID", type: "int" }),
     __metadata("design:type", Number)
 ], OrderDetail.prototype, "orderID", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)({ name: "itemID", type: "int" }),
+    __metadata("design:type", Number)
+], OrderDetail.prototype, "itemID", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Orders_1.Order, (o) => o.orderDetails),
     (0, typeorm_1.JoinColumn)({ name: "orderID" }),
     __metadata("design:type", Orders_1.Order)
 ], OrderDetail.prototype, "order", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "json", nullable: true }),
-    __metadata("design:type", Object)
-], OrderDetail.prototype, "itemInfo", void 0);
+    (0, typeorm_1.ManyToOne)(() => Item_1.Item),
+    (0, typeorm_1.JoinColumn)({ name: "itemID" }),
+    __metadata("design:type", Item_1.Item)
+], OrderDetail.prototype, "item", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], OrderDetail.prototype, "note", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "int" }),
     __metadata("design:type", Number)
 ], OrderDetail.prototype, "quantity", void 0);
 exports.OrderDetail = OrderDetail = __decorate([

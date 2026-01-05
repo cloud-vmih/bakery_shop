@@ -13,7 +13,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import "../styles/home.css";
-import { Header } from "../components/Header";
 import ChatBox from "../components/chat/ChatBox";
 import { AdminSidebar } from "../components/Sidebar";
 

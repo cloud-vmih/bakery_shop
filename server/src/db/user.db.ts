@@ -104,3 +104,20 @@ export async function getCustomerByID(userId: number) {
     {where: {id: userId}}
   );
 }
+
+export async function getAllAdminAndStaff() {
+  return await userRepository.find({
+    where: [
+      { type: "Admin" },
+      { type: "Staff" },
+    ],
+    select: ["id"],
+  });
+}
+
+export async function getAllCustomer() {
+  return await userRepository.find({
+    where: { type: "Customer" },
+    select: ["id"],
+  });
+}

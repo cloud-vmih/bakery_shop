@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { orderService } from "../services/order.service";
-import { Header } from "../components/Header";
 
 export default function OrderStatus() {
   const { orderId } = useParams<{ orderId: string }>();

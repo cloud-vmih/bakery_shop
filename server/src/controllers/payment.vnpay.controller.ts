@@ -8,6 +8,9 @@ import {
   rollbackInventoryForOrder,
 } from "../services/inventory.service";
 import { MembershipService } from "../services/mempoint.service";
+import { ENotiType } from "../entity/enum/enum";
+import { sendNotification } from "../services/notification.service";
+import { getAdminAndStaffIds } from "../services/user.service";
 
 const paymentService = new PaymentService();
 const ordersService = new OrdersService();
@@ -143,6 +146,24 @@ export const vnpayReturn = async (req: Request, res: Response) => {
 
       // 3️⃣ confirm order
       await ordersService.confirmOrder(orderId);
+
+      await sendNotification(
+        [userId],
+        "Đặt hàng thành công",
+        `Đơn hàng #${order.id} của bạn đã được xác nhận`,
+        ENotiType.ORDER,
+        `/orderDetails/${order.id}`
+      );
+
+      const adminStaffIds = await getAdminAndStaffIds();
+
+      await sendNotification(
+        adminStaffIds,
+        "Đơn hàng mới",
+        `Có đơn hàng mới #${order.id} cần xử lý`,
+        ENotiType.ORDER,
+        `/admin/manage-orders`
+      );
 
       await MembershipService.accumulatePoints(userId, orderId, amount);
 

@@ -6,8 +6,9 @@ interface Notification {
   id: number;
   title: string;
   content: string;
-  createAt: string;
+  sentAt: string;
   isRead: boolean;
+  href?: string;
 }
 
 interface NotificationStore {

@@ -3,7 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdminConversationChatStore } from "../../stores/adminConversationChat.store";
 import { MessageBubble } from "./MessageBubble";
-import { Header } from "../Header";
 
 export default function AdminConversationChat() {
   const { id } = useParams();
@@ -11,6 +10,14 @@ export default function AdminConversationChat() {
   const store = useAdminConversationChatStore();
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+const handleSend = () => {
+  if (!input.trim()) return;
+
+  store.send(input);
+  setInput(""); 
+};
+
 
   useEffect(() => {
     if (!id) return;
@@ -89,7 +96,13 @@ return (
               disabled={store.locked}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && store.send(e.currentTarget.value)}
+              onKeyDown={(e) => { 
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+
               placeholder={store.locked ? "Cuộc trò chuyện đã kết thúc" : "Nhập tin nhắn..."}
               className={`flex-1 px-3 md:px-5 py-2 md:py-3 border-2 rounded-lg md:rounded-xl outline-none transition-all text-gray-800 placeholder-gray-500 bg-white/90 text-sm md:text-base ${
                 store.locked
@@ -98,7 +111,7 @@ return (
               }`}
             />
             <button
-              onClick={() => store.send(input)}
+              onClick={handleSend}
               disabled={store.locked || !input.trim()}
               className="px-3 md:px-4 py-2 md:py-3 bg-green-600 text-white font-bold rounded-lg md:rounded-xl shadow-md hover:bg-green-700 hover:scale-105 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap"
             >

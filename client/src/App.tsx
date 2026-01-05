@@ -102,6 +102,11 @@ export default function App() {
                                         <Route path="promotion" element={<ItemsDiscountPage />} />
                                         <Route path="staff" element={<StaffPage />} />
                                         <Route path="reviews" element={<ManageReviews />} />
+                                        <Route path="/admin/conversations" element={<AdminConversationList />} />
+                                        <Route
+                                        path="/admin/conversations/:id"
+                                        element={<AdminConversationChat />}
+                                        />
                                         <Route
                                             path="/admin/manage-orders"
                                             element={<OrderManagement />}

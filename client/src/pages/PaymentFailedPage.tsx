@@ -1,5 +1,4 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Header } from "../components/Header";
 
 export default function PaymentFailedPage() {
   const [params] = useSearchParams();

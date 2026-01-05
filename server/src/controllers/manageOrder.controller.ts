@@ -1,6 +1,6 @@
 // src/controllers/order.controller.ts
 import { Request, Response } from "express";
-import { EOrderStatus } from "../entity/enum/enum";
+import { ENotiType, EOrderStatus } from "../entity/enum/enum";
 import {
   getOrderList,
   getOrderDetail,
@@ -10,6 +10,8 @@ import {
   handleCancelRequest,
   generateInvoiceHTML,
 } from "../services/manageOrder.service";
+import { getAdminAndStaffIds } from "../services/user.service";
+import { sendNotification } from "../services/notification.service";
 
 /* ================== TYPE ================== */
 interface AuthRequest extends Request {
@@ -54,6 +56,13 @@ export const updateStatus = async (req: AuthRequest, res: Response) => {
     }
 
     const order = await updateOrderStatus(orderId, newStatus);
+    await sendNotification(
+      [order.customer?.id!],
+      "Trạng thái đơn hàng đã được cập nhật",
+      `Đơn hàng #${order.id} của bạn trong trạng thái ${newStatus}`,
+      ENotiType.ORDER,
+      `/orderDetails/${order.id}`
+    );
     res.json({ message: "Cập nhật trạng thái thành công", order });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -71,6 +80,13 @@ export const cancel = async (req: AuthRequest, res: Response) => {
     }
 
     const order = await cancelOrder(orderId, cancelReason.trim());
+    await sendNotification(
+      [order.customer?.id!],
+      "Đặt hàng thành công",
+      `Đơn hàng #${order.id} của bạn đã bị hủy`,
+      ENotiType.ORDER,
+      `/orderDetails/${order.id}`
+    );
     res.json({ message: "Hủy đơn thành công", order });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -93,6 +109,15 @@ export const requestCancel = async (req: AuthRequest, res: Response) => {
     }
 
     const order = await requestCancelOrder(orderId, userId, reason.trim());
+    const adminStaffIds = await getAdminAndStaffIds();
+
+    await sendNotification(
+      adminStaffIds,
+      "Yêu cầu hủy đơn",
+      `Có yêu cầu hủy #${order.id} cần xử lý`,
+      ENotiType.ORDER,
+      `/admin/manage-orders`
+    );
     res.json({ message: "Đã gửi yêu cầu hủy đơn", order });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -114,12 +139,34 @@ export const handleCancel = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "Hành động không hợp lệ" });
     }
 
-    const order = await handleCancelRequest(orderId, action, String(staffId), note);
+    const order = await handleCancelRequest(
+      orderId,
+      action,
+      String(staffId),
+      note
+    );
 
+    if (action === "approve"){
+      await sendNotification(
+      [order.customer?.id!],
+      "Hủy đơn thành công",
+      `Đơn hàng #${order.id} của bạn đã được hủy`,
+      ENotiType.ORDER,
+      `/orderDetails/${order.id}`
+    );
+  }
+    else{
+      await sendNotification(
+      [order.customer?.id!],
+      "Hủy đơn thất bại",
+      `Đơn hàng #${order.id} của bạn không được hủy, vui lòng liên hệ nhân viên để biết thêm chi tiết`,
+      ENotiType.ORDER,
+      `/orderDetails/${order.id}`
+    );
+    }
     res.json({
-      message: action === "approve"
-        ? "Đã duyệt hủy đơn"
-        : "Đã từ chối yêu cầu hủy",
+      message:
+        action === "approve" ? "Đã duyệt hủy đơn" : "Đã từ chối yêu cầu hủy",
       order,
     });
   } catch (error: any) {

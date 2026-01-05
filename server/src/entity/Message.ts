@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { Conversation } from "./Conversation";
 import { User } from "./User";
-import { ESender } from "./enum/enum";
 
 @Entity({ name: "messages" })
 export class Message {

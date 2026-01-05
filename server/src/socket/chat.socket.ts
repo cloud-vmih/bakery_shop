@@ -10,19 +10,31 @@ export const chatSocket = (io: Server, socket: Socket) => {
   });
 
   socket.on("chat:send", async ({ conversationId, content }) => {
-    const sender = socket.data.user;
-    console.log(content, sender.id, sender.type);
+    try {
+      const sender = socket.data.user;
+      if (!sender) {
+        console.error("Missing socket.data.user");
+        return;
+      }
 
-    const message = await chatService.updateChat(conversationId, content, sender.id, sender);
-    
-    io.to(`conversation:${conversationId}`).emit("chat:receive", message);
-
-     io.to("admins").emit("conversation:update", {
+      const message = await chatService.updateChat(
         conversationId,
-        lastMessage: message.content,
-        lastMessageAt: message.createdAt,
-        senderRole: sender.type
-    });
+        content,
+        sender.id,
+        sender
+      );
+
+      io.to(`conversation:${conversationId}`).emit(
+        "chat:receive",
+        message
+      );
+      
+    } catch (err) {
+      console.error("chat:send error:", err);
+      socket.emit("chat:error", {
+        message: "Không gửi được tin nhắn",
+      });
+    }
   });
 
   socket.on("admin:joinDashboard", () => {

@@ -3,8 +3,8 @@ import * as notificationService from "../services/notification.service";
 
 export const sendNotification = async (req: Request, res: Response) => {
     try {
-        const { userIds, title, contents, notiType } = req.body;
-        const noti = await notificationService.sendNotification( userIds, title, contents, notiType );
+        const { userIds, title, contents, notiType, href } = req.body;
+        const noti = await notificationService.sendNotification( userIds, title, contents, notiType, href );
     
         res.status(200).json({
           success: true,

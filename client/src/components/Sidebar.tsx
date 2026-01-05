@@ -1,13 +1,23 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { useRef, useEffect } from "react";
 import { useUser } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom";
+import { useNotificationStore } from '../stores/notification.store';
+import { Bell } from 'lucide-react';
+import { NotificationDropdown } from './NotificationDropdown';
+import { NotificationPortal } from './NotificationPortal';
+
 
 export const AdminSidebar = () => {
     const location = useLocation();
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const { unreadCount } = useNotificationStore();
     const {user} = useUser()
     const navigate = useNavigate();
+    const notificationRef = useRef<HTMLDivElement | null>(null);
+    const [showNotifications, setShowNotifications] = useState(false);
+
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -23,12 +33,32 @@ export const AdminSidebar = () => {
         {to: "/admin/reviews", label: "Customer Reviews", icon: "fas fa-star", types: ['Admin', 'Staff']},
         {to: "/admin/staff", label: "Staff Management", icon: "fas fa-users-cog", types: ['Admin']},
         {to: "/admin/manage-orders", label: "Orders", icon: "fas fa-shopping-bag", types: ['Admin', 'Staff']},
+        {to: "/admin/conversations", label: "Conversations", icon: "fas fa-comments", types: ['Admin', 'Staff']},
     ];
 
     const menuItems = adminMenuItems.filter(item => {
         if (!user) return false;
         return item.types.includes(user.type || '');
     });
+
+    useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
+    };
+
+    if (showNotifications) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showNotifications]);
 
     return (
         <>
@@ -99,6 +129,30 @@ export const AdminSidebar = () => {
                         </div>
                         <span
                             className={`w-3 h-3 rounded-full ${user?.type === 'Admin' ? 'bg-purple-500' : 'bg-emerald-500'}`}></span>
+                         <div className="relative" ref={notificationRef}>
+                            <button
+                                onClick={() => setShowNotifications(!showNotifications)}
+                                className="relative p-2 rounded-full hover:bg-emerald-50 transition"
+                            >
+                                <Bell className="w-6 h-6 text-emerald-700" />
+                                {unreadCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 min-w-[1.25rem] h-5 flex items-center justify-center">
+                                    {unreadCount > 99 ? "99+" : unreadCount}
+                                </span>
+                                )}
+                            </button>
+
+                            {/* Notification Dropdown*/}
+                            {showNotifications && (
+                                <NotificationPortal>
+                                    <div
+                                    className="fixed top-[100px] left-[220px] z-[99999] w-96"
+                                    >
+                                    <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                                    </div>
+                                </NotificationPortal>
+                                )}
+                            </div>
                     </div>
                 </div>
 

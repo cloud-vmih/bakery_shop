@@ -109,6 +109,7 @@ export const handleCancelRequest = async (
   if (action === "approve") {
     if (
       [EOrderStatus.DELIVERING, EOrderStatus.COMPLETED].includes(order.status!)
+      
     ) {
       throw new Error("Không thể duyệt hủy ở trạng thái này");
     }
@@ -128,7 +129,7 @@ export const handleCancelRequest = async (
     order.cancelStatus = ECancelStatus.REJECTED;
     order.cancelNote = note;
   }
-
+  
   return await saveOrder(order);
 };
 

@@ -4,7 +4,6 @@ import { useCart } from "../context/CartContext";
 import { useInventory } from "../context/InventoryContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Header } from "../components/Header";
 import { calculateOrderTotals } from "../utils/orderCalculator";
 
 import toast from "react-hot-toast";

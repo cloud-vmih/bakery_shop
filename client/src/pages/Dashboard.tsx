@@ -45,7 +45,6 @@ import dayjs from "dayjs";
 import { exportDashboardToExcel } from "../utils/exportExcel";
 import { getDashboardData } from "../services/dashboard.service";
 import "../styles/Dashboard.css";
-import { Header } from "../components/Header";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;

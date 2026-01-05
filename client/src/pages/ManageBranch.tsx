@@ -3,7 +3,6 @@ import { getBranches, createBranch, updateBranch, deleteBranch, } from "../servi
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useUser } from "../context/AuthContext";
-import { Header } from "../components/Header";
 import GooglePlaceInput from "../components/AddressAutocomplete";
 import MapProvider from "../components/MapProvider";
 import InventoryPopup from "./ManageQuantity";

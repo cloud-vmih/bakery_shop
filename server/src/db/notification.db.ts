@@ -5,8 +5,8 @@ import { User } from "../entity/User";
 
 const notiRepo = AppDataSource.getRepository(Notification);
 
-export const create = async (title: string, contents: string, notiType: ENotiType, users: User[]) => {
-    const notification = notiRepo.create({title, contents, notiType, users});
+export const create = async (title: string, contents: string, notiType: ENotiType, users: User[], href?: string) => {
+    const notification = notiRepo.create({title, contents, notiType, users, href});
     return await notiRepo.save(notification);
 }
 

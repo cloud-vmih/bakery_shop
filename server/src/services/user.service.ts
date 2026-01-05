@@ -1,4 +1,4 @@
-import { getUserById, updateUser, UserResponse, UpdateUserPayload } from '../db/user.db';
+import { getUserById, updateUser, UserResponse, UpdateUserPayload, getAllAdminAndStaff, getAllCustomer } from '../db/user.db';
 
 // Lấy profile
 export async function getProfile(userId: number): Promise<UserResponse> {
@@ -14,3 +14,13 @@ export async function updateProfile(userId: number, updates: UpdateUserPayload):
   if (!updatedUser) throw new Error('Không có thay đổi nào hoặc người dùng không tồn tại!');
   return updatedUser;
 }
+
+export const getAdminAndStaffIds = async (): Promise<number[]> => {
+  const users = await getAllAdminAndStaff();
+  return users.map(u => u.id!);
+};
+
+export const getCustomerIds = async (): Promise<number[]> => {
+  const users = await getAllCustomer();
+  return users.map(u => u.id!);
+};

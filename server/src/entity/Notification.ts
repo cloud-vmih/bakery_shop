@@ -19,6 +19,9 @@ export class Notification {
     @Column({ type: "boolean", default: false })
     isRead?: boolean;
 
+    @Column({ type: "text", nullable: true })
+    href?: string;
+
     @Column({
         type: "enum",
         enum: ENotiType,

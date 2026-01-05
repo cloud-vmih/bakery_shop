@@ -6,6 +6,9 @@ import {
   updateItemsDiscount,
   removeItemsDiscount,
 } from "../services/itemsDiscount.service";
+import { getCustomerIds } from "../services/user.service";
+import { ENotiType } from "../entity/enum/enum";
+import { sendNotification } from "../services/notification.service";
 
 export const getAllItemsDiscountController = async (req: Request, res: Response) => {
   try {
@@ -36,6 +39,15 @@ export const createItemsDiscountController = async (req: Request, res: Response)
       return res.status(400).json({ message: "Phải chọn ít nhất 1 sản phẩm" });
     }
     const data = await createItemsDiscount(req.body);
+
+    const customerIds = await getCustomerIds();
+    await sendNotification(
+      customerIds,
+      data.title!,
+      "Khuyến mãi mới lên đến " + data.discountAmount + "%",
+      ENotiType.SYSTEM,
+      `/menu`
+    );
     return res.status(201).json(data);
   } catch (err: any) {
     if (err.message === "ITEMS_NOT_FOUND") {  

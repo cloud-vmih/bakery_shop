@@ -51,5 +51,6 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Address.prototype, "isDefault", void 0);
 exports.Address = Address = __decorate([
-    (0, typeorm_1.Entity)("address")
+    (0, typeorm_1.Entity)("address"),
+    (0, typeorm_1.Index)(["customer", "placeId"], { unique: true })
 ], Address);

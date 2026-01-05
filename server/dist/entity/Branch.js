@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Branch = void 0;
 const typeorm_1 = require("typeorm");
 const Address_1 = require("./Address");
+const Inventory_1 = require("./Inventory");
 let Branch = class Branch extends typeorm_1.BaseEntity {
 };
 exports.Branch = Branch;
@@ -27,6 +28,10 @@ __decorate([
     (0, typeorm_1.OneToOne)(() => Address_1.Address, (a) => a.branch),
     __metadata("design:type", Address_1.Address)
 ], Branch.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Inventory_1.Inventory, (i) => i.branch),
+    __metadata("design:type", Array)
+], Branch.prototype, "inventory", void 0);
 exports.Branch = Branch = __decorate([
     (0, typeorm_1.Entity)("branch")
 ], Branch);

@@ -1,14 +1,22 @@
 import { useNotificationStore } from "../stores/notification.store";
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { vi } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
 
 export const NotificationDropdown = ({ onClose }: { onClose: () => void }) => {
   const { notifications, markAsRead } = useNotificationStore();
+  const navigate = useNavigate();
+
+  const handleClick = (n: any) => {
+    markAsRead(n.id);
+
+    if (n.href) {
+      navigate(n.href);
+    }
+
+    onClose();
+  };
 
   return (
-    <div
-      className="absolute right-0 mt-2 w-96 bg-white border rounded-xl shadow-xl z-50"
-    >
+    <div className="absolute right-0 mt-2 w-96 bg-white border rounded-xl shadow-xl z-[1000]">
       <div className="p-3 font-semibold border-b flex justify-between">
         <span>Thông báo</span>
 
@@ -33,7 +41,7 @@ export const NotificationDropdown = ({ onClose }: { onClose: () => void }) => {
             className={`w-full text-left p-3 border-b hover:bg-gray-50 transition ${
               !n.isRead ? "bg-blue-50" : ""
             }`}
-            onClick={() => markAsRead(n.id)}
+            onClick={() => handleClick(n)}
           >
             <div className="font-medium">{n.title}</div>
 
@@ -42,11 +50,11 @@ export const NotificationDropdown = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             <div className="text-xs text-gray-400 mt-1">
-              {formatDistanceToNow(parseISO(n.createAt), {
-                addSuffix: true,
-                locale: vi,
-              })}
+              {n.sentAt
+                ? new Date(n.sentAt).toLocaleString("vi-VN")
+                : ""}
             </div>
+
           </button>
         ))}
       </div>

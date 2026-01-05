@@ -1,5 +1,4 @@
 import { Link, useParams, Navigate } from "react-router-dom";
-import { Header } from "../components/Header";
 
 import { useEffect, useState } from "react";
 

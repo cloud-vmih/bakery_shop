@@ -13,6 +13,7 @@ exports.Rating = void 0;
 const typeorm_1 = require("typeorm");
 const Item_1 = require("./Item");
 const Customer_1 = require("./Customer");
+const ResponseRating_1 = require("./ResponseRating");
 let Rating = class Rating extends typeorm_1.BaseEntity {
 };
 exports.Rating = Rating;
@@ -30,6 +31,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: "customerID" }),
     __metadata("design:type", Customer_1.Customer)
 ], Rating.prototype, "customer", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => ResponseRating_1.ResponseRating, (responseRating) => responseRating.rating),
+    __metadata("design:type", Array)
+], Rating.prototype, "responses", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)

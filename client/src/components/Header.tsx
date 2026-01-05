@@ -114,6 +114,28 @@ export const Header: React.FC<HeaderProps> = ({
               ))}
           </div>
 
+          {/* Notification */}
+          <div className="relative">
+              <button
+              onClick={() => setDropDown(!dropDown)}
+              className="relative p-2 rounded-full hover:bg-emerald-50 transition"
+              >
+              <Bell className="w-6 h-6 text-emerald-700" />
+
+              {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+              )}
+              </button>
+
+              {dropDown && (
+              <div className="absolute right-0 mt-2">
+                  <NotificationDropdown onClose={() => setDropDown(false)} />
+              </div>
+              )}
+          </div>
+
           {/* User Section */}
           <div className="flex items-center gap-4">
             {user?.type === "Customer" && (

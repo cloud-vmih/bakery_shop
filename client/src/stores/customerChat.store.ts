@@ -29,15 +29,31 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (!get().messages[conversationId]) {
 
       const page = await loadMessages(conversationId);
+
+      if (page.items.length > 0) {
+        const firstMsg = page.items[0];
+        toast.success(
+          `First message:
+      id=${firstMsg.id}
+      senderId=${firstMsg.senderId}
+       createdAt=${firstMsg.createdAt} | sentAt=${(firstMsg as any).sentAt}
+      content=${firstMsg.content}`
+        );
+      }
+
       set((state) => ({
         messages: {
           ...state.messages,
-          [conversationId]: page.items.map((msg) => ({
+          [conversationId]: page.items.map((msg: any) => ({
             ...msg,
+            createdAt:
+              msg.createdAt ??
+              (msg.sentAt ? new Date(msg.sentAt).toISOString() : null),
             isMine: msg.senderId.toString() === currentUserId,
           })),
         }
       }));
+
     }
 
   set({
@@ -54,6 +70,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const socket = useSocketStore.getState().socket;
     if (!socket) return;
+
+    toast.success(`content: ${content}`)
 
     socket.emit("chat:send", {
       conversationId: activeConversationId,
