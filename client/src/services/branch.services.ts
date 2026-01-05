@@ -7,6 +7,15 @@ interface CreateResponse {
     latitude: number;
     longitude: number;
 }
+
+export type Branch = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+  address: string;
+};
+
 // CREATE
 export const createBranch = async (data: CreateResponse) => {
     try {
