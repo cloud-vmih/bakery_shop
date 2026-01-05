@@ -8,6 +8,8 @@ import "../styles/productDetails.css";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid"; // Heroicons solid
 import { ClockIcon } from "lucide-react";
 import { PriceDisplay } from "../components/ItemPrice";
+import { useUser } from "../context/AuthContext";
+import { addToWishlist, removeFromWishlist, getWishlist } from "../services/wishlist.service";
 
 const formatPrice = (price?: number) => {
   if (price === undefined || price === null) return "Liên hệ";
@@ -47,6 +49,9 @@ const ProductDetails = () => {
   const { getItemQuantity, loadInventory } = useInventory();
   const navigate = useNavigate();
 
+  const { user } = useUser();
+  const [liked, setLiked] = useState(false);
+
   useEffect(() => {
     loadInventory();
   }, [loadInventory]);
@@ -68,6 +73,43 @@ const ProductDetails = () => {
     };
     fetchItem();
   }, [id]);
+
+  useEffect(() => {
+    if (!user || !item?.id) return;
+    const checkWishlist = async () => {
+      try {
+        const data = await getWishlist();
+        setLiked(data.some(i => i.id === item.id));
+      } catch (err) {
+        console.error("Không thể tải wishlist");
+      }
+    };
+    checkWishlist();
+  }, [user, item]);
+
+  const handleToggleWishlist = async () => {
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để sử dụng wishlist");
+      navigate("/login");
+      return;
+    }
+    if (!item?.id) return;
+
+    try {
+      if (liked) {
+        await removeFromWishlist(item.id);
+        setLiked(false);
+        toast.success("Đã xóa khỏi wishlist");
+      } else {
+        await addToWishlist(item.id);
+        setLiked(true);
+        toast.success("Đã thêm vào wishlist");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Có lỗi xảy ra");
+    }
+  };
+
 
   const tags = useMemo(() => {
     if (!item) return [];
@@ -203,6 +245,16 @@ const ProductDetails = () => {
                 <div className="stockAvailabilityTag">
                   Còn {currentQuantity ?? "-"} sản phẩm
                 </div>
+
+                <button
+                  onClick={handleToggleWishlist}
+                  className={`
+                    px-3 py-1 rounded-xl border border-gray-300 transition-all
+                    ${liked ? "bg-red-100 text-red-600" : "bg-white text-gray-700 hover:bg-gray-100"}
+                  `}
+                >
+                  {liked ? "❤️ Đã yêu thích" : "🤍 Thêm vào wishlist"}
+                </button>
               </div>
 
               {/* Mô tả + Hạn sử dụng */}
