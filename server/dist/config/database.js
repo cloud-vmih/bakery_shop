@@ -11,15 +11,15 @@ const dotenv_1 = __importDefault(require("dotenv"));
 if (process.env.NODE_ENV !== "production") {
     dotenv_1.default.config();
 }
+console.log("DATABASE_URL =", process.env.DATABASE_URL);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "postgres",
     host: process.env.DB_HOST || "localhost",
     port: Number(process.env.DB_PORT) || 5432,
-    username: process.env.DB_USER,
-    password: String(process.env.DB_PASS),
+    username: process.env.DB_USER || "postgres",
+    password: String(process.env.DB_PASS) || "nthg",
     database: process.env.DB_NAME,
-    //url: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    //ssl: { rejectUnauthorized: false }, 
     synchronize: false,
     entities: [path_1.default.join(__dirname, "../entity/**/*.js")],
     migrations: [path_1.default.join(__dirname, "../migration/*.js")],

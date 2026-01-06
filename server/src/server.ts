@@ -26,6 +26,8 @@ import staffRoutes from "./routes/staff.route";
 import reviewRoutes from "./routes/review.route";
 import membershipDiscountRoutes from "./routes/membershipDiscount.route";
 import mempointRoutes from "./routes/mempoint.route";
+import ratingRouter from "./routes/rating.route";
+
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -73,6 +75,7 @@ app.use("/api/promotion", membershipDiscountRoutes);
 app.get("/api/__ping", (req, res) => {
   res.send("OK");
 });
+app.use("/api/ratings", ratingRouter);
 
 
 // export đặt CUỐI CÙNG

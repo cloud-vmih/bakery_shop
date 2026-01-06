@@ -11,6 +11,7 @@ import { useInventory } from "../context/InventoryContext";
 import { PriceDisplay } from "../components/ItemPrice";
 import { useCart } from "../context/CartContext";
 import RequireAuthModal from "../components/RequireAuthModal";
+import WishlistIcon from "../components/WishlistIcon";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -306,7 +307,6 @@ export default function MenuPage() {
                 </div>
               )}
 
-
               {/* Loading & danh sách sản phẩm */}
               {(loading || loadingBranches) ? (
                 <p className="text-center text-green-700 text-lg">Đang tải...</p>
@@ -336,26 +336,12 @@ export default function MenuPage() {
                         >
                           {/* Wishlist button - giữ nguyên */}
                           <div className="absolute top-3 right-3 z-20">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (!isDisabled) handleToggleWishlist(item.id);
-                              }}
+                            <WishlistIcon
+                              liked={wishlist.includes(item.id)}
                               disabled={isDisabled}
-                              className={`
-                                wishlistButton relative overflow-hidden
-                                ${wishlist.includes(item.id) ? 'liked' : ''}
-                                ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
-                              `}
-                            >
-                              {/* Icon tim */}
-                              <span className="text-2xl block transition-all duration-300">
-                                {wishlist.includes(item.id) ? '❤️' : '🤍'}
-                              </span>
-
-                              {/* Hiệu ứng khi đang thêm (chúng ta sẽ trigger bằng state tạm) */}
-                              {/* Ở đây mình dùng trick đơn giản: khi click, thêm class tạm thời nếu chưa liked */}
-                            </button>
+                              onToggle={() => handleToggleWishlist(item.id)}
+                              size={24} // bạn có thể tăng giảm kích thước tim
+                            />
                           </div>
                           {/* Hình ảnh */}
                           <div className="menuImageWrapper">

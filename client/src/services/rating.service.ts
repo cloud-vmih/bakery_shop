@@ -1,19 +1,20 @@
-// client/services/rating.service.ts
 import API from "../api/axois.config";
 import { AxiosError } from "axios";
 
 export interface Rating {
-  itemID: number;
-  customerID: number;
+  id: number;          // ID của bản ghi rating
+  itemID: number;      // ID sản phẩm
+  customerID: number;  // ID khách hàng
   contents: string;
   createAt: string;
   customer?: {
+    id: number;
     fullName: string;
     avatarURL?: string;
   };
 }
 
-/** Lấy tất cả rating của 1 item */
+// Lấy đánh giá theo sản phẩm
 export const getRatingsByItem = async (itemID: number): Promise<Rating[]> => {
   try {
     const res = await API.get(`/ratings/item/${itemID}`);
@@ -24,7 +25,7 @@ export const getRatingsByItem = async (itemID: number): Promise<Rating[]> => {
   }
 };
 
-/** Thêm hoặc cập nhật rating */
+// Thêm hoặc chỉnh sửa đánh giá
 export const addOrUpdateRating = async (itemID: number, contents: string) => {
   try {
     const res = await API.post(`/ratings`, { itemID, contents });
@@ -35,10 +36,10 @@ export const addOrUpdateRating = async (itemID: number, contents: string) => {
   }
 };
 
-/** Xóa rating */
-export const deleteRating = async (itemID: number) => {
+// Xóa đánh giá theo ID của rating
+export const deleteRating = async (ratingID: number) => {
   try {
-    const res = await API.delete(`/ratings/${itemID}`);
+    const res = await API.delete(`/ratings/${ratingID}`);
     return res.data;
   } catch (error) {
     const err = error as AxiosError<any>;
