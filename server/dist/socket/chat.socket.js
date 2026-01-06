@@ -42,7 +42,6 @@ const chatSocket = (io, socket) => {
         console.log(conversationId);
     });
     socket.on("chat:send", async ({ conversationId, content }) => {
-<<<<<<< HEAD
         try {
             const sender = socket.data.user;
             if (!sender) {
@@ -58,18 +57,6 @@ const chatSocket = (io, socket) => {
                 message: "Không gửi được tin nhắn",
             });
         }
-=======
-        const sender = socket.data.user;
-        console.log(content, sender.id, sender.type);
-        const message = await chatService.updateChat(conversationId, content, sender.id, sender);
-        io.to(`conversation:${conversationId}`).emit("chat:receive", message);
-        io.to("admins").emit("conversation:update", {
-            conversationId,
-            lastMessage: message.content,
-            lastMessageAt: message.createdAt,
-            senderRole: sender.type
-        });
->>>>>>> origin/feature/cake-filling
     });
     socket.on("admin:joinDashboard", () => {
         socket.join("admins");

@@ -6,7 +6,7 @@ const Item_1 = require("../entity/Item");
 const findAllItems = async () => {
     const repo = database_1.AppDataSource.getRepository(Item_1.Item);
     return await repo.find({
-        relations: ["discounts"],
+        relations: ["discounts", "membershipDiscounts"],
     });
 };
 exports.findAllItems = findAllItems;
@@ -19,7 +19,7 @@ const findItemById = async (id) => {
     const repo = database_1.AppDataSource.getRepository(Item_1.Item);
     return await repo.findOne({
         where: { id },
-        relations: ["ratings", "wishlists", "inventory", "inventory.branch", "discounts"],
+        relations: ["ratings", "wishlists", "inventory", "inventory.branch", "discounts", "membershipDiscounts"],
     });
 };
 exports.findItemById = findItemById;

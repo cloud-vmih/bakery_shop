@@ -5,25 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailService = void 0;
 exports.sendEmail = sendEmail;
-<<<<<<< HEAD
-// utils/emailService.ts
-const nodemailer_1 = __importDefault(require("nodemailer"));
-const emailTemplate_1 = require("../templates/emailTemplate");
-async function sendEmail(email, subject, html) {
-    const transport = nodemailer_1.default.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-    await transport.sendMail({
-        from: `MyBakery <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: subject,
-        html: html,
-    });
-=======
 const emailTemplate_1 = require("../templates/emailTemplate");
 const mail_1 = __importDefault(require("@sendgrid/mail"));
 // Khởi tạo SendGrid với API Key
@@ -80,7 +61,6 @@ async function sendEmail(email, subject, html) {
         });
         throw error;
     }
->>>>>>> origin/feature/cake-filling
 }
 exports.emailService = {
     // Gửi OTP

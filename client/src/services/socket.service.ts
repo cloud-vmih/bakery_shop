@@ -1,10 +1,7 @@
-import toast from "react-hot-toast";
-
 export const getSocketAuth = () => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    toast.success("tpk")
     return { token };
   }
 

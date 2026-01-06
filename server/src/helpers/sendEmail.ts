@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import { Resend } from "resend";
 import { emailTemplates } from '../templates/emailTemplate';
 import sgMail from '@sendgrid/mail';
 

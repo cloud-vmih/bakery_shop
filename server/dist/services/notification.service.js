@@ -37,15 +37,9 @@ exports.markRead = exports.list = exports.sendNotification = void 0;
 const user_db_1 = require("../db/user.db");
 const socket_1 = require("../socket");
 const notificationDB = __importStar(require("../db/notification.db"));
-<<<<<<< HEAD
 const sendNotification = async (userIds, title, contents, notiType, href) => {
     const users = (await Promise.all(userIds.map(id => (0, user_db_1.getRawUserByID)(id)))).filter((u) => u !== null);
     const noti = await notificationDB.create(title, contents, notiType, users, href);
-=======
-const sendNotification = async (userIds, title, contents, notiType) => {
-    const users = (await Promise.all(userIds.map(id => (0, user_db_1.getRawUserByID)(id)))).filter((u) => u !== null);
-    const noti = await notificationDB.create(title, contents, notiType, users);
->>>>>>> origin/feature/cake-filling
     users.forEach((u) => {
         socket_1.io.to(`notify:${u.id}`).emit("notification:new", noti);
     });
@@ -59,14 +53,9 @@ const list = async (userId) => {
         id: n.id,
         title: n.title,
         content: n.contents,
-<<<<<<< HEAD
         sentAt: n.sentAt,
         isRead: n.isRead,
         href: n.href,
-=======
-        createAt: n.sentAt,
-        isRead: n.isRead,
->>>>>>> origin/feature/cake-filling
     }));
 };
 exports.list = list;

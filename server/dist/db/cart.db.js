@@ -10,7 +10,10 @@ const getCartByUserId = async (userId) => {
         where: { customer: { id: userId } },
         relations: {
             items: {
-                item: true, // 👈 load luôn product
+                item: {
+                    discounts: true,
+                    membershipDiscounts: true,
+                },
             },
         },
     });

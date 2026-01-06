@@ -1,34 +1,31 @@
 "use strict";
-// // services/rating.service.ts
-// import {
-//   createOrUpdateRating,
-//   getRatingsByItem,
-//   getRatingsByCustomer,
-//   deleteRating,
-// } from "../db/rating.db";
-// import { Rating } from "../entity/Rating";
-//
-// /**
-//  * Tạo hoặc cập nhật rating
-//  */
-// export const ratingService = {
-//   addOrUpdateRating: async (
-//     customerID: number,
-//     itemID: number,
-//     contents: string
-//   ): Promise<Rating> => {
-//     return await createOrUpdateRating(customerID, itemID, contents);
-//   },
-//
-//   getItemRatings: async (itemID: number): Promise<Rating[]> => {
-//     return await getRatingsByItem(itemID);
-//   },
-//
-//   getCustomerRatings: async (customerID: number): Promise<Rating[]> => {
-//     return await getRatingsByCustomer(customerID);
-//   },
-//
-//   removeRating: async (customerID: number, itemID: number): Promise<void> => {
-//     await deleteRating(customerID, itemID);
-//   },
-// };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ratingService = void 0;
+const rating_db_1 = require("../db/rating.db");
+const BAD_WORDS_REGEX = /fuck|shit|damn/gi;
+exports.ratingService = {
+    addOrUpdateRating: async (customerID, itemID, contents) => {
+        return await rating_db_1.ratingRepository.createOrUpdateRating(customerID, itemID, contents);
+    },
+    getItemRatings: async (itemID) => {
+        const data = await rating_db_1.ratingRepository.getRatingsByItem(itemID);
+        for (const item of data) {
+            if (BAD_WORDS_REGEX.test(item.contents)) {
+                item.contents = item.contents.replace(BAD_WORDS_REGEX, '***');
+            }
+        }
+        return data;
+    },
+    getCustomerRatings: async (customerID) => {
+        const data = await rating_db_1.ratingRepository.getRatingsByCustomer(customerID);
+        for (const item of data) {
+            if (BAD_WORDS_REGEX.test(item.contents)) {
+                item.contents = item.contents.replace(BAD_WORDS_REGEX, '***');
+            }
+        }
+        return data;
+    },
+    removeRating: async (customerID, itemID) => {
+        await rating_db_1.ratingRepository.deleteRating(customerID, itemID);
+    },
+};

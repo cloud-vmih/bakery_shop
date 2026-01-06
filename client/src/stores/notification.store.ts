@@ -27,7 +27,6 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     const socket = useSocketStore.getState().socket;
 
     if (!socket) return;
-    toast.success("Có socket");
     socket.emit("notification:list", null, (data: Notification[]) => {
       set({
         notifications: data,

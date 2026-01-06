@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:type", Number)
 ], MembershipDiscount.prototype, "minPoints", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Item_1.Item, { nullable: true }),
+    (0, typeorm_1.ManyToMany)(() => Item_1.Item, (i) => i.membershipDiscounts, { nullable: true }),
     (0, typeorm_1.JoinTable)({ name: "membership_discount_items" }),
     __metadata("design:type", Array)
 ], MembershipDiscount.prototype, "items", void 0);

@@ -82,7 +82,6 @@ const getOrCreateConversation = async (senderId) => {
 };
 exports.getOrCreateConversation = getOrCreateConversation;
 const getMessagesByConversation = async (conversationId, cursor, limit = 20) => {
-<<<<<<< HEAD
     const result = await chatDB.getMessages(conversationId, cursor, limit);
     return {
         items: result.items.map((m) => ({
@@ -94,9 +93,6 @@ const getMessagesByConversation = async (conversationId, cursor, limit = 20) => 
         })),
         nextCursor: result.nextCursor,
     };
-=======
-    return await chatDB.getMessages(conversationId, cursor, limit);
->>>>>>> origin/feature/cake-filling
 };
 exports.getMessagesByConversation = getMessagesByConversation;
 const getConversationsSummary = async () => {
@@ -106,16 +102,10 @@ const getConversationsSummary = async () => {
         .map(async (c) => {
         const message = await chatDB.getLatestMessageByConversation(c.id);
         const unreadCount = await chatDB.countUnreadMessages(c.id);
-<<<<<<< HEAD
         const customer = await chatDB.getConversationCustomer(c.id);
         return {
             id: c.id,
             user: customer?.fullName ?? null,
-=======
-        return {
-            id: c.id,
-            userId: message?.senderUser?.id ?? message?.senderId ?? null,
->>>>>>> origin/feature/cake-filling
             lastMessage: message?.content,
             unreadCount,
             lockedBy: null,

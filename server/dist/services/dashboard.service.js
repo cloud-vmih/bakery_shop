@@ -20,7 +20,7 @@ const getDashboardData = async (filters) => {
         where: {
             createAt: (0, typeorm_1.Between)(fromDate, toDate),
         },
-        relations: ["customer", "orderDetails"],
+        relations: ["customer", "orderDetails", "orderDetails.item"],
         order: { createAt: "ASC" },
     });
     if (orders.length === 0) {
@@ -123,7 +123,7 @@ const getDashboardData = async (filters) => {
     const prevTo = new Date(toDate.getTime() - durationMs - 1);
     const prevOrders = await manageOrder_db_1.orderRepo.find({
         where: { createAt: (0, typeorm_1.Between)(prevFrom, prevTo) },
-        relations: ["orderDetails"],
+        relations: ["orderDetails", "orderDetails.item"],
     });
     let prevNetRevenue = 0;
     prevOrders.forEach(order => {

@@ -4,11 +4,8 @@ exports.getUserById = getUserById;
 exports.updateUser = updateUser;
 exports.getRawUserByID = getRawUserByID;
 exports.getCustomerByID = getCustomerByID;
-<<<<<<< HEAD
 exports.getAllAdminAndStaff = getAllAdminAndStaff;
 exports.getAllCustomer = getAllCustomer;
-=======
->>>>>>> origin/feature/cake-filling
 // db/user.ts (cho các operations với single user)
 const database_1 = require("../config/database");
 const User_1 = require("../entity/User");
@@ -86,7 +83,6 @@ async function getCustomerByID(userId) {
     const customerRepository = database_1.AppDataSource.getRepository(Customer_1.Customer);
     return await customerRepository.findOne({ where: { id: userId } });
 }
-<<<<<<< HEAD
 async function getAllAdminAndStaff() {
     return await userRepository.find({
         where: [
@@ -102,5 +98,3 @@ async function getAllCustomer() {
         select: ["id"],
     });
 }
-=======
->>>>>>> origin/feature/cake-filling

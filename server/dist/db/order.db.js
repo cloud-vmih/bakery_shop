@@ -9,7 +9,7 @@ exports.orderRepo = {
     findByCustomerId: async (userId) => {
         return await orderRepository.find({
             where: { customer: { id: userId } },
-            relations: ["orderDetails", "orderDetails.item"],
+            relations: ["orderDetails", "orderDetails.item", "orderDetails.item.discounts", "orderInfo", "orderInfo.address"],
             // Tùy chọn: chỉ lấy các field cần của orderDetails
         });
     },
@@ -20,7 +20,7 @@ exports.orderRepo = {
                 id: orderId,
                 customer: { id: userId },
             },
-            relations: ["orderDetails", "customer", "payment", "orderDetails.item", "orderInfo"],
+            relations: ["orderDetails", "customer", "payment", "orderDetails.item", "orderInfo", "orderInfo.address", "orderDetails.item.discounts", "orderDetails.item.membershipDiscounts"],
         });
     },
     save: async (order) => {

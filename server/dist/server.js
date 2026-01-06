@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// src/server.ts
 const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
@@ -28,6 +27,8 @@ const staff_route_1 = __importDefault(require("./routes/staff.route"));
 const review_route_1 = __importDefault(require("./routes/review.route"));
 const membershipDiscount_route_1 = __importDefault(require("./routes/membershipDiscount.route"));
 const mempoint_route_1 = __importDefault(require("./routes/mempoint.route"));
+const rating_route_1 = __importDefault(require("./routes/rating.route"));
+const mempoint_route_2 = __importDefault(require("./routes/mempoint.route"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -48,7 +49,7 @@ app.use("/api/branchs", branch_route_1.default);
 app.use("/api/items", item_route_1.default);
 app.use("/api", inventory_route_1.default);
 //app.use("/api", addressRoutes);
-app.use('/api', user_route_1.default);
+app.use("/api", user_route_1.default);
 app.use("/api/order", order_route_1.default);
 app.use("/api/wishlist", wishlist_route_1.default);
 app.use("/api/chat", chat_route_1.default);
@@ -60,10 +61,12 @@ app.use("/api/payment", payment_route_1.default);
 app.use("/api/payment/vnpay", payment_vnpay_route_1.default);
 app.use("/api/items-discount", itemsDiscount_route_1.default);
 app.use("/api/staff", staff_route_1.default);
-app.use('/api/reviews', review_route_1.default);
+app.use("/api/reviews", review_route_1.default);
 app.use("/api/promotion", membershipDiscount_route_1.default);
 app.get("/api/__ping", (req, res) => {
     res.send("OK");
 });
+app.use("/api/ratings", rating_route_1.default);
+app.use("/api/membership", mempoint_route_2.default);
 // export đặt CUỐI CÙNG
 exports.default = app;

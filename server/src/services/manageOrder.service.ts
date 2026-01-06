@@ -9,6 +9,7 @@ import { Order } from "../entity/Orders";
 import dayjs from "dayjs";
 import fs from "fs";
 import path from "path";
+import { EPayStatus, EPayment } from "../entity/enum/enum";
 
 /* ================== STATUS FLOW ================== */
 const allowedTransitions: Record<EOrderStatus, EOrderStatus[]> = {
@@ -214,6 +215,16 @@ export const updateOrderStatus = async (
 
   if (order.status === EOrderStatus.CANCELED) {
     throw new Error("Đơn đã hủy, không thể cập nhật trạng thái");
+  }
+
+  if (newStatus === EOrderStatus.COMPLETED) {
+    if (
+      order.payment &&
+      order.payment.paymentMethod === EPayment.COD &&
+      order.payment.status === EPayStatus.PENDING
+    ) {
+      order.payment.status = EPayStatus.PAID;
+    }
   }
 
   if (!allowedTransitions[order.status!].includes(newStatus)) {

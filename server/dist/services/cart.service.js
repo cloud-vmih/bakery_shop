@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartService = void 0;
-// src/services/cart.service.ts
 const database_1 = require("../config/database");
 const CartItem_1 = require("../entity/CartItem");
 const cart_db_1 = require("../db/cart.db");

@@ -124,15 +124,15 @@ exports.googleService = {
                 customer.account = acc;
                 customer.avatarURL = avatarURL || "";
                 user = await (0, account_db_1.createUser)(customer);
+                await (0, verify_db_1.createEmailVerification)(accountId);
             }
             else {
-                if (await (0, verify_db_1.isAccountVerified)(user.account.id))
-                    accountId = user.account.id;
-                else
-                    throw new Error("Please verify email!");
+                // if (await isAccountVerified(user.account.id))
+                //   accountId = user.account.id;
+                // else throw new Error("Please verify email!");
+                accountId = user.account.id;
             }
             await account_db_1.socialAuthRepo.linkSocialAccount(providerUserId, email, accountId);
-            await (0, verify_db_1.createEmailVerification)(accountId);
             await (0, verify_db_1.verify)(accountId);
         }
         const jwtPayload = {
@@ -164,16 +164,7 @@ exports.changePassword = {
             }
             await redis_1.redis.set(`otp:${email}`, otp, { ex: OTP_TTL });
             await redis_1.redis.set(cooldownKey, "1", { ex: COOLDOWN_TTL });
-<<<<<<< HEAD
-            //   const html = `
-            //   <h2>Verify your OTP</h2>
-            //   <p>Your OTP:</p>
-            //   <a>${otp}</a>
-            // `;
-            //   await sendEmail(email, "Verify your OTP", html);
-=======
             console.log("OTP saved to Redis");
->>>>>>> origin/feature/cake-filling
             await sendEmail_1.emailService.sendOTP(email, user.fullName, otp);
             return { message: "The OTP send successfully, please check it." };
         }

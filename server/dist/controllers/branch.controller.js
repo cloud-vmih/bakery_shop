@@ -50,8 +50,8 @@ const createBranchWithAddres = async (req, res) => {
 exports.createBranchWithAddres = createBranchWithAddres;
 const getBranches = async (req, res) => {
     try {
-        const result = await branchService.getAllBranchService();
-        res.status(201).json(result);
+        const branches = await branchService.getAllBranchService();
+        res.status(201).json(branches);
     }
     catch (err) {
         res.status(400).json({

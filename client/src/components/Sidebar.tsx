@@ -32,7 +32,7 @@ export const AdminSidebar = () => {
         {to: "/admin/promotion", label: "Promotions", icon: "fas fa-tag", types: ['Admin']},
         {to: "/admin/reviews", label: "Customer Reviews", icon: "fas fa-star", types: ['Admin', 'Staff']},
         {to: "/admin/staff", label: "Staff Management", icon: "fas fa-users-cog", types: ['Admin']},
-        {to: "/admin/manage-orders", label: "Orders", icon: "fas fa-shopping-bag", types: ['Admin', 'Staff']},
+        {to: "/admin/manage-orders", label: "Orders Management", icon: "fas fa-shopping-bag", types: ['Admin', 'Staff']},
         {to: "/admin/conversations", label: "Conversations", icon: "fas fa-comments", types: ['Admin', 'Staff']},
     ];
 

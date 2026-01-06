@@ -10,7 +10,6 @@ const addToCart = async (req, res) => {
     try {
         const userId = req.user.id;
         const { itemId, quantity = 1 } = req.body;
-        console.log("itemId", itemId);
         if (!itemId) {
             return res.status(400).json({ message: "Thiếu itemId" });
         }
@@ -31,6 +30,7 @@ const getCart = async (req, res) => {
     try {
         const userId = req.user.id;
         const cart = await cartService.getCart(userId);
+        console.log(cart);
         return res.json(cart);
     }
     catch (error) {

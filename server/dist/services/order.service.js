@@ -56,7 +56,6 @@ exports.getMyOrders = getMyOrders;
 // Lấy chi tiết trạng thái một đơn hàng
 const getOrderStatus = async (orderId, userId) => {
     const order = await order_db_1.orderRepo.findOneByIdAndCustomer(orderId, userId);
-    console.log("Order fetched:", order);
     if (!order) {
         return null;
     }
@@ -69,6 +68,7 @@ const getOrderStatus = async (orderId, userId) => {
         createdAt: order.createAt,
         payStatus: order.payment?.status ?? enum_1.EPayStatus.PENDING, // THÊM DÒNG NÀY
         cancelStatus: order.cancelStatus ?? enum_1.ECancelStatus.NONE,
+        cancelReason: order.cancelReason || null,
         timeline,
         payment: order.payment ? {
             method: order.payment.paymentMethod, // ví dụ: "COD", "VNPAY"
@@ -79,13 +79,15 @@ const getOrderStatus = async (orderId, userId) => {
             quantity: detail.quantity ?? detail.item?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
         })) || [],
         note: order.orderInfo?.note || null,
+        branchId: order.orderInfo?.branchId || null,
+        address: order.orderInfo?.address,
     };
 };
 exports.getOrderStatus = getOrderStatus;
 /**
  * Hủy đơn hàng - theo trạng thái thanh toán
  */
-const cancelOrder = async (orderId, userId) => {
+const cancelOrder = async (orderId, userId, reason) => {
     // 1. Tìm đơn hàng của user
     const order = await order_db_1.orderRepo.findOneByIdAndCustomer(orderId, userId);
     if (!order) {
@@ -129,6 +131,9 @@ const cancelOrder = async (orderId, userId) => {
     if (payStatus === enum_1.EPayStatus.PENDING) {
         order.status = enum_1.EOrderStatus.CANCELED;
         order.cancelStatus = enum_1.ECancelStatus.NONE; // Không cần lưu trạng thái yêu cầu
+        if (reason?.trim()) {
+            order.cancelReason = reason.trim(); // ← LƯU LÝ DO
+        }
         await order_db_1.orderRepo.save(order);
         return {
             success: true,
@@ -140,6 +145,9 @@ const cancelOrder = async (orderId, userId) => {
     if (payStatus === enum_1.EPayStatus.PAID) {
         order.cancelStatus = enum_1.ECancelStatus.REQUESTED;
         // Giữ nguyên status (PENDING/CONFIRMED) để admin có thể xử lý tiếp
+        if (reason?.trim()) {
+            order.cancelReason = reason.trim(); // ← LƯU LÝ DO
+        }
         await order_db_1.orderRepo.save(order);
         const customer = await (0, user_db_1.getUserById)(userId);
         await sendEmail_1.emailService.sendRefundForm(customer.email, customer.fullName, String(orderId), 'https://docs.google.com/forms/d/e/1FAIpQLSf-Yh0jF8aH-G-JCGDnmHkMAcBE6XP_SUvDK4CsxnbBDrB-vQ/viewform?usp=header');

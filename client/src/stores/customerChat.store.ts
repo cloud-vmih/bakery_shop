@@ -23,23 +23,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ loading: true });
 
     const conversationId = await getActiveConversation();
-    toast.success(`conversation: ${conversationId}`);
     const socket = useSocketStore.getState().socket;
     socket?.emit("chat:join", { conversationId });
     if (!get().messages[conversationId]) {
 
       const page = await loadMessages(conversationId);
-
-      if (page.items.length > 0) {
-        const firstMsg = page.items[0];
-        toast.success(
-          `First message:
-      id=${firstMsg.id}
-      senderId=${firstMsg.senderId}
-       createdAt=${firstMsg.createdAt} | sentAt=${(firstMsg as any).sentAt}
-      content=${firstMsg.content}`
-        );
-      }
 
       set((state) => ({
         messages: {
@@ -70,9 +58,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const socket = useSocketStore.getState().socket;
     if (!socket) return;
-
-    toast.success(`content: ${content}`)
-
     socket.emit("chat:send", {
       conversationId: activeConversationId,
       content,

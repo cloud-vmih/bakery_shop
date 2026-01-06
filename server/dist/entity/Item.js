@@ -15,6 +15,7 @@ const enum_1 = require("./enum/enum");
 const Wishlist_1 = require("./Wishlist");
 const Rating_1 = require("./Rating");
 const ItemDiscount_1 = require("./ItemDiscount");
+const MembershipDiscount_1 = require("./MembershipDiscount");
 const Inventory_1 = require("./Inventory");
 let Item = class Item extends typeorm_1.BaseEntity {
 };
@@ -67,6 +68,10 @@ __decorate([
     (0, typeorm_1.ManyToMany)(() => ItemDiscount_1.ItemsDiscount, (i) => i.items),
     __metadata("design:type", Array)
 ], Item.prototype, "discounts", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => MembershipDiscount_1.MembershipDiscount, (m) => m.items),
+    __metadata("design:type", Array)
+], Item.prototype, "membershipDiscounts", void 0);
 exports.Item = Item = __decorate([
     (0, typeorm_1.Entity)("item")
 ], Item);

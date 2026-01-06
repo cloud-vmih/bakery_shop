@@ -12,10 +12,17 @@ const findOrdersWithFilter = async (queryBuilder) => {
     return await queryBuilder.getMany();
 };
 exports.findOrdersWithFilter = findOrdersWithFilter;
+/* ================== CHI TIẾT ĐƠN HÀNG - DÙNG CHO IN HÓA ĐƠN ================== */
 const findOrderById = async (orderId) => {
     return await exports.orderRepo.findOne({
         where: { id: orderId },
-        relations: ["customer", "orderDetails"],
+        relations: [
+            "customer",
+            "orderDetails", // Join orderDetails
+            "orderDetails.item", // ← QUAN TRỌNG: Join sâu đến Item để lấy name, price
+            "payment", // Nếu có payment (phương thức, trạng thái thanh toán)
+            "orderInfo", // Để lấy note (lịch sử hủy, ghi chú)
+        ],
     });
 };
 exports.findOrderById = findOrderById;

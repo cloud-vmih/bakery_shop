@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import Cart from "./pages/CartPage";
-import Home from "./pages/Home";
 import VerifyEmail from "./pages/verifyEmail";
 import OrderManagement from "./pages/OrderManagement";
 import Dashboard from "./pages/Dashboard";
@@ -63,7 +62,7 @@ export default function App() {
                                     <Route path="/change-password" element={<ChangePassword />} />
                                     <Route element={<MainLayout />}>
                                         <Route path="/profile" element={<ProfilePage/>} />
-                                        <Route path="/*" element={<Home />} />
+                                        <Route path="/*" element={<MenuPage />} />
                                         <Route path="/verify" element={<VerifyEmail />} />
                                         <Route path="/menu" element={<MenuPage />} />
                                         <Route path="/product/:id" element={<ProductDetails />} />
@@ -75,7 +74,7 @@ export default function App() {
                                             element={<OrderStatus />}
                                         />
                                         <Route path="/wishlist" element={<WishlistPage />} />
-                                        <Route path="/" element={<Home />} />
+                                        <Route path="/" element={<MenuPage />} />
                                         <Route path="/cart" element={<Cart />} />
                                         <Route path="/checkout" element={<Checkout />} />
                                         <Route

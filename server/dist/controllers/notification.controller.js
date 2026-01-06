@@ -37,13 +37,8 @@ exports.listNotifications = exports.sendNotification = void 0;
 const notificationService = __importStar(require("../services/notification.service"));
 const sendNotification = async (req, res) => {
     try {
-<<<<<<< HEAD
         const { userIds, title, contents, notiType, href } = req.body;
         const noti = await notificationService.sendNotification(userIds, title, contents, notiType, href);
-=======
-        const { userIds, title, contents, notiType } = req.body;
-        const noti = await notificationService.sendNotification(userIds, title, contents, notiType);
->>>>>>> origin/feature/cake-filling
         res.status(200).json({
             success: true,
             data: noti,

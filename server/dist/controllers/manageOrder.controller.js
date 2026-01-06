@@ -3,11 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.printInvoice = exports.handleCancel = exports.requestCancel = exports.cancel = exports.updateStatus = exports.getDetail = exports.getOrders = void 0;
 const enum_1 = require("../entity/enum/enum");
 const manageOrder_service_1 = require("../services/manageOrder.service");
-<<<<<<< HEAD
 const user_service_1 = require("../services/user.service");
 const notification_service_1 = require("../services/notification.service");
-=======
->>>>>>> origin/feature/cake-filling
 /* ================== GET ================== */
 const getOrders = async (req, res) => {
     try {
@@ -42,10 +39,7 @@ const updateStatus = async (req, res) => {
             return res.status(400).json({ message: "Trạng thái không hợp lệ" });
         }
         const order = await (0, manageOrder_service_1.updateOrderStatus)(orderId, newStatus);
-<<<<<<< HEAD
         await (0, notification_service_1.sendNotification)([order.customer?.id], "Trạng thái đơn hàng đã được cập nhật", `Đơn hàng #${order.id} của bạn trong trạng thái ${newStatus}`, enum_1.ENotiType.ORDER, `/orderDetails/${order.id}`);
-=======
->>>>>>> origin/feature/cake-filling
         res.json({ message: "Cập nhật trạng thái thành công", order });
     }
     catch (error) {
@@ -62,10 +56,7 @@ const cancel = async (req, res) => {
             return res.status(400).json({ message: "Vui lòng nhập lý do hủy" });
         }
         const order = await (0, manageOrder_service_1.cancelOrder)(orderId, cancelReason.trim());
-<<<<<<< HEAD
         await (0, notification_service_1.sendNotification)([order.customer?.id], "Đặt hàng thành công", `Đơn hàng #${order.id} của bạn đã bị hủy`, enum_1.ENotiType.ORDER, `/orderDetails/${order.id}`);
-=======
->>>>>>> origin/feature/cake-filling
         res.json({ message: "Hủy đơn thành công", order });
     }
     catch (error) {
@@ -86,11 +77,8 @@ const requestCancel = async (req, res) => {
             return res.status(400).json({ message: "Vui lòng nhập lý do hủy" });
         }
         const order = await (0, manageOrder_service_1.requestCancelOrder)(orderId, userId, reason.trim());
-<<<<<<< HEAD
         const adminStaffIds = await (0, user_service_1.getAdminAndStaffIds)();
         await (0, notification_service_1.sendNotification)(adminStaffIds, "Yêu cầu hủy đơn", `Có yêu cầu hủy #${order.id} cần xử lý`, enum_1.ENotiType.ORDER, `/admin/manage-orders`);
-=======
->>>>>>> origin/feature/cake-filling
         res.json({ message: "Đã gửi yêu cầu hủy đơn", order });
     }
     catch (error) {
@@ -103,15 +91,13 @@ const handleCancel = async (req, res) => {
     try {
         const orderId = Number(req.params.id);
         const { action, note } = req.body;
-        const staffId = req.user?.id;
-        if (!staffId) {
-            return res.status(401).json({ message: "Không có quyền" });
-        }
         if (!["approve", "reject"].includes(action)) {
             return res.status(400).json({ message: "Hành động không hợp lệ" });
         }
-        const order = await (0, manageOrder_service_1.handleCancelRequest)(orderId, action, String(staffId), note);
-<<<<<<< HEAD
+        // Không bắt buộc phải có user ID (vì quyền đã kiểm tra ở frontend)
+        // Nếu có thì dùng, không có thì để "Nhân viên" chung chung
+        const handledById = req.user?.id ? String(req.user.id) : undefined;
+        const order = await (0, manageOrder_service_1.handleCancelRequest)(orderId, action, handledById, note);
         if (action === "approve") {
             await (0, notification_service_1.sendNotification)([order.customer?.id], "Hủy đơn thành công", `Đơn hàng #${order.id} của bạn đã được hủy`, enum_1.ENotiType.ORDER, `/orderDetails/${order.id}`);
         }
@@ -120,12 +106,6 @@ const handleCancel = async (req, res) => {
         }
         res.json({
             message: action === "approve" ? "Đã duyệt hủy đơn" : "Đã từ chối yêu cầu hủy",
-=======
-        res.json({
-            message: action === "approve"
-                ? "Đã duyệt hủy đơn"
-                : "Đã từ chối yêu cầu hủy",
->>>>>>> origin/feature/cake-filling
             order,
         });
     }

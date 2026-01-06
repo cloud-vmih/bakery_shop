@@ -61,10 +61,6 @@ const createVNPayUrl = ({ orderId, amount, orderInfo, returnUrl, ipAddr, userId 
         .digest("hex");
     // ===== 5. URL THANH TOÁN CUỐI =====
     const paymentUrl = `${vnp_Url}?${query}&vnp_SecureHash=${secureHash}`;
-    // ===== 6. DEBUG (NÊN GIỮ KHI TEST) =====
-    console.log("VNPay hashData:", hashData);
-    console.log("VNPay secureHash:", secureHash);
-    console.log("VNPay paymentUrl:", paymentUrl);
     return paymentUrl;
 };
 exports.createVNPayUrl = createVNPayUrl;
