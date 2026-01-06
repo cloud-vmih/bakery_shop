@@ -8,7 +8,9 @@ export const getCartByUserId = async (userId: number) => {
     where: { customer: { id: userId } },
     relations: {
       items: {
-        item: true, // 👈 load luôn product
+        item: {
+          discounts: true,
+        },
       },
     },
   });

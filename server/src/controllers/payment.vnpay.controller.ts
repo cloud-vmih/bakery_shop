@@ -62,8 +62,6 @@ export const createVNPayPayment = async (req: Request, res: Response) => {
    GET /api/payment/vnpay/return
 ===================================================== */
 export const vnpayReturn = async (req: Request, res: Response) => {
-    const { amount } = req.body;
-
   try {
     /* =========================
        1️⃣ VERIFY SIGNATURE
@@ -144,6 +142,8 @@ export const vnpayReturn = async (req: Request, res: Response) => {
       // 2️⃣ trừ kho thật
       await commitInventoryForOrder(branchId, inventoryItems);
 
+
+
       // 3️⃣ confirm order
       await ordersService.confirmOrder(orderId);
 
@@ -165,7 +165,15 @@ export const vnpayReturn = async (req: Request, res: Response) => {
         `/admin/manage-orders`
       );
 
-      await MembershipService.accumulatePoints(userId, orderId, amount);
+      // 4️⃣ 🔥 TÍCH ĐIỂM THÀNH VIÊN (VNPay)
+      const vnpAmountRaw = vnp_Params["vnp_Amount"];
+      const totalAmount = Number(vnpAmountRaw) / 100;
+
+      await MembershipService.accumulatePoints(
+        order.customer?.id!, // customerId
+        orderId, // orderId
+        totalAmount // orderAmount
+      );
 
       return res.redirect(
         `${process.env.CLIENT_URL}/payment/vnpay/return?` +

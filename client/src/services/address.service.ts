@@ -43,7 +43,8 @@ export const getMyAddresses = async (): Promise<Address[]> => {
    - Trả về address vừa tạo
 ======================= */
 
-export const createAddress = async ( // cùng logic, khác tên với addAddress của tructruc
+export const createAddress = async (
+  // cùng logic, khác tên với addAddress của tructruc
   payload: CreateAddressPayload
 ): Promise<Address> => {
   try {

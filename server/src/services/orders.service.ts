@@ -15,7 +15,6 @@ export class OrdersService {
     return createOrderDB({
       customerId: userId,
 
-      // ✅ TRUYỀN BRANCH ID XUỐNG DB
       branchId: payload.branchId,
 
       info: {

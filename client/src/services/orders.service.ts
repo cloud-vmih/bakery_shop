@@ -22,9 +22,9 @@ export type OrderDetailItem = {
 export type OrderItem = {
   id: number;
   createAt: string;
-  status: string;            // PENDING, CONFIRMED, ...
-  payStatus: string;         // PENDING, PAID, REFUNDED
-  cancelStatus?: string;     // NONE, REQUESTED, APPROVED, REJECTED
+  status: string; // PENDING, CONFIRMED, ...
+  payStatus: string; // PENDING, PAID, REFUNDED
+  cancelStatus?: string; // NONE, REQUESTED, APPROVED, REJECTED
   orderDetails: OrderDetailItem[];
 };
 
@@ -39,19 +39,19 @@ export type OrderStatusResponse = {
   status: string;
   statusText: string;
   createdAt: string;
-  payStatus: string;                    // THÊM
-  cancelStatus?: string;                // THÊM
+  payStatus: string; // THÊM
+  cancelStatus?: string; // THÊM
   payment?: {
-    method: string;                     // COD, VNPAY, ...
-    status: string;                     // PENDING, PAID
+    method: string; // COD, VNPAY, ...
+    status: string; // PENDING, PAID
   } | null;
   timeline: {
     status?: string;
     label: string;
     completed: boolean;
   }[];
-  items: OrderDetailItem[];   
-  note?: string | null;          
+  items: OrderDetailItem[];
+  note?: string | null;
 };
 
 // Response khi hủy/yêu cầu hủy đơn
@@ -119,8 +119,5 @@ export const cancelOrder = (id: number, cancelReason: string) => {
 };
 
 export const printInvoice = (id: number) => {
-  window.open(
-    `http://localhost:5000/api/manage-orders/${id}/print`,
-    "_blank"
-  );
+  window.open(`http://localhost:5000/api/manage-orders/${id}/print`, "_blank");
 };

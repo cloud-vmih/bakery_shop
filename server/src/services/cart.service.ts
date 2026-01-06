@@ -1,7 +1,5 @@
-// src/services/cart.service.ts
 import { AppDataSource } from "../config/database";
 import { CartItem } from "../entity/CartItem";
-import { Cart } from "../entity/Cart";
 import {
   getCartByUserId,
   createOrUpdateCart,

@@ -6,6 +6,8 @@ import {
   commitInventoryForOrder,
 } from "../services/inventory.service";
 import { EPayment,ENotiType } from "../entity/enum/enum";
+
+import { MembershipService } from "../services/mempoint.service";
 import { getAdminAndStaffIds } from "../services/user.service";
 import { sendNotification } from "../services/notification.service";
 
@@ -26,12 +28,11 @@ export const createOrder = async (req: any, res: Response) => {
       paymentMethod,
       branchId,
       items, // [{ itemId, quantity }]
+      totalAmount,
     } = req.body;
 
-    console.log(`branch id : ${branchId}`)
-
     const inventoryItems = items.map((i: any) => ({
-      itemId: i.item?.id, // 👈 LẤY ĐÚNG
+      itemId: i.item?.id,
       quantity: i.quantity,
     }));
 
@@ -43,6 +44,7 @@ export const createOrder = async (req: any, res: Response) => {
     /* =========================
        2️⃣ TẠO ORDER (PENDING)
     ========================= */
+
     const order = await ordersService.createOrder(userId, req.body);
   
     /* =========================
@@ -57,6 +59,12 @@ export const createOrder = async (req: any, res: Response) => {
 
       // confirm order
       await ordersService.confirmOrder(order.id!);
+
+      await MembershipService.accumulatePoints(
+        userId, // customerId
+        order.id!, // orderId
+        totalAmount // orderAmount
+      );
 
       await sendNotification(
         [userId],

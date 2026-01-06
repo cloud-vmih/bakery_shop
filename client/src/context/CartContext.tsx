@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   getCart,
-  addToCart as addToCartService,
+  addToCart as addToCartService, // renamed to avoid conflict
   updateCartItem,
   removeCartItem,
 } from "../services/cart.service";
@@ -40,7 +40,7 @@ type CartContextType = {
   confirmOpen: boolean;
 
   reloadCart: () => Promise<void>;
-  resetCart: () => void; // 👈 THÊM
+  resetCart: () => void;
 };
 
 /* ================= CONTEXT ================= */
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [removeId, setRemoveId] = useState<number | null>(null);
 
   /* ---------- LOAD CART ---------- */
-  const loadCart = async () => {
+  const reloadCart = async () => {
     try {
       setLoading(true);
       const data = await getCart();
@@ -74,17 +74,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // useEffect(() => {
-  //   loadCart();
-  // }, []);
-
   const { user } = useUser();
 
   useEffect(() => {
     if (user) {
-      loadCart();
+      reloadCart();
     } else {
-      //
       setItems([]);
       setCheckedItems([]);
     }
@@ -92,10 +87,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   /* ---------- DERIVED ---------- */
   const totalItems = items.length;
-
-  //   const totalQuantity = items.reduce((sum, i) => sum + i.quantity, 0);
-
-  //   const totalProducts = items.length;
 
   /* ---------- SELECT ---------- */
   const toggleItem = (id: number) => {
@@ -117,7 +108,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
     try {
       await addToCartService(itemId, quantity);
-      await loadCart();
+      await reloadCart();
       toast.success("Đã thêm vào giỏ hàng");
     } catch (err: any) {
       if (err.message === "NEED_LOGIN") throw err;
@@ -217,7 +208,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         confirmRemove,
         cancelRemove,
         confirmOpen,
-        reloadCart: loadCart,
+        reloadCart,
         resetCart,
       }}
     >

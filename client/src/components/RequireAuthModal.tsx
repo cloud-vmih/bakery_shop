@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ShoppingBag, UserPlus, LogIn } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -19,43 +20,34 @@ export default function RequireAuthModal({ open, onClose }: Props) {
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl p-7 w-[380px] shadow-2xl animate-scaleIn">
+      <div className="relative w-[400px] rounded-3xl bg-white shadow-2xl p-8 animate-scaleIn">
         {/* Icon */}
-        <div className="w-14 h-14 rounded-full bg-cyan-100 flex items-center justify-center mx-auto mb-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-7 h-7 text-cyan-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17"
-            />
-          </svg>
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+          <ShoppingBag className="h-8 w-8 text-emerald-600" />
         </div>
 
-        {/* Content */}
-        <h3 className="text-xl font-bold text-center text-gray-800 mb-2">
-          Vui lòng đăng nhập
+        {/* Title */}
+        <h3 className="text-center text-2xl font-bold text-gray-900">
+          Đăng nhập để tiếp tục
         </h3>
 
-        <p className="text-center text-gray-600 mb-6 text-sm leading-relaxed">
-          Bạn cần đăng nhập để tiếp tục mua hàng và quản lý giỏ hàng của mình.
+        {/* Subtitle */}
+        <p className="mt-2 text-center text-sm text-gray-600 leading-relaxed">
+          Đăng nhập để lưu giỏ hàng, theo dõi đơn hàng
+          <br />
+          và nhận ưu đãi hấp dẫn từ <b>MyBakery</b> 🍰
         </p>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="mt-7 space-y-3">
           <button
             onClick={() => {
               onClose();
               navigate("/login");
             }}
-            className="flex-1 bg-cyan-700 text-white py-2.5 rounded-xl font-semibold hover:bg-cyan-800 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 transition"
           >
+            <LogIn className="h-4 w-4" />
             Đăng nhập
           </button>
 
@@ -64,18 +56,19 @@ export default function RequireAuthModal({ open, onClose }: Props) {
               onClose();
               navigate("/register");
             }}
-            className="flex-1 border border-cyan-700 text-cyan-700 py-2.5 rounded-xl font-semibold hover:bg-cyan-50 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-600 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 transition"
           >
-            Đăng ký
+            <UserPlus className="h-4 w-4" />
+            Tạo tài khoản mới
           </button>
         </div>
 
         {/* Skip */}
         <button
           onClick={onClose}
-          className="mt-5 text-sm text-gray-500 hover:text-gray-700 hover:underline block mx-auto"
+          className="mt-6 block w-full text-center text-sm text-gray-500 hover:text-gray-700 hover:underline"
         >
-          Để sau
+          Tiếp tục xem menu
         </button>
       </div>
     </div>
