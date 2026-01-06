@@ -13,6 +13,7 @@ import { useCart } from "../context/CartContext";
 import RequireAuthModal from "../components/RequireAuthModal";
 import { getMyAddresses } from "../services/address.service";
 import { getDistanceKm } from "../utils/distance";
+import ChatBox from "../components/chat/ChatBox";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -509,6 +510,7 @@ export default function MenuPage() {
               open={showAuthModal}
               onClose={() => setShowAuthModal(false)}
           />
+          < ChatBox />
       </div>
   );
 }

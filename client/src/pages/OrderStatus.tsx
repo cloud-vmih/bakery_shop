@@ -28,7 +28,7 @@ export default function OrderStatus() {
     const fetchData = async () => {
       try {
         const res = await orderService.getOrderStatus(Number(orderId));
-        const discount = await getTotalMembershipDiscountByOrder(data)
+        const discount = await getTotalMembershipDiscountByOrder(data);
         setData(res);
         setDiscount(discount)
       } catch (error) {
