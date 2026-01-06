@@ -20,6 +20,11 @@ import { AddressResult } from "../components/AddressAutocomplete";
 
 import { Header } from "../components/Header";
 
+import { useInventory } from "../context/InventoryContext";
+import { getBranches, Branch } from "../services/branch.services";
+import { getDistanceKm } from "../utils/distance";
+import { calculateShippingFee } from "../utils/shippingCalculator";
+
 import "../styles/checkout.css";
 
 /* ===============================
@@ -50,7 +55,7 @@ const loadDraft = (): Draft | null => {
 const saveDraft = (draft: Draft) => {
     try {
         sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-    } catch {}
+    } catch { }
 };
 
 /* ===============================
@@ -62,6 +67,12 @@ export default function Checkout() {
     const { items, checkedItems } = useCart();
 
     const draft = loadDraft();
+    const { branchId } = useInventory();
+    const [branches, setBranches] = useState<Branch[]>([]);
+    const [cartBranch, setCartBranch] = useState<Branch | null>(null);
+    const [customerLocation, setCustomerLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [shippingFee, setShippingFee] = useState<number>(0);
+    const [shippingDistance, setShippingDistance] = useState<number | null>(null);
 
     /* ================= CUSTOMER ================= */
     const [customer, setCustomer] = useState({
@@ -122,6 +133,66 @@ export default function Checkout() {
         loadAddresses();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
+
+    // Load danh sách chi nhánh
+    useEffect(() => {
+        getBranches()
+            .then(setBranches)
+            .catch(err => {
+                console.error("Lỗi load branches:", err);
+            });
+    }, []);
+
+    // Tìm chi nhánh của giỏ hàng
+    useEffect(() => {
+        if (!branchId || branches.length === 0) {
+            setCartBranch(null);
+            return;
+        }
+        const branch = branches.find(b => b.id === branchId);
+        setCartBranch(branch || null);
+
+    }, [branchId, branches]);
+
+    // Cập nhật tọa độ khách hàng khi chọn địa chỉ
+    useEffect(() => {
+        let lat: number | null = null;
+        let lng: number | null = null;
+
+        if (selectedAddressId) {
+            const addr = addresses.find(a => a.id === selectedAddressId);
+            lat = addr?.lat ?? null;
+            lng = addr?.lng ?? null;
+        } else if (newAddressObj) {
+            lat = newAddressObj.lat;
+            lng = newAddressObj.lng;
+        }
+
+        setCustomerLocation(lat && lng ? { lat, lng } : null);
+    }, [selectedAddressId, addresses, newAddressObj]);
+
+    // Tính khoảng cách + phí ship
+    useEffect(() => {
+        if (!cartBranch || !customerLocation) {
+            setShippingFee(0);
+            setShippingDistance(null);
+            return;
+        }
+
+        const distance = getDistanceKm(
+            cartBranch.lat,
+            cartBranch.lng,
+            customerLocation.lat,
+            customerLocation.lng
+        );
+
+        setShippingDistance(distance);
+        setShippingFee(calculateShippingFee(
+            cartBranch.lat,
+            cartBranch.lng,
+            customerLocation.lat,
+            customerLocation.lng));
+    }, [cartBranch, customerLocation]);
 
     /* ================= NOTE ================= */
     const [note, setNote] = useState(draft?.note ?? "");
@@ -218,7 +289,7 @@ export default function Checkout() {
             paymentMethod,
             items: selectedItems,
             note,
-            shippingFee: 30000, //thay đổi biến ở đây
+            shippingFee: shippingFee, //thay đổi biến ở đây
             discount: 50000, //thay đổi biến ở đây
         };
 
@@ -237,8 +308,8 @@ export default function Checkout() {
                     <span className="text-emerald-600 font-medium">Giỏ hàng</span>
                     <span className="mx-2">›</span>
                     <span className="font-semibold text-gray-900">
-            Thông tin đặt hàng
-          </span>
+                        Thông tin đặt hàng
+                    </span>
                 </div>
 
                 <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -287,7 +358,7 @@ export default function Checkout() {
                         <OrderSummary
                             items={selectedItems}
                             discount={50000} //Thêm biến ở đây
-                            shippingFee={30000} //Thêm biến ở đây
+                            shippingFee={shippingFee} 
                         />
                         <ConfirmOrderButton onSubmit={handleSubmit} />
                         {errors.length > 0 && (
