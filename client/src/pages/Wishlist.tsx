@@ -7,6 +7,7 @@ import "../styles/menu.css";
 import { useUser } from "../context/AuthContext";
 import { getWishlist, removeFromWishlist } from "../services/wishlist.service";
 import { PriceDisplay } from "../components/ItemPrice";
+import { useInventory } from "../context/InventoryContext"
 import WishlistIcon from "../components/WishlistIcon";
 
 export default function WishlistPage() {
@@ -19,6 +20,7 @@ export default function WishlistPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceSort, setPriceSort] = useState<"none" | "low-to-high" | "high-to-low">("none");
   const [currentPage, setCurrentPage] = useState(1);
+  const { branchId, findStockBranch } = useInventory();
   const itemsPerPage = 12;
 
   const categories = [
@@ -195,7 +197,9 @@ export default function WishlistPage() {
                     <div
                       key={item.id}
                       className="menuCard relative hover:-translate-y-1"
-                      onClick={() => navigate(`/product/${item.id}`)}
+                      onClick={() => {
+                          const branchQuery = findStockBranch(item.id) ? `?branch=${findStockBranch(item.id)}` : branchId;
+                          navigate(`/product/${item.id}/${branchQuery}`)}}
                     >
                       {/* Wishlist icon */}
                       <div className="absolute top-3 right-3 z-20">
@@ -234,7 +238,8 @@ export default function WishlistPage() {
                           className="menuButton"
                           onClick={e => {
                             e.stopPropagation();
-                            navigate(`/product/${item.id}`);
+                            const branchQuery = findStockBranch(item.id) ? `?branch=${findStockBranch(item.id)}` : branchId;
+                            navigate(`/product/${item.id}/${branchQuery}`);
                           }}
                         >
                           Xem chi tiết

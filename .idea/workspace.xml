@@ -5,59 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/build/icons/atm-card.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/icons/cod.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/boxchatHeader.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/boxchatIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/chuongtrinh-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/chuongtrinh-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/chuongtrinh-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/nhan-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/images/tiramisu.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/css/main.56c4772f.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/css/main.56c4772f.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/js/main.0be2b8e8.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/js/main.0be2b8e8.js.LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/js/main.0be2b8e8.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/media/fa-brands-400.1c5c7716b05754cb4eab.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/media/fa-regular-400.6f05ca9ab7b5345dbc07.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/media/fa-solid-900.8ae0d37556ff1e685de2.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/build/static/media/fa-v4compatibility.e4340c52a50e727c6afa.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/RatingView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/WishlistIcon.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/routes/rating.route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/services/branch.services.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/utils/directions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/utils/distance.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/css/main.7658a99d.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/css/main.7658a99d.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/css/main.ea00636c.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/css/main.ea00636c.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.45ef3178.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.45ef3178.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.45ef3178.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.9a8a4333.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.9a8a4333.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/static/js/main.9a8a4333.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/context/InventoryContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/context/InventoryContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/MenuPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MenuPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/NearestBranch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/NearestBranch.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/ProductDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ProductDetails.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/Rating.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Rating.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/Wishlist.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Wishlist.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/services/rating.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/rating.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/config/database.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/config/database.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controllers/payment.vnpay.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/controllers/payment.vnpay.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/payment.vnpay.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/payment.vnpay.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/rating.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/rating.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/db/rating.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/rating.db.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/rating.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/rating.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/address.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/address.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/branch.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/branch.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +98,7 @@
       <workItem from="1766997489549" duration="11372000" />
       <workItem from="1767020769017" duration="6333000" />
       <workItem from="1767247993354" duration="5318000" />
-      <workItem from="1767685583840" duration="2407000" />
+      <workItem from="1767685583840" duration="9679000" />
     </task>
     <servers />
   </component>

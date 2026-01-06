@@ -11,7 +11,8 @@ import { useInventory } from "../context/InventoryContext";
 import { PriceDisplay } from "../components/ItemPrice";
 import { useCart } from "../context/CartContext";
 import RequireAuthModal from "../components/RequireAuthModal";
-import WishlistIcon from "../components/WishlistIcon";
+import { getMyAddresses } from "../services/address.service";
+import { getDistanceKm } from "../utils/distance";
 
 export default function MenuPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -73,16 +74,66 @@ export default function MenuPage() {
   }, []);
 
   useEffect(() => {
-    if (branches.length > 0 && selectedBranchId === null) {
-      if (branches.length === 1) {
-        setBranchId(branches[0].id);
+    if (branches.length === 0) return;
+
+    const selectNearestBranch = async () => {
+      try {
+        // Nếu user đã đăng nhập, thử lấy địa chỉ mặc định
+        if (user) {
+          try {
+            const addresses = await getMyAddresses();
+            const defaultAddress = addresses.find(addr => addr.isDefault) || addresses[0];
+
+            if (defaultAddress && defaultAddress.lat && defaultAddress.lng) {
+              // Tính khoảng cách từ địa chỉ user đến tất cả chi nhánh
+              const branchesWithDistance = branches
+                .filter(branch => branch.lat && branch.lng)
+                .map(branch => ({
+                  ...branch,
+                  distance: getDistanceKm(
+                    defaultAddress.lat,
+                    defaultAddress.lng,
+                    branch.lat,
+                    branch.lng
+                  )
+                }))
+                .sort((a, b) => a.distance - b.distance); // Sắp xếp theo khoảng cách tăng dần
+
+              if (branchesWithDistance.length > 0) {
+                // Chọn chi nhánh gần nhất
+                const nearestBranch = branchesWithDistance[0];
+                setSelectedBranchId(nearestBranch.id);
+                setBranchId(nearestBranch.id);
+                return;
+              }
+            }
+          } catch (err) {
+            // Nếu không lấy được địa chỉ, fallback về chi nhánh đầu tiên
+            console.log("Không thể lấy địa chỉ của khách hàng:", err);
+          }
+        }
+
+        // Nếu user chưa đăng nhập hoặc chưa có địa chỉ: chọn chi nhánh cũ nhất (id nhỏ nhất)
+        const sortedBranches = [...branches].sort((a, b) => (a.id || 0) - (b.id || 0));
+        const oldestBranch = sortedBranches[0];
+        setSelectedBranchId(oldestBranch.id);
+        if (branches.length === 1) {
+          setBranchId(oldestBranch.id);
+        }
+      } catch (err) {
+        console.error("Lỗi khi chọn chi nhánh:", err);
+        // Fallback: chọn chi nhánh đầu tiên
+        const sortedBranches = [...branches].sort((a, b) => (a.id || 0) - (b.id || 0));
+        const oldestBranch = sortedBranches[0];
+        setSelectedBranchId(oldestBranch.id);
       }
-      setSelectedBranchId(branches[0].id);
+    };
+
+    // Chỉ chạy khi chưa có chi nhánh được chọn
+    if (selectedBranchId === null) {
+        selectNearestBranch();
     }
-    if (branches.length === 1) {
-        setBranchId(branches[0].id);
-    }
-  }, [branches, selectedBranchId]);
+  }, [branches, user, selectedBranchId])
 
     const handleAddToCart = async (itemId: number) => {
     try {
@@ -271,7 +322,7 @@ export default function MenuPage() {
                         setSelectedBranchId(e.target.value ? Number(e.target.value) : null);
                         setBranchId(e.target.value ? Number(e.target.value) : null)
                     }}
-                    className="w-full px-4 py-3.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
+                    className="w-full px-4 py-2.5 pr-12 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent cursor-pointer appearance-none transition-all hover:border-green-400"
                   >
 
                     {branches.map((branch: any) => (
@@ -307,6 +358,7 @@ export default function MenuPage() {
                 </div>
               )}
 
+
               {/* Loading & danh sách sản phẩm */}
               {(loading || loadingBranches) ? (
                 <p className="text-center text-green-700 text-lg">Đang tải...</p>
@@ -336,12 +388,26 @@ export default function MenuPage() {
                         >
                           {/* Wishlist button - giữ nguyên */}
                           <div className="absolute top-3 right-3 z-20">
-                            <WishlistIcon
-                              liked={wishlist.includes(item.id)}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isDisabled) handleToggleWishlist(item.id);
+                              }}
                               disabled={isDisabled}
-                              onToggle={() => handleToggleWishlist(item.id)}
-                              size={24} // bạn có thể tăng giảm kích thước tim
-                            />
+                              className={`
+                                wishlistButton relative overflow-hidden
+                                ${wishlist.includes(item.id) ? 'liked' : ''}
+                                ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
+                              `}
+                            >
+                              {/* Icon tim */}
+                              <span className="text-2xl block transition-all duration-300">
+                                {wishlist.includes(item.id) ? '❤️' : '🤍'}
+                              </span>
+
+                              {/* Hiệu ứng khi đang thêm (chúng ta sẽ trigger bằng state tạm) */}
+                              {/* Ở đây mình dùng trick đơn giản: khi click, thêm class tạm thời nếu chưa liked */}
+                            </button>
                           </div>
                           {/* Hình ảnh */}
                           <div className="menuImageWrapper">

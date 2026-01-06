@@ -226,6 +226,17 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
             )}
+            {/* Tìm chi nhánh gần nhất - chỉ hiển thị cho Customer, đặt bên phải login */}
+            {(user?.type === "Customer" || !user) && (
+              <Link
+                to="/nearest-branch"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 group"
+                title="Tìm chi nhánh gần nhất"
+              >
+                <span className="fas fa-map-marker-alt text-base"></span>
+                <span className="text-sm">Find us</span>
+              </Link>
+            )}
           </div>
         </nav>
 
@@ -310,6 +321,17 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Mobile User Section */}
               <div className="border-t border-emerald-100 mt-3 pt-4">
+                {/* Nút tìm chi nhánh trên mobile */}
+                {(user?.type === "Customer" || !user) && (
+                  <Link
+                    to="/nearest-branch"
+                    className="flex items-center justify-center gap-2 px-4 py-3 mb-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg hover:shadow-md transition-all"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="fas fa-map-marker-alt"></span>
+                    <span>Tìm chi nhánh gần nhất</span>
+                  </Link>
+                )}
                 {!user ? (
                   <Link
                     to="/login"
