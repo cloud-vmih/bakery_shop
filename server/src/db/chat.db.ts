@@ -79,6 +79,7 @@ export const getLatestMessageByConversation = async (conversationId: number) => 
             id: conversationId,
         }  },
         order: { sentAt: "DESC" },
+        relations: ["senderUser"],
     });
 }
 
@@ -94,4 +95,12 @@ export const countUnreadMessages = async (conversationId: number) => {
             isRead: false, 
         }
     })
+}
+
+export const getConversationCustomer = async (conversationId: number) => {
+    const message =  await messageRepo.findOne({
+        where: { senderUser: { type: Not("admin") && Not("staff") }, conversation: { id: conversationId } },
+        relations: ["senderUser"],
+    });
+    return message?.senderUser || null;
 }

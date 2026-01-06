@@ -90,10 +90,11 @@ export const getConversationsSummary = async () => {
       .map(async (c) => {
         const message = await chatDB.getLatestMessageByConversation(c.id!);
         const unreadCount = await chatDB.countUnreadMessages(c.id!);
+        const customer = await chatDB.getConversationCustomer(c.id!);
 
         return {
           id: c.id,
-          userId: message?.senderUser?.id ?? message?.senderId ?? null,
+          user: customer?.fullName ?? null,
           lastMessage: message?.content,
           unreadCount,
           lockedBy: null,

@@ -14,6 +14,7 @@ export default function AdminConversationList() {
   }, []);
 
 return (
+  <div className="flex-1 w-[calc(100vw-16rem)] max-w-none">
   <div 
     className="min-h-screen bg-gradient-to-b from-green-50/30 to-amber-50/20 p-4 md:p-6"
     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
@@ -57,13 +58,13 @@ return (
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-xl border border-amber-200 flex items-center justify-center shadow-sm">
                     <span className="text-lg md:text-xl font-bold text-green-700">
-                      {c.userId?.toString().toUpperCase() || 'U'}
+                      {'U'}
                     </span>
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <b className="text-green-800 truncate text-base md:text-lg">
-                        Người dùng: {c.userId}
+                        {c.user}
                       </b>
                       {c.isLocked && (
                         <div className="flex-shrink-0">
@@ -123,6 +124,7 @@ return (
         Chọn một cuộc trò chuyện để xem chi tiết
       </p>
     </div>
+  </div>
   </div>
 );
 }

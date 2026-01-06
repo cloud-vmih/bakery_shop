@@ -14,7 +14,7 @@ export interface MessagePage {
 
 export interface ConversationSummary {
   id: number;
-  userId: number | string;
+  user: number | string;
   lastMessage: string;
   lastMessageAt: string;
   isRead: boolean;

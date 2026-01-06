@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countUnreadMessages = exports.getLatestMessageByConversation = exports.getAllConversations = exports.getMessageBySender = exports.getConversationById = exports.createConversation = exports.getUnReadMessages = exports.getMessages = exports.createMessage = void 0;
+exports.getConversationCustomer = exports.countUnreadMessages = exports.getLatestMessageByConversation = exports.getAllConversations = exports.getMessageBySender = exports.getConversationById = exports.createConversation = exports.getUnReadMessages = exports.getMessages = exports.createMessage = void 0;
 const database_1 = require("../config/database");
 const Message_1 = require("../entity/Message");
 const Conversation_1 = require("../entity/Conversation");
@@ -70,6 +70,7 @@ const getLatestMessageByConversation = async (conversationId) => {
                 id: conversationId,
             } },
         order: { sentAt: "DESC" },
+        relations: ["senderUser"],
     });
 };
 exports.getLatestMessageByConversation = getLatestMessageByConversation;
@@ -87,3 +88,11 @@ const countUnreadMessages = async (conversationId) => {
     });
 };
 exports.countUnreadMessages = countUnreadMessages;
+const getConversationCustomer = async (conversationId) => {
+    const message = await messageRepo.findOne({
+        where: { senderUser: { type: (0, typeorm_1.Not)("admin") && (0, typeorm_1.Not)("staff") }, conversation: { id: conversationId } },
+        relations: ["senderUser"],
+    });
+    return message?.senderUser || null;
+};
+exports.getConversationCustomer = getConversationCustomer;
