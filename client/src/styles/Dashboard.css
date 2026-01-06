@@ -1,0 +1,214 @@
+/* src/styles/Dashboard.css - Tone xanh lá nhạt + kem + be nhạt, chữ rõ ràng, nút nổi bật */
+
+/* Container chính */
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdfdf9 0%, #f5faf5 100%);
+  padding: 24px 16px;
+}
+
+/* Header thanh lịch */
+.dashboard-header {
+  background: linear-gradient(135deg, #e8f5e9, #d9f0db);
+  border-radius: 24px;
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 12px 32px rgba(200, 230, 201, 0.3);
+  color: #1a5f1a;
+}
+
+.dashboard-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.dashboard-header-icon {
+  background: rgba(255, 255, 255, 0.7);
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-header-title {
+  font-size: 36px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  color: #1a5f1a; /* Xanh lá đậm nhẹ, rõ ràng */
+}
+
+.dashboard-header-subtitle {
+  font-size: 18px;
+  color: #2d6a2d;
+  opacity: 0.9;
+  margin-top: 8px;
+}
+
+/* Bộ lọc thời gian */
+.dashboard-filter-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(200, 230, 201, 0.15);
+  border: 1px solid #e8f5e9;
+  background: white;
+  margin-bottom: 32px;
+}
+
+.dashboard-filter-card .ant-card-head {
+  background: #f8fcf8;
+  border-bottom: 1px solid #e8f5e9;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 24px;
+}
+
+.dashboard-filter-card .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d6a2d;
+}
+
+/* Summary cards */
+.summary-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(200, 230, 201, 0.15);
+  border: 1px solid #e8f5e9;
+  background: white;
+  transition: all 0.3s ease;
+  height: 100%;
+  padding: 24px 20px;
+}
+
+.summary-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(200, 230, 201, 0.25);
+}
+
+.summary-card .ant-statistic-title {
+  font-size: 16px;
+  color: #2d6a2d;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.summary-card .ant-statistic-content {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1a5f1a;
+}
+
+/* Chart cards */
+.chart-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(200, 230, 201, 0.15);
+  border: 1px solid #e8f5e9;
+  background: white;
+  padding: 24px;
+}
+
+.chart-card .ant-card-head {
+  border-bottom: 1px solid #e8f5e9;
+  padding: 0 0 16px 0;
+}
+
+.chart-card .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d6a2d;
+}
+
+/* Table cards - header bảng rõ ràng, không trắng lẫn nền */
+.ant-table-wrapper .ant-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(200, 230, 201, 0.15);
+  border: 1px solid #e8f5e9;
+}
+
+.ant-table-wrapper .ant-card-head {
+  background: #e8f5e9 !important; /* Xanh lá nhạt cho header card */
+  border-bottom: 1px solid #c8e6c9;
+}
+
+.ant-table-wrapper .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a5f1a !important; /* Chữ xanh đậm rõ ràng */
+}
+
+/* Table header - nền xanh lá nhạt, chữ xanh đậm */
+.ant-table-thead > tr > th {
+  background: #e8f5e9 !important;
+  color: #1a5f1a !important;
+  font-weight: 600;
+  border-bottom: 1px solid #c8e6c9;
+}
+
+/* Table body - chữ xanh lá tự nhiên */
+.ant-table-tbody > tr > td {
+  color: #1e6b1e;
+}
+
+/* Hover row */
+.ant-table-tbody > tr:hover > td {
+  background: #f0f9f5 !important;
+}
+
+/* Nút Xuất báo cáo - nổi bật hơn */
+.ant-btn-primary {
+  background: #c8e6c9 !important;
+  border: 1px solid #a5d6a7 !important;
+  color: #1b5e20 !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(165, 214, 167, 0.4);
+}
+
+.ant-btn-primary:hover {
+  background: #a5d6a7 !important;
+  border-color: #81c784 !important;
+  color: #1b5e20 !important;
+}
+
+/* Nút Làm mới */
+.ant-btn:not(.ant-btn-primary) {
+  background: #f1f8e9;
+  border-color: #dcedc8;
+  color: #33691e;
+}
+
+.ant-btn:not(.ant-btn-primary):hover {
+  background: #dcedc8;
+  border-color: #c5e1a5;
+}
+
+/* Empty state */
+.ant-empty-description {
+  font-size: 18px;
+  color: #33691e;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .dashboard-header-title {
+    font-size: 30px !important;
+  }
+  
+  .summary-card .ant-statistic-content {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header-wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .dashboard-header-title {
+    font-size: 28px !important;
+  }
+}

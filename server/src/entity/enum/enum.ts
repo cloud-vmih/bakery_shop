@@ -1,5 +1,3 @@
-
-
 export enum ENotiType {
   ORDER = "ORDER",
   SYSTEM = "SYSTEM",
@@ -23,12 +21,13 @@ export enum ECakeType {
 
 export enum EPayment {
   COD = "COD",
-  BANKING = "BANKING",
+  VNPAY = "VNPAY",
 }
 
 export enum EPayStatus {
   PENDING = "PENDING",
   PAID = "PAID",
+  FAILED = "FAILED",
   REFUNDED = "REFUNDED",
 }
 
@@ -37,4 +36,23 @@ export enum ECategory {
   BREAD = "BREAD",
   COOKIE = "COOKIE",
   OTHER = "OTHER",
+}
+
+export enum EAddressType {
+  HOME = "HOME",
+  OFFICE = "OFFICE",
+  SCHOOL = "SCHOOL",
+}
+
+
+export enum ESender {
+  USER = "USER",
+  GUEST = "GUEST",
+}
+
+export enum ECancelStatus {
+  NONE = "NONE",           // Không có yêu cầu hủy nào
+  REQUESTED = "REQUESTED", // Khách hàng đã yêu cầu hủy
+  APPROVED = "APPROVED",   // Shop chấp thuận hủy
+  REJECTED = "REJECTED",   // Shop từ chối hủy
 }

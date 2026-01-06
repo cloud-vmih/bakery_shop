@@ -10,10 +10,10 @@ CREATE TYPE ECategory AS ENUM ('CAKE', 'BREAD', 'COOKIE', 'OTHER');
 
 -- ================ TẠO BẢNG =====================
 CREATE TABLE account(
-	id				BIG SERIAL PRIMARY KEY,
+	id				BIGSERIAL PRIMARY KEY,
 	username		VARCHAR(50) NOT NULL, -- không dấu/ký tự đặc biệt
 	password 		CHAR(60) NOT NULL,	 -- hash BCrypt có 60 ký tự cố định
-	role			ERole	NOT NULL DEFAULT 'CUSTOMER',
+	role			ERole	NOT NULL DEFAULT 'CUSTOMER'
 );
 
 CREATE TABLE users(
@@ -47,7 +47,7 @@ CREATE TABLE address(
 CREATE TABLE conversation(
 	id				BIGSERIAL PRIMARY KEY,
 	customerID		BIGINT REFERENCES users(id),
-	supporterID 
+	supporterID		BIGINT REFERENCES users(id)
 );
 
 CREATE TABLE messages(
@@ -56,7 +56,7 @@ CREATE TABLE messages(
 	conversationID	BIGINT REFERENCES conversation(id),
 	contents		TEXT NOT NULL,
 	sentAt			TIMESTAMP DEFAULT NOW(),
-	isRead			BOOLEAN DEFAULT FALSE,
+	isRead			BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE notification(
@@ -65,7 +65,7 @@ CREATE TABLE notification(
 	contents		TEXT NOT NULL,
 	sentAt			TIMESTAMP NOT NULL,
 	isRead			BOOLEAN	DEFAULT FALSE,
-	notiType		ENotiType NOT NULL,
+	notiType		ENotiType NOT NULL
 );
 
 CREATE TABLE notification_user(
@@ -91,8 +91,9 @@ CREATE TABLE item(
 );
 
 CREATE TABLE wishlist(
-	customerID		BIGINT REFERENCES users(id) PRIMARY KEY,
-	itemID			BIGINT[] REFERENCES item(id)
+	customerID		BIGINT REFERENCES users(id),
+	itemID			INT REFERENCES item(id),
+	PRIMARY KEY(customerID, itemID)
 );
 
 CREATE TABLE cart(
@@ -118,7 +119,7 @@ CREATE TABLE orders(
 
 CREATE TABLE orderDetail(
 	orderID			BIGINT REFERENCES orders(id),
-	cartItemID		BIGINT	REFERENCES cart(id),
+	cartItemID		INT	REFERENCES cartItem(id),
 	note			TEXT,
 	PRIMARY KEY(orderID, cartItemID)
 );
@@ -136,12 +137,13 @@ CREATE TABLE rating(
 	customerID		BIGINT REFERENCES users(id),
 	-- rating
 	contents		TEXT NOT NULL,
-	createAt		TIMESTAMP DEFAULT NOW()
+	createAt		TIMESTAMP DEFAULT NOW(),
+	PRIMARY KEY(itemID, customerID)
 );
 
 CREATE TABLE promotion(
 	id				SERIAL PRIMARY KEY,
-	title			NVARCHAR(255) NOT NULL,
+	title			VARCHAR(255) NOT NULL,
 	description		TEXT NOT NULL,
 	-- promotionType
 	dicountAmount	BIGINT NOT NULL,

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",  // thay vì "ES2020" hoặc "esnext"
+    "module": "commonjs",  
     "target": "ES2020",
     "moduleResolution": "Node",
     "outDir": "dist",

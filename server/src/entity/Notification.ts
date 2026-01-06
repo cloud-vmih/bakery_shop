@@ -13,11 +13,14 @@ export class Notification {
     @Column({ type: "text" })
     contents?: string;
         
-    @Column({ type: "timestamp" })
+    @Column({ type: "timestamp", default: () => "NOW()" })
     sentAt?: Date;
 
     @Column({ type: "boolean", default: false })
     isRead?: boolean;
+
+    @Column({ type: "text", nullable: true })
+    href?: string;
 
     @Column({
         type: "enum",
@@ -25,7 +28,7 @@ export class Notification {
     })
     notiType?: ENotiType;
 
-    @ManyToMany(() => User, user => user.notifications)
+    @ManyToMany(() => User, (user: User) => user.notifications)
     @JoinTable({
     name: "notification_user",
     joinColumn: { name: "notificationID" },

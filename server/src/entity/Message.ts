@@ -7,18 +7,19 @@ export class Message {
   @PrimaryGeneratedColumn("increment")
   id?: number;
 
-  @ManyToOne(() => User, user => user.messages, {
-    onDelete: "SET NULL",
-  })
-  sender?: User;
+  @Column()
+  senderId!: string;
 
-  @ManyToOne(() => Conversation, conv => conv.messages, {
+  @ManyToOne(() => User, (user: User) => user.messages)
+  senderUser?: User;
+  
+  @ManyToOne(() => Conversation, (conv: Conversation) => conv.messages, {
     onDelete: "CASCADE",
   })
   conversation?: Conversation;
 
   @Column({ type: "text" })
-  contents?: string;
+  content?: string;
 
   @Column({ type: "timestamp", default: () => "NOW()" })
   sentAt?: Date;

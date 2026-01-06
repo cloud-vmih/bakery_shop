@@ -1,0 +1,479 @@
+/* ================================
+   DESIGN TOKENS – CHUNG VỚI CONFIRM
+================================ */
+:root {
+  /* Primary CTA */
+  --primary: #22c55e; /* emerald-500 */
+  --primary-hover: #16a34a; /* emerald-600 */
+
+  /* Mint / Emerald system */
+  --mint: #10b981; /* emerald-500 */
+  --mint-soft: #ecfdf5; /* emerald-50 */
+  --mint-border: #40f19e; /* emerald-200 */
+
+  /* Page & card */
+  --page-bg: #f0fdf4; /* emerald-50 */
+  --card-bg: #ffffff;
+
+  /* Text */
+  --text-main: #111827;
+  --text-sub: #6b7280;
+
+  /* Border */
+  --border-default: #d1fae5; /* emerald-100 */
+}
+
+/* ================================
+   RESET NHẸ CHO CHECKOUT
+================================ */
+.checkout-section * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* ================================
+   LAYOUT (GIỮ NGUYÊN)
+================================ */
+.checkout-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  /* card feel giống confirm */
+  padding: 24px;
+  background: var(--card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--mint-border);
+}
+
+.checkout-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+/* note */
+.checkout-note .checkout-title {
+  margin-bottom: 0;
+}
+
+.checkout-note {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+/* ================================
+   INPUT / SELECT
+================================ */
+.checkout-input,
+.checkout-select {
+  width: 100%;
+  height: 52px;
+
+  border: 1.5px solid var(--mint-border);
+  border-radius: 14px;
+
+  padding: 0 16px;
+  font-size: 15px;
+  line-height: normal;
+
+  outline: none;
+  background: #fff;
+  color: var(--text-main);
+}
+
+/* SELECT arrow */
+.checkout-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%236b7280' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px;
+  padding-right: 44px;
+}
+
+/* Placeholder */
+.checkout-input::placeholder,
+.checkout-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Focus */
+.checkout-input:focus,
+.checkout-select:focus,
+.checkout-textarea:focus {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+/* ================================
+   TEXTAREA
+================================ */
+.checkout-textarea {
+  width: 100%;
+  min-height: 96px;
+
+  border: 1.5px solid var(--mint-border);
+  border-radius: 14px;
+
+  padding: 12px 16px;
+
+  font-size: 15px;
+  line-height: 1.5;
+
+  outline: none;
+  resize: none;
+  background: #fff;
+
+  color: var(--text-main);
+}
+
+/* ================================
+   GRID
+================================ */
+.checkout-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ================================
+   CHECKBOX / TOGGLE
+================================ */
+.checkout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.checkout-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkout-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--mint);
+}
+
+/* ================================
+   PAYMENT METHOD
+================================ */
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.payment-box {
+  border: 1.5px solid var(--mint-border);
+  border-radius: 16px;
+  padding: 16px 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.payment-box.active {
+  border-color: var(--mint);
+  background: var(--mint-soft);
+}
+
+.payment-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.payment-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.payment-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.payment-sub {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.payment-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #9ca3af;
+  position: relative;
+}
+
+.payment-box.active .payment-check {
+  border-color: var(--mint);
+}
+
+.payment-box.active .payment-check::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--mint);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ================================
+   ORDER SUMMARY
+================================ */
+.order-summary {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid var(--mint-border);
+}
+
+.order-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-main);
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-image {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.order-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+.order-qty {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #9ca3af;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.order-desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.order-price {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.order-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 18px 0;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+/* ================================
+   BUTTON
+================================ */
+.confirm-btn {
+  width: 100%;
+  height: 56px;
+
+  background: var(--primary);
+  color: #fff;
+
+  border-radius: 16px;
+  border: none;
+
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.confirm-btn:hover {
+  background: var(--primary-hover);
+}
+
+/* ================================
+   LINK
+================================ */
+.checkout-back {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #20bb87;
+  text-decoration: none;
+}
+
+.checkout-back:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   DROPDOWN
+================================ */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-control {
+  height: 52px;
+  border: 1.5px solid var(--mint-border);
+  border-radius: 14px;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  cursor: pointer;
+  background: #fff;
+  font-size: 15px;
+}
+
+.dropdown-control.open {
+  border-color: var(--mint);
+}
+
+.dropdown-arrow {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-control.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 20;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--mint-soft);
+}
+
+.dropdown-item.active {
+  background: #ecfeff;
+  font-weight: 600;
+}
+
+/* ================================
+   ERRORS
+================================ */
+.checkout-errors {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.checkout-error {
+  margin-bottom: 4px;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .checkout-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+}

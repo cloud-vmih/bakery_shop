@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hóa đơn {{orderId}}</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      padding: 40px;
+      line-height: 1.6;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+    }
+    h1 {
+      text-align: center;
+      color: #1e293b;
+      border-bottom: 4px solid #6366f1;
+      padding-bottom: 12px;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    .info {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #6366f1;
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+    .info p {
+      margin: 8px 0;
+    }
+    h2 {
+      color: #4338ca;
+      margin: 40px 0 20px;
+      font-size: 22px;
+      border-bottom: 2px solid #e0e7ff;
+      padding-bottom: 8px;
+    }
+
+    /* Bảng chi tiết sản phẩm - Cột đều, đẹp */
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0 40px;
+      font-size: 16px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .product-table th {
+      background: #6366f1;
+      color: white;
+      padding: 16px 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .product-table th:nth-child(2), .product-table td:nth-child(2) { text-align: center; width: 15%; }
+    .product-table th:nth-child(3), .product-table td:nth-child(3) { text-align: right; width: 20%; }
+    .product-table th:nth-child(4), .product-table td:nth-child(4) { text-align: right; width: 22%; font-weight: bold; }
+
+    .product-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .product-table tr:last-child td {
+      border-bottom: none;
+    }
+    .product-table tr:hover {
+      background-color: #f1f5f9;
+    }
+
+    /* Bảng thanh toán */
+    .payment-table {
+      width: 100%;
+      margin-top: 40px;
+      font-size: 17px;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+    }
+    .payment-table td {
+      padding: 12px 0;
+    }
+    .payment-table .label {
+      width: 70%;
+      padding-right: 20px;
+    }
+    .payment-table .value {
+      text-align: right;
+      font-weight: 500;
+    }
+    .discount {
+      color: #dc2626 !important;
+      font-weight: bold;
+    }
+    .total-row td {
+      border-top: 4px double #fbbf24;
+      padding-top: 20px;
+      font-size: 22px;
+    }
+    .total-label {
+      font-weight: bold;
+      color: #000;
+    }
+    .total-amount {
+      font-size: 30px !important;
+      font-weight: bold;
+      color: #d97706 !important;
+    }
+
+    .note {
+      background: #fffbeb;
+      padding: 18px;
+      border-left: 5px solid #f59e0b;
+      border-radius: 8px;
+      margin: 30px 0;
+      font-style: italic;
+      color: #92400e;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      color: #64748b;
+      font-size: 15px;
+      padding-top: 30px;
+      border-top: 1px dashed #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HÓA ĐƠN BÁNH NGỌT {{orderId}}</h1>
+
+  <div class="info">
+    <p><strong>Khách hàng:</strong> {{customerName}}</p>
+    <p><strong>Số điện thoại:</strong> {{phone}}</p>
+    <p><strong>Ngày đặt:</strong> {{date}}</p>
+    <p><strong>Trạng thái:</strong> <span style="color: #6366f1; font-weight: bold;">{{status}}</span></p>
+  </div>
+
+  <h2>Chi tiết sản phẩm</h2>
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Đơn giá</th>
+        <th>Thành tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{productRows}}
+    </tbody>
+  </table>
+
+  <!-- Bảng thanh toán -->
+<!-- Bảng thanh toán - Căn đều với cột Thành tiền -->
+<table width="100%" style="margin-top: 40px; font-size: 17px; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 12px 0; width: 70%;">Tạm tính</td>
+    <td align="right" style="padding: 12px 0; width: 30%;">{{subtotal}} VND</td>
+  </tr>
+  <tr>
+    <td style="padding: 12px 0;">VAT (10%)</td>
+    <td align="right" style="padding: 12px 0;">{{vatAmount}} VND</td>
+  </tr>
+  <tr>
+    <td style="padding: 12px 0;">Phí ship</td>
+    <td align="right" style="padding: 12px 0;">{{shippingFee}} VND</td>
+  </tr>
+  <tr style="color: red; font-weight: bold;">
+    <td style="padding: 12px 0;">Giảm giá</td>
+    <td align="right" style="padding: 12px 0;">-{{discountAmount}} VND</td>
+  </tr>
+  <tr style="border-top: 4px double #fbbf24; margin-top: 15px;">
+    <td style="padding-top: 25px; font-size: 24px; font-weight: bold; color: #000;">
+      TỔNG CỘNG
+    </td>
+    <td align="right" style="padding-top: 25px; font-size: 32px; font-weight: bold; color: #d97706;">
+      {{total}} VND
+    </td>
+  </tr>
+</table>
+
+  {{note}}
+
+  <div class="footer">
+    <p><strong>Cảm ơn quý khách đã ủng hộ Bánh Ngọt Shop!</strong></p>
+    <p>Hotline: 0909 123 456 | Email: contact@bakery.com | Website: www.bakery.com</p>
+    <p>Địa chỉ: 123 Đường Ngọt Ngào, Quận 1, TP. Hồ Chí Minh</p>
+  </div>
+
+</body>
+</html>
