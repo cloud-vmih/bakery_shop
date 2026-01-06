@@ -43,20 +43,6 @@ export default function ChangePassword() {
         );
     }
 
-    const getPasswordStrength = (password: string) => {
-  if (!password) return { color: '#9ca3af', text: 'Chưa nhập' };
-  
-  if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
-    return { color: '#059669', text: 'Mật khẩu mạnh' };
-  }
-  
-  if (password.length >= 6) {
-    return { color: '#d97706', text: 'Mật khẩu trung bình' };
-  }
-  
-  return { color: '#dc2626', text: 'Mật khẩu yếu' };
-};
-
     //gửi OTP
     const handleSendOTP = async () => {
         try {
@@ -296,14 +282,14 @@ export default function ChangePassword() {
                                                 className="strengthFill"
                                                 style={{
                                                     width: `${Math.min(password.length * 10, 100)}%`,
-                                                    backgroundColor: password.length >= 8 ? '#10b981' : password.length >= 6 ? '#f59e0b' : '#ef4444'
+                                                    backgroundColor: isPasswordStrong(password) ? '#10b981' : password.length >= 6 ? '#f59e0b' : '#ef4444'
                                                 }}
                                             ></div>
                                         </div>
                                         <div className="strengthText" style={{
-                                            color: password.length >= 8 ? '#059669' : password.length >= 6 ? '#d97706' : '#dc2626'
+                                            color: isPasswordStrong(password) ? '#059669' : password.length >= 6 ? '#d97706' : '#dc2626'
                                         }}>
-                                            {password.length >= 8 ? 'Mật khẩu mạnh' : password.length >= 6 ? 'Mật khẩu trung bình' : 'Mật khẩu yếu'}
+                                            {isPasswordStrong(password) ? 'Mật khẩu mạnh' : password.length >= 6 ? 'Cần đủ 6 kí tự bao gồm chữ in hoa và số' : 'Cần đủ 6 kí tự bao gồm chữ in hoa và số'}
                                         </div>
                                     </div>
                                 )}
@@ -344,7 +330,7 @@ export default function ChangePassword() {
 
                             <button
                                 onClick={handleResetPassword}
-                                disabled={loading || !password || !confirm || password !== confirm}
+                                disabled={loading || !password || !confirm || password !== confirm || !isPasswordStrong(password)}
                                 className="submitButton"
                             >
                                 {loading ? (
