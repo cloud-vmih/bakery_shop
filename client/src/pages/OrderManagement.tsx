@@ -40,6 +40,7 @@ import {
   TrophyOutlined,
   ReloadOutlined,
   DeleteOutlined,
+  FileTextOutlined,
   
 } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -234,6 +235,18 @@ const handleCustomerCancelRequest = (order: OrderRecord) => {
 
   const columns: ColumnsType<OrderRecord> = [
     {
+    title: "ID Đơn hàng",
+    dataIndex: "id",
+    key: "id",
+    width: 100,
+    fixed: "left", // Cố định cột trái để luôn thấy khi scroll ngang
+    sorter: (a, b) => a.id - b.id,
+    render: (id: number) => (
+      <Text strong style={{ color: "#1890ff" }}>#{id}</Text>
+    ),
+  },
+  
+    {
       title: <>Ngày đặt <CalendarOutlined /></>,
       dataIndex: "createAt",
       width: 140,
@@ -424,24 +437,45 @@ const handleCustomerCancelRequest = (order: OrderRecord) => {
   },
 },
 {
-  title: "Ghi chú",
-  width: 200,
+  title: <>Ghi chú <FileTextOutlined /></>,
+  width: 280,
   render: (_, record) => {
-    const note = record.orderInfo?.note;
-    if (!note) return <Text type="secondary">-</Text>;
+    const notes = [];
 
-    // Nếu ghi chú dài → cắt ngắn và hover xem full
-    if (note.length > 30) {
-      return (
-        <Popover content={note} title="Ghi chú đầy đủ">
-          <Text type="secondary" style={{ fontSize: 13 }}>
-            {note.substring(0, 30)}...
-          </Text>
-        </Popover>
+    // 1. Lý do khách yêu cầu hủy
+    if (record.cancelReason) {
+      notes.push(
+        <Tag color="orange" key="reason">
+          <Text strong>Khách:</Text> {record.cancelReason}
+        </Tag>
       );
     }
 
-    return <Text type="secondary" style={{ fontSize: 13 }}>{note}</Text>;
+    // 2. Ghi chú nội bộ admin
+    if (record.cancelNote) {
+      notes.push(
+        <Tag color="red" key="admin-note">
+          <Text strong>Admin:</Text> {record.cancelNote}
+        </Tag>
+      );
+    }
+
+    // 3. Lịch sử đầy đủ từ orderInfo.note (nếu có)
+    if (record.orderInfo?.note) {
+      notes.push(
+        <Text type="secondary" italic key="history" style={{ fontSize: 12, display: "block", marginTop: 4 }}>
+          Lịch sử: {record.orderInfo.note}
+        </Text>
+      );
+    }
+
+    return notes.length > 0 ? (
+      <Space direction="vertical" size={4}>
+        {notes}
+      </Space>
+    ) : (
+      <Text type="secondary">-</Text>
+    );
   },
 },
 
@@ -680,8 +714,8 @@ const handleCustomerCancelRequest = (order: OrderRecord) => {
               style={{ width: "100%" }}
               onChange={(v) => setFilters(v ? { ...filters, paymentMethod: v } : (({ paymentMethod, ...rest }) => rest)(filters))}
             >
-              <Option value="COD">COD</Option>
-              <Option value="BANKING">Chuyển khoản</Option>
+              <Option value="COD">COD (Thanh toán khi nhận hàng)</Option>
+    <Option value="VNPAY">VNPAY / Chuyển khoản online</Option>
             </Select>
           </div>
 
@@ -730,16 +764,6 @@ const handleCustomerCancelRequest = (order: OrderRecord) => {
             </Select>
           </div>
 
-          <div className="filter-item filter-actions">
-            <Space size={12}>
-              <Button type="primary" icon={<SearchOutlined />} onClick={fetchOrders} size="large">
-                Tìm kiếm
-              </Button>
-              <Button icon={<DeleteOutlined />} onClick={() => setFilters({})} size="large">
-                Xóa bộ lọc
-              </Button>
-            </Space>
-          </div>
         </div>
       </Card>
 
