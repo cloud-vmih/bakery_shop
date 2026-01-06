@@ -39,8 +39,7 @@ export const updateMultipleQuantities = async (
         relations: ["item", "branch"],
       });
 
-      if (update.quantity === 0 || update.quantity === inventory?.stockQuantity) continue;
-      console.log(inventory)
+      if ((update.quantity === 0 && !inventory) || update.quantity === inventory?.stockQuantity) continue;
 
       if (!inventory) {
         // Create new if not exists

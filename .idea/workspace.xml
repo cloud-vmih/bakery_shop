@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ItemsDiscountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ItemsDiscountPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/db/inventory.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/inventory.db.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/membershipDiscount.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/membershipDiscount.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ProfileInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ProfileInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/order.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/order.db.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +42,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging feature/cake-filling",
+    "git-widget-placeholder": "feature/cake-filling",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -90,7 +88,7 @@
       <workItem from="1766997489549" duration="11372000" />
       <workItem from="1767020769017" duration="6333000" />
       <workItem from="1767247993354" duration="5318000" />
-      <workItem from="1767685583840" duration="16059000" />
+      <workItem from="1767685583840" duration="21313000" />
     </task>
     <servers />
   </component>

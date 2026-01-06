@@ -213,7 +213,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ onProfileUpdate }) => {
                   {field === 'email' && 'Email'}
                   {field === 'phoneNumber' && 'Số điện thoại'}
                   {field === 'dateOfBirth' && 'Ngày sinh'}
-                  {field === 'avatar' && 'Link ảnh đại diện (tùy chọn)'}
+                  {field === 'avatar' && 'Link ảnh đại diện'}
                 </label>
                 <input
                   type={field === 'dateOfBirth' ? 'date' : field === 'email' ? 'email' : 'text'}
