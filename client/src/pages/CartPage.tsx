@@ -26,7 +26,7 @@ export default function Cart() {
         confirmOpen,
     } = useCart();
 
-    const { branchId, getItemQuantity, findStockBranch } = useInventory();
+    const { branchId, setBranchId, getItemQuantity, findStockBranch } = useInventory();
 
     const selectedItems = items.filter((i) => checkedItems.includes(i.id));
 
@@ -51,11 +51,10 @@ export default function Cart() {
 
     const hasOverStockItem = items.some((cartItem) => {
         if (branchId === null) {
-            const available = findStockBranch(cartItem.item.id);
-            return cartItem.quantity > available
-        };
-
-        const available = getItemQuantity(cartItem.item.id, branchId);
+            if (findStockBranch(cartItem.item.id) === null) return false
+            setBranchId(findStockBranch(cartItem.item.id))
+        }
+        const available = getItemQuantity(cartItem.item.id, branchId!);
         return cartItem.quantity > available;
     });
 
@@ -118,10 +117,9 @@ export default function Cart() {
 
                         {/* ITEMS */}
                         {items.map((cartItem) => {
-                            const resolvedBranchId = branchId ?? findStockBranch(cartItem.item.id);
                             const available =
-                                resolvedBranchId !== null
-                                    ? getItemQuantity(cartItem.item.id, resolvedBranchId)
+                                branchId !== null
+                                    ? getItemQuantity(cartItem.item.id, branchId)
                                     : Infinity;
                             return (
                                 <CartItem

@@ -33,6 +33,7 @@ export type OrderStatusResponse = {
   createdAt: string;
   payStatus: string;                    // THÊM
   cancelStatus?: string;                // THÊM
+  cancelReason?: string;
   payment?: {
     method: string;                     // COD, VNPAY, ...
     status: string;                     // PENDING, PAID
@@ -52,6 +53,15 @@ export type CancelOrderResponse = {
   action?: "canceled_directly" | "cancel_requested";
 };
 
+export const processCustomerCancelRequest = (
+  orderId: number,
+  action: "approve" | "reject",
+  note?: string
+) => {
+  // Endpoint đúng là /manage-orders/:id/handle-cancel (PATCH)
+  return API.patch( `/manage-orders/${orderId}/handle-cancel`, { action, note });
+};
+
 // ==================== Các hàm gọi API ====================
 
 export const orderService = {
@@ -68,10 +78,10 @@ export const orderService = {
   },
 
   // 3. Hủy hoặc yêu cầu hủy đơn hàng
-  cancelOrder: async (orderId: number): Promise<CancelOrderResponse> => {
-    const res = await API.post(`/order/${orderId}/cancel`);
-    return res.data; // backend trả về { message, action? }
-  },
+cancelOrder: async (orderId: number, reason: string): Promise<CancelOrderResponse> => {
+  const res = await API.post(`/order/${orderId}/cancel`, { reason }); // ← gửi reason
+  return res.data;
+},
 };
 
 export const getOrders = (filters = {}) => {

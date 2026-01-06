@@ -23,7 +23,7 @@ export const getDashboardData = async (filters: DashboardFilters) => {
     where: {
       createAt: Between(fromDate, toDate),
     },
-    relations: ["customer", "orderDetails"],
+    relations: ["customer", "orderDetails", "orderDetails.item"],
     order: { createAt: "ASC" },
   });
 
@@ -138,7 +138,7 @@ export const getDashboardData = async (filters: DashboardFilters) => {
 
   const prevOrders = await orderRepo.find({
     where: { createAt: Between(prevFrom, prevTo) },
-    relations: ["orderDetails"],
+    relations: ["orderDetails", "orderDetails.item"],
   });
 
   let prevNetRevenue = 0;

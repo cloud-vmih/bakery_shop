@@ -14,6 +14,8 @@ import {
   Badge,
   Avatar,
   Card,
+  Popover,
+  Divider,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -46,7 +48,8 @@ import {
   getOrders,
   updateOrderStatus,
   cancelOrder,
-} from "../services/orders.service";
+  processCustomerCancelRequest,
+} from "../services/order.service";
 import "../styles/OrderManagement.css";
 
 const { Title, Text } = Typography;
@@ -60,17 +63,28 @@ interface OrderRecord {
     fullName?: string;
     phoneNumber?: string;
   };
-  paymentMethod?: string;
-  payStatus?: string;
+
   cancelStatus?: string;
   status?: string;
-  orderDetails?: Array<{
-    itemInfo?: {
+   cancelReason?: string;     // Lý do khách hàng hủy
+  cancelNote?: string;       // Ghi chú admin khi xử lý/hủy
+  orderInfo?: {
+    note?: string;           // Ghi chú chung của đơn hàng (thường dùng để lưu lịch sử hủy)
+  };
+ orderDetails?: Array<{
+    quantity: number;                 // quantity nằm ở đây
+    item?: {                          // ← đúng tên là "item"
       name?: string;
-      quantity?: number;
-    };
-    note?: string;
+      price?: number;
+      description?: string;
+    }; 
+    
   }>;
+  payment?: {
+    paymentMethod: string;  // "COD" | "VNPAY"
+    status: string;         // "PENDING" | "PAID" | "FAILED" | "REFUNDED"
+  } | null;
+
 }
 
 const OrderManagement: React.FC = () => {
@@ -98,6 +112,72 @@ const OrderManagement: React.FC = () => {
     return !["DELIVERING", "COMPLETED", "CANCELED"].includes(order.status || "");
   };
 
+// Trong OrderManagement.tsx - hàm handleCustomerCancelRequest (giữ nguyên hoặc copy lại để chắc chắn)
+
+const handleCustomerCancelRequest = (order: OrderRecord) => {
+  let action: "approve" | "reject" = "approve";
+  let adminNote = "";
+
+  Modal.confirm({
+    title: "Xử lý yêu cầu hủy đơn từ khách hàng",
+    icon: <ExclamationCircleOutlined style={{ color: "#faad14" }} />,
+    content: (
+      <>
+        <Text>
+          Đơn hàng <strong>#{order.id}</strong> có yêu cầu hủy từ khách hàng.
+        </Text>
+        {order.cancelReason && (
+          <div style={{ margin: "12px 0" }}>
+            <Text type="secondary">Lý do khách hàng:</Text>
+            <Text style={{ display: "block", marginTop: 4, fontStyle: "italic" }}>
+              "{order.cancelReason}"
+            </Text>
+          </div>
+        )}
+        <div style={{ marginTop: 16 }}>
+          <Text strong>Chọn hành động:</Text>
+          <Select
+            style={{ width: "100%", marginTop: 8 }}
+            placeholder="Chọn duyệt hoặc từ chối"
+            onChange={(value) => (action = value as "approve" | "reject")}
+            defaultValue="approve"
+          >
+            <Option value="approve">
+              <CheckCircleOutlined style={{ color: "#52c41a" }} /> Duyệt hủy đơn
+            </Option>
+            <Option value="reject">
+              <CloseCircleOutlined style={{ color: "#ff4d4f" }} /> Từ chối yêu cầu hủy
+            </Option>
+          </Select>
+        </div>
+        <Input.TextArea
+          placeholder="Ghi chú nội bộ (khuyến khích khi từ chối)"
+          rows={3}
+          style={{ marginTop: 12 }}
+          onChange={(e) => (adminNote = e.target.value)}
+        />
+      </>
+    ),
+    okText: "Thực hiện",
+    okType: "danger",
+    cancelText: "Hủy bỏ",
+    width: 520,
+    onOk: async () => {
+      try {
+        await processCustomerCancelRequest(order.id, action, adminNote.trim() || undefined);
+        message.success(
+          action === "approve"
+            ? "Đã duyệt hủy đơn hàng theo yêu cầu khách"
+            : "Đã từ chối yêu cầu hủy đơn"
+        );
+        fetchOrders();
+      } catch (err: any) {
+        message.error(err.response?.data?.message || "Không thể xử lý yêu cầu");
+      }
+    },
+  });
+};
+
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
       await updateOrderStatus(id, status);
@@ -109,43 +189,48 @@ const OrderManagement: React.FC = () => {
   };
 
   const handleCancelOrder = (order: OrderRecord) => {
-    let reason = "";
-    Modal.confirm({
-      title: "Xác nhận hủy đơn hàng",
-      icon: <ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />,
-      content: (
-        <>
-          <Text>Bạn có chắc chắn muốn hủy đơn hàng #{order.id}?</Text>
-          <Input.TextArea
-            placeholder="Nhập lý do hủy (bắt buộc)"
-            rows={3}
-            onChange={(e) => (reason = e.target.value)}
-            style={{ marginTop: 12 }}
-          />
-        </>
-      ),
-      okText: "Hủy đơn",
-      okType: "danger",
-      cancelText: "Thoát",
-      onOk: async () => {
-        if (!reason.trim()) {
-          message.error("Vui lòng nhập lý do hủy");
-          return Promise.reject();
-        }
-        try {
-          await cancelOrder(order.id, reason);
-          message.success("Đã hủy đơn hàng");
-          fetchOrders();
-        } catch (err: any) {
-          message.error(err.response?.data?.message || "Không thể hủy");
-        }
-      },
-    });
-  };
+  let adminNote = ""; // Đổi tên biến cho đúng nghĩa
+
+  Modal.confirm({
+    title: "Xác nhận hủy đơn hàng",
+    icon: <ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />,
+    content: (
+      <>
+        <Text strong>Bạn có chắc chắn muốn hủy đơn hàng #{order.id}?</Text>
+        <Text type="secondary" style={{ display: "block", margin: "8px 0" }}>
+          Hành động này không thể hoàn tác.
+        </Text>
+        <Input.TextArea
+          placeholder="Nhập lý do hủy (ghi chú nội bộ - bắt buộc)"
+          rows={3}
+          onChange={(e) => (adminNote = e.target.value)}
+          style={{ marginTop: 12 }}
+        />
+      </>
+    ),
+    okText: "Hủy đơn",
+    okType: "danger",
+    cancelText: "Thoát",
+    onOk: async () => {
+      if (!adminNote.trim()) {
+        message.error("Vui lòng nhập lý do hủy");
+        return Promise.reject();
+      }
+      try {
+        await cancelOrder(order.id, adminNote.trim());
+        message.success("Đã hủy đơn hàng thành công");
+        fetchOrders();
+      } catch (err: any) {
+        message.error(err.response?.data?.message || "Không thể hủy đơn hàng");
+      }
+    },
+  });
+};
 
   const handlePrintInvoice = (id: number) => {
     window.open(`http://localhost:5000/api/manage-orders/${id}/print`, "_blank");
   };
+  
 
   const columns: ColumnsType<OrderRecord> = [
     {
@@ -182,20 +267,55 @@ const OrderManagement: React.FC = () => {
         </Space>
       ),
     },
-    {
-      title: <>Thanh toán <DollarCircleOutlined /></>,
-      width: 130,
-      render: (_, record) => (
-        <Space direction="vertical" size={4}>
-          <Tag color={record.paymentMethod === "BANKING" ? "success" : "warning"}>
-            {record.paymentMethod === "BANKING" ? "Chuyển khoản" : "COD"}
-          </Tag>
-          <Tag color={record.payStatus === "PAID" ? "success" : "default"}>
-            {record.payStatus === "PAID" ? "Đã thanh toán" : "Chưa thanh toán"}
-          </Tag>
-        </Space>
-      ),
-    },
+  {
+  title: <>Thanh toán <DollarCircleOutlined /></>,
+  width: 160,
+  render: (_, record) => {
+    const method = record.payment?.paymentMethod;
+    const status = record.payment?.status;
+
+    // Hiển thị phương thức
+    const methodText = method === "VNPAY" 
+      ? "VNPAY" 
+      : method === "COD" 
+      ? "COD (Tiền mặt)" 
+      : "Không xác định";
+
+    const methodColor = method === "VNPAY" 
+      ? "green" 
+      : method === "COD" 
+      ? "orange" 
+      : "default";
+
+    // Hiển thị trạng thái
+    const statusText = status === "PAID" 
+      ? "Đã thanh toán" 
+      : status === "REFUNDED" 
+      ? "Đã hoàn tiền" 
+      : status === "FAILED" 
+      ? "Thanh toán thất bại" 
+      : "Chưa thanh toán";
+
+    const statusColor = status === "PAID" 
+      ? "success" 
+      : status === "REFUNDED" 
+      ? "purple" 
+      : status === "FAILED" 
+      ? "red" 
+      : "warning";
+
+    return (
+      <Space direction="vertical" size={4}>
+        <Tag color={methodColor}>
+          {methodText}
+        </Tag>
+        <Tag color={statusColor}>
+          {statusText}
+        </Tag>
+      </Space>
+    );
+  },
+},
     {
       title: <>Yêu cầu hủy <QuestionCircleOutlined /></>,
       width: 140,
@@ -245,28 +365,123 @@ const OrderManagement: React.FC = () => {
         );
       },
     },
-    {
-      title: "Sản phẩm",
-      width: 200,
-      render: (_, record) => {
-        const item = record.orderDetails?.[0]?.itemInfo;
-        return item ? (
-          <Text>
-            <strong>{item.name}</strong> × {item.quantity}
+ {
+  title: "Sản phẩm",
+  width: 250,
+  render: (_, record) => {
+    const details = record.orderDetails || [];
+
+    if (details.length === 0) {
+      return <Text type="secondary">-</Text>;
+    }
+
+    // Nếu chỉ có 1 món → hiển thị ngắn gọn
+    if (details.length === 1) {
+      const detail = details[0];
+      return (
+        <Text>
+          <strong>{detail.item?.name || "Sản phẩm"}</strong> × {detail.quantity}
+        </Text>
+      );
+    }
+
+    // Nếu có nhiều món → hiển thị dạng list hoặc popover để đẹp
+    return (
+      <Popover
+        title="Chi tiết sản phẩm"
+        content={
+          <Space direction="vertical" size={4}>
+            {details.map((detail: any, index: number) => (
+              <div key={index}>
+                <Text strong>{detail.item?.name || "Sản phẩm"}</Text> × {detail.quantity}
+                <br />
+                <Text type="secondary">
+                  {(detail.item?.price || 0).toLocaleString()} VNĐ
+                </Text>
+              </div>
+            ))}
+            <Divider style={{ margin: "8px 0" }} />
+            <Text strong>
+              Tổng tiền:{" "}
+              {details
+                .reduce(
+                  (sum: number, d: any) =>
+                    sum + d.quantity * (d.item?.price || 0),
+                  0
+                )
+                .toLocaleString()}{" "}
+              VNĐ
+            </Text>
+          </Space>
+        }
+        trigger="hover"
+      >
+        <Button type="link" size="small" style={{ padding: 0 }}>
+          {details.length} món <EyeOutlined />
+        </Button>
+      </Popover>
+    );
+  },
+},
+{
+  title: "Ghi chú",
+  width: 200,
+  render: (_, record) => {
+    const note = record.orderInfo?.note;
+    if (!note) return <Text type="secondary">-</Text>;
+
+    // Nếu ghi chú dài → cắt ngắn và hover xem full
+    if (note.length > 30) {
+      return (
+        <Popover content={note} title="Ghi chú đầy đủ">
+          <Text type="secondary" style={{ fontSize: 13 }}>
+            {note.substring(0, 30)}...
           </Text>
-        ) : (
-          "-"
+        </Popover>
+      );
+    }
+
+    return <Text type="secondary" style={{ fontSize: 13 }}>{note}</Text>;
+  },
+},
+
+    {
+      title: "Lý do hủy",
+      width: 240,
+      render: (_, record) => {
+        if (!record.cancelReason && !record.cancelNote) return "-";
+
+        return (
+          <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+            {record.cancelReason && (
+              <div>
+                <Text type="danger" strong>Khách:</Text>{" "}
+                <Popover content={record.cancelReason} title="Lý do từ khách">
+                  <Text underline style={{ cursor: "pointer", color: "#ff4d4f" }}>
+                    {record.cancelReason.length > 35
+                      ? record.cancelReason.slice(0, 35) + "..."
+                      : record.cancelReason}
+                  </Text>
+                </Popover>
+              </div>
+            )}
+            {record.cancelNote && (
+              <div style={{ marginTop: 4 }}>
+                <Text type="secondary" strong>Admin:</Text>{" "}
+                <Popover content={record.cancelNote} title="Ghi chú nội bộ">
+                  <Text italic style={{ color: "#666", cursor: "pointer" }}>
+                    {record.cancelNote.length > 35
+                      ? record.cancelNote.slice(0, 35) + "..."
+                      : record.cancelNote}
+                  </Text>
+                </Popover>
+              </div>
+            )}
+          </div>
         );
       },
     },
-    {
-      title: "Ghi chú",
-      render: (_, record) => (
-        <Text type="secondary" style={{ fontSize: 13 }}>
-          {record.orderDetails?.[0]?.note || "-"}
-        </Text>
-      ),
-    },
+    
    {
   title: "Hành động",
   key: "actions",
@@ -283,9 +498,7 @@ const OrderManagement: React.FC = () => {
         flexWrap: "nowrap"
       }}
     >
-      <Tooltip title="Xem chi tiết">
-        <Button shape="circle" icon={<EyeOutlined />} size="small" />
-      </Tooltip>
+  
 
       {record.status === "PENDING" && (
         <Tooltip title="Xác nhận đơn">
@@ -334,6 +547,19 @@ const OrderManagement: React.FC = () => {
           />
         </Tooltip>
       )}
+      {/* Nút mới: Xử lý yêu cầu hủy từ khách */}
+        {record.cancelStatus === "REQUESTED" && (
+          <Tooltip title="Xử lý yêu cầu hủy từ khách">
+            <Button
+              type="primary"
+              danger
+              shape="circle"
+              size="small"
+              icon={<ExclamationCircleOutlined />}
+              onClick={() => handleCustomerCancelRequest(record)}
+            />
+          </Tooltip>
+        )}
 
       {canAdminCancel(record) && (
         <Tooltip title="Hủy đơn">
@@ -356,13 +582,6 @@ const OrderManagement: React.FC = () => {
         />
       </Tooltip>
 
-      {record.cancelStatus === "REQUESTED" && (
-        <Badge dot status="processing" offset={[6, 0]}>
-          <Button type="dashed" danger size="small">
-            Yêu cầu hủy
-          </Button>
-        </Badge>
-      )}
     </Space>
   ),
 },

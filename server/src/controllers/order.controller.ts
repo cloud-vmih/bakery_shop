@@ -181,12 +181,12 @@ export class OrderController {
     try {
       const orderId = Number(req.params.orderId);
       const userId = (req as any).user.id;
-
+      const { reason } = req.body;  // ← LẤY LÝ DO TỪ BODY
       if (isNaN(orderId)) {
         return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
       }
 
-      const result = await customerOrderService.cancelOrder(orderId, userId);
+      const result = await customerOrderService.cancelOrder(orderId, userId, reason);
 
       if (!result.success) {
         return res.status(400).json({ message: result.message });
