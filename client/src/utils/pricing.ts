@@ -62,10 +62,10 @@ export const getTotalMembershipDiscount = async (items: any[]): Promise<number> 
     const memberPoint = points.totalPoints;
     const now = new Date();
 
-    return items.reduce((total: number, item: any) => {
-        if (!item?.membershipDiscounts?.length) return total;
+    return items.reduce((total: number, it: any) => {
+        if (!it?.item.membershipDiscounts?.length) return total;
 
-        const totalPercent = item.membershipDiscounts
+        const totalPercent = it.item.membershipDiscounts
             .filter((d: any) => {
                 const start = new Date(d.startAt);
                 const end = new Date(d.endAt);
@@ -73,7 +73,38 @@ export const getTotalMembershipDiscount = async (items: any[]): Promise<number> 
             })
             .reduce((sum: number, d: any) => sum + d.discountAmount, 0);
 
-        const itemDiscount = item.price * (totalPercent / 100);
+        const itemDiscount = it.item.price * (totalPercent / 100);
+
+        return total + itemDiscount;
+    }, 0);
+};
+
+export const getTotalMembershipDiscountByOrder = async (order: any): Promise<number> => {
+    if (!order?.items?.length) return 0;
+
+    const points = await getMyPoints();
+    const memberPoint = points.totalPoints;
+
+    const orderDate = new Date(order.createdAt);
+
+    return order.items.reduce((total: number, it: any) => {
+        const discounts = it?.item?.membershipDiscounts;
+        if (!discounts?.length) return total;
+
+        const totalPercent = discounts
+            .filter((d: any) => {
+                const start = new Date(d.startAt);
+                const end = new Date(d.endAt);
+
+                return (
+                    orderDate >= start &&
+                    orderDate <= end &&
+                    d.minPoints <= memberPoint
+                );
+            })
+            .reduce((sum: number, d: any) => sum + d.discountAmount, 0);
+
+        const itemDiscount = it.item.price  * (totalPercent / 100);
 
         return total + itemDiscount;
     }, 0);

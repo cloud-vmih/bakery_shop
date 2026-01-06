@@ -160,7 +160,6 @@ export default function Checkout() {
     // Tìm chi nhánh của giỏ hàng
     useEffect(() => {
         if (!branchId) {
-            console.log("Không có branchId")
             setCartBranch(null);
             return;
         }

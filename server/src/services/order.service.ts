@@ -68,7 +68,6 @@ export const getMyOrders = async (userId: number) => {
 // Lấy chi tiết trạng thái một đơn hàng
 export const getOrderStatus = async (orderId: number, userId: number) => {
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
-  console.log("Order fetched:", order);
   if (!order) {
     return null;
   }
@@ -94,6 +93,8 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
       quantity: detail.quantity ?? detail.item?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
     })) || [],
     note: order.orderInfo?.note || null,
+    branchId: order.orderInfo?.branchId || null,
+    address: order.orderInfo?.address,
   };
 };
 

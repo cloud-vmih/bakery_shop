@@ -18,6 +18,8 @@ export type CartItem = {
     name: string;
     price: number;
     imageURL?: string;
+    discounts?: any;
+    membershipDiscounts?: any;
   };
 };
 
@@ -63,7 +65,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true);
       const data = await getCart();
       const cartItems = data.items || [];
-
       setItems(cartItems);
       setCheckedItems(cartItems.map((i) => i.id));
     } catch {

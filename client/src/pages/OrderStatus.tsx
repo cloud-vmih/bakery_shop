@@ -4,9 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { orderService } from "../services/order.service";
 import { addToCart } from "../services/cart.service"; // Hàm addToCart nhận (itemId: number, quantity?: number)
 import { Review} from "../services/review.service"; // Hàm addToCart nhận (itemId: number, quantity?: number)
-import { Header } from "../components/Header";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
+import {getBranches} from "../services/branch.service";
+import { calculateShippingFee } from "../utils/shippingCalculator";
+import { getTotalMembershipDiscountByOrder } from "../utils/pricing";
 export default function OrderStatus() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
@@ -17,6 +19,8 @@ export default function OrderStatus() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
   const [actionMessage, setActionMessage] = useState<{ text: string; type: "success" | "info" } | null>(null);
+  const [branches, setBranches] = useState<any[]>([]);
+  const [discount, setDiscount] = useState<number>(0);
 
   useEffect(() => {
     if (!orderId) return;
@@ -24,7 +28,9 @@ export default function OrderStatus() {
     const fetchData = async () => {
       try {
         const res = await orderService.getOrderStatus(Number(orderId));
+        const discount = await getTotalMembershipDiscountByOrder(data)
         setData(res);
+        setDiscount(discount)
       } catch (error) {
         alert("Không thể tải trạng thái đơn hàng");
       } finally {
@@ -35,6 +41,15 @@ export default function OrderStatus() {
     fetchData();
   }, [orderId]);
 
+  useEffect(() => {
+        getBranches()
+            .then(setBranches)
+            .catch(() => {
+                toast.error("Không thể tải danh sách chi nhánh");
+            });
+    }, []);
+    const branch = branches.find(b => b.id === data?.branchId);
+
   // Tính toán giá
   const subtotal =
     data?.items?.reduce((sum: number, i: any) => {
@@ -43,9 +58,9 @@ export default function OrderStatus() {
       return sum + price * quantity;
     }, 0) || 0;
 
+
   const vat = Math.round(subtotal * 0.1);
-  const shipping = 30000;
-  const discount = 50000;
+  const shipping = calculateShippingFee(branch?.address.lat, branch?.address.lng, data?.address.lat, data?.address.lng)
   const grandTotal = subtotal + vat + shipping - discount;
 
   const cancelReasons = [

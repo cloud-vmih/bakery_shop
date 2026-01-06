@@ -31,6 +31,7 @@ export const getCart = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
     const cart = await cartService.getCart(userId);
+    console.log(cart)
     return res.json(cart);
   } catch (error) {
     return res.status(500).json({ message: "Lỗi server" });

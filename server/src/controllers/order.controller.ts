@@ -38,6 +38,16 @@ export const getDetail = async (req: Request, res: Response) => {
     }
 
     const order = await getOrderDetail(orderId);
+    order.orderDetails?.forEach((detail, index) => {
+          const item = detail.item;
+          const discounts = item?.membershipDiscounts ?? [];
+
+          if (!discounts.length) {
+              console.log('No membership discounts');
+              return;
+          }
+          console.log(discounts)
+      });
     res.json(order);
   } catch (error: any) {
     res.status(404).json({ message: error.message });

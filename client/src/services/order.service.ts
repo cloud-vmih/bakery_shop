@@ -6,6 +6,8 @@ export type OrderDetailItem = {
     name?: string;
     price?: number;
     flavor?: string;
+    discounts: any;
+    membershipDiscounts: any;
     [key: string]: any;
   };
   quantity: number;
@@ -43,8 +45,10 @@ export type OrderStatusResponse = {
     label: string;
     completed: boolean;
   }[];
-  items: OrderDetailItem[];   
+  items: OrderDetailItem[];
   note?: string;
+  branchId: number ;
+  address: any ;
 };
 
 // Response khi hủy/yêu cầu hủy đơn
