@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateInvoiceHTML = exports.updateOrderStatus = exports.getOrderDetail = exports.getOrderList = exports.handleCancelRequest = exports.requestCancelOrder = exports.cancelOrder = void 0;
 const manageOrder_db_1 = require("../db/manageOrder.db");
+const payment_db_1 = require("../db/payment.db");
 const enum_1 = require("../entity/enum/enum");
 const dayjs_1 = __importDefault(require("dayjs"));
 const fs_1 = __importDefault(require("fs"));
@@ -132,24 +133,50 @@ const getOrderList = async (filters) => {
         .leftJoinAndSelect("order.orderDetails", "orderDetail")
         .leftJoinAndSelect("orderDetail.item", "item")
         .leftJoinAndSelect("order.payment", "payment")
+        .leftJoinAndSelect("order.orderInfo", "orderInfo")
         .orderBy("order.createAt", "DESC");
+    // 1. Trạng thái đơn hàng
     if (filters.status) {
         query.andWhere("order.status = :status", { status: filters.status });
     }
+    // 2. Tên khách hàng (LIKE, không phân biệt hoa thường)
     if (filters.customerName) {
         query.andWhere("LOWER(customer.fullName) LIKE LOWER(:name)", {
             name: `%${filters.customerName}%`,
         });
     }
-    if (filters.fromDate) {
-        query.andWhere("order.createAt >= :fromDate", {
-            fromDate: (0, dayjs_1.default)(filters.fromDate, "DD/MM/YYYY").toDate(),
+    // 3. Số điện thoại
+    if (filters.phone) {
+        query.andWhere("customer.phoneNumber LIKE :phone", {
+            phone: `%${filters.phone}%`,
         });
     }
-    if (filters.toDate) {
-        query.andWhere("order.createAt <= :toDate", {
-            toDate: (0, dayjs_1.default)(filters.toDate, "DD/MM/YYYY").toDate(),
+    // 4. ID đơn hàng
+    if (filters.orderId) {
+        query.andWhere("order.id = :orderId", { orderId: Number(filters.orderId) });
+    }
+    // 5. Phương thức thanh toán
+    if (filters.paymentMethod) {
+        query.andWhere("payment.paymentMethod = :paymentMethod", {
+            paymentMethod: filters.paymentMethod,
         });
+    }
+    // 6. Trạng thái thanh toán
+    if (filters.payStatus) {
+        query.andWhere("payment.status = :payStatus", { payStatus: filters.payStatus });
+    }
+    // 7. Trạng thái hủy đơn
+    if (filters.cancelStatus) {
+        query.andWhere("order.cancelStatus = :cancelStatus", {
+            cancelStatus: filters.cancelStatus,
+        });
+    }
+    // 8. Khoảng thời gian (có xử lý startOf/endOf ngày để chính xác)
+    if (filters.fromDate && filters.toDate) {
+        const from = (0, dayjs_1.default)(filters.fromDate, "DD/MM/YYYY").startOf("day").toDate();
+        const to = (0, dayjs_1.default)(filters.toDate, "DD/MM/YYYY").endOf("day").toDate();
+        query.andWhere("order.createAt >= :from", { from });
+        query.andWhere("order.createAt <= :to", { to });
     }
     return await query.getMany();
 };
@@ -173,7 +200,14 @@ const updateOrderStatus = async (orderId, newStatus) => {
     if (!allowedTransitions[order.status].includes(newStatus)) {
         throw new Error("Không thể chuyển sang trạng thái này");
     }
+    if (newStatus === enum_1.EOrderStatus.COMPLETED) {
+        if (order.payment &&
+            order.payment.paymentMethod === enum_1.EPayment.COD) {
+            order.payment.status = enum_1.EPayStatus.PAID;
+        }
+    }
     order.status = newStatus;
+    await (0, payment_db_1.updatePaymentStatusDB)(order.payment?.id || 0, order.payment?.status || enum_1.EPayStatus.PENDING);
     return await (0, manageOrder_db_1.saveOrder)(order);
 };
 exports.updateOrderStatus = updateOrderStatus;
