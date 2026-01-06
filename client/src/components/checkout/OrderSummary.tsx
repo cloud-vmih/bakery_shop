@@ -13,12 +13,12 @@ type Props = {
 };
 
 export default function OrderSummary({
-                                         items,
-                                         shippingFee = 0,
-                                         discount = 0,
-                                         vatRate = 0.1,
-                                         showDetails = true,
-                                     }: Props) {
+    items,
+    shippingFee = 0,
+    discount = 0,
+    vatRate = 0.1,
+    showDetails = true,
+}: Props) {
     const { subtotal, vat, total } = calculateOrderTotals(items, {
         shippingFee,
         discount,
