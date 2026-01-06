@@ -9,7 +9,7 @@ export const orderRepo = {
     findByCustomerId: async (userId: number) => {
       return await orderRepository.find({
         where: { customer: { id: userId } },
-        relations: ["orderDetails", "orderDetails.item", "orderDetails.item.discount", "orderInfo", ""],
+        relations: ["orderDetails", "orderDetails.item", "orderDetails.item.discount", "orderInfo", "orderInfo.address"],
         // Tùy chọn: chỉ lấy các field cần của orderDetails
         });
     },

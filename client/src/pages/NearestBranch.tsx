@@ -4,7 +4,7 @@ import MapProvider from "../components/MapProvider";
 import AddressAutocomplete, {
   AddressResult,
 } from "../components/AddressAutocomplete";
-import { getBranches, Branch } from "../services/branch.services";
+import { getBranches } from "../services/branch.service";
 import { getDistanceKm } from "../utils/distance";
 
 import {
@@ -15,6 +15,17 @@ import {
 } from "@heroicons/react/24/outline";
 
 /* ================== CONSTANT ================== */
+export type Branch = {
+    id: number;
+    name: string;
+    address:
+    {
+        placeId: number;
+        lat: number;
+        lng: number;
+        fullAddress: string;
+    }
+};
 
 const containerStyle = {
   width: "100%",
@@ -70,8 +81,8 @@ export default function NearestBranch() {
         distance: getDistanceKm(
           selectedLocation.lat,
           selectedLocation.lng,
-          branch.lat,
-          branch.lng
+          branch.address.lat,
+          branch.address.lng
         ),
       }))
       .filter(b => b.distance <= 5)
@@ -83,7 +94,7 @@ export default function NearestBranch() {
       setSelectedBranch(nearby[0]);
       setInfoWindowType("BRANCH");
 
-      panToLocation(nearby[0].lat, nearby[0].lng);
+      panToLocation(nearby[0].address.lat, nearby[0].address.lng);
     } else {
       setSelectedBranch(null);
     }
@@ -98,7 +109,7 @@ export default function NearestBranch() {
   const openGoogleMaps = (branch: Branch) => {
     if (!mapLocation) return;
 
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${mapLocation.lat},${mapLocation.lng}&destination=${branch.lat},${branch.lng}&travelmode=driving`;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${mapLocation.lat},${mapLocation.lng}&destination=${branch.address.lat},${branch.address.lng}&travelmode=driving`;
     window.open(url, "_blank");
   };
 
@@ -171,7 +182,7 @@ export default function NearestBranch() {
                   return (
                     <Marker
                       key={branch.id}
-                      position={{ lat: branch.lat, lng: branch.lng }}
+                      position={{ lat: branch.address.lat, lng: branch.address.lng }}
                       icon={
                         isSelected
                           ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
@@ -184,12 +195,12 @@ export default function NearestBranch() {
                         const distance = getDistanceKm(
                           mapLocation.lat,
                           mapLocation.lng,
-                          branch.lat,
-                          branch.lng
+                          branch.address.lat,
+                          branch.address.lng
                         );
                         setSelectedBranch({ ...branch, distance });
                         setInfoWindowType("BRANCH");
-                        panToLocation(branch.lat, branch.lng);
+                        panToLocation(branch.address.lat, branch.address.lng);
                       }}
                     />
                   );
@@ -216,7 +227,7 @@ export default function NearestBranch() {
 
                 {infoWindowType === "BRANCH" && selectedBranch && (
                   <InfoWindow
-                    position={{ lat: selectedBranch.lat, lng: selectedBranch.lng }}
+                    position={{ lat: selectedBranch.address.lat, lng: selectedBranch.address.lng }}
                     onCloseClick={() => {
                       setSelectedBranch(null);
                       setInfoWindowType("USER");
@@ -231,7 +242,7 @@ export default function NearestBranch() {
                       </div>
 
                       <p className="text-sm text-gray-700 ml-8 mb-3">
-                        {selectedBranch.address}
+                        {selectedBranch.address.fullAddress}
                       </p>
 
                       <p className="flex items-center gap-2 text-green-700 font-semibold ml-8 mb-3">
@@ -278,7 +289,7 @@ export default function NearestBranch() {
                   onClick={() => {
                     setSelectedBranch(branch);
                     setInfoWindowType("BRANCH");
-                    panToLocation(branch.lat, branch.lng);
+                    panToLocation(branch.address.lat, branch.address.lng);
                   }}
                   className="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 hover:shadow-md cursor-pointer transition-all"
                 >
@@ -286,7 +297,7 @@ export default function NearestBranch() {
                     <BuildingStorefrontIcon className="w-6 h-6 text-green-800 flex-shrink-0" />
                     <div className="flex-1">
                       <p className="font-bold text-green-800">{branch.name}</p>
-                      <p className="text-sm text-gray-700 mt-1">{branch.address}</p>
+                      <p className="text-sm text-gray-700 mt-1">{branch.address.fullAddress}</p>
                       <p className="flex items-center gap-2 text-green-700 font-medium mt-3">
                         <TruckIcon className="w-5 h-5" />
                         {branch.distance.toFixed(2)} km
@@ -320,8 +331,8 @@ export default function NearestBranch() {
                   ? getDistanceKm(
                     mapLocation.lat,
                     mapLocation.lng,
-                    branch.lat,
-                    branch.lng
+                    branch.address.lat,
+                    branch.address.lng
                   )
                   : null;
 
@@ -332,7 +343,7 @@ export default function NearestBranch() {
                       if (!mapLocation) return;
                       setSelectedBranch({ ...branch, distance: distance! });
                       setInfoWindowType("BRANCH");
-                      panToLocation(branch.lat, branch.lng);
+                      panToLocation(branch.address.lat, branch.address.lng);
                     }}
 
                     className="bg-white rounded-2xl shadow-lg border border-amber-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer"
@@ -345,7 +356,7 @@ export default function NearestBranch() {
                         </h4>
                         <p className="text-sm text-gray-700 leading-relaxed flex items-start gap-2 mb-3">
                           <MapPinIcon className="w-5 h-5 text-amber-700 mt-0.5 flex-shrink-0" />
-                          {branch.address}
+                          {branch.address.fullAddress}
                         </p>
                         {distance !== null && (
                           <p className="text-green-700 font-medium flex items-center gap-2">

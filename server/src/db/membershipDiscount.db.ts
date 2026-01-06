@@ -60,7 +60,7 @@ export const MembershipDiscountDB = {
     Object.assign(existed, data);
 
     if (itemIds !== undefined) {
-      existed.items = itemIds.map(id => ({ id } as Item));
+      existed.items! = itemIds.map(id => ({ id } as Item));
     }
 
     return repo.save(existed);

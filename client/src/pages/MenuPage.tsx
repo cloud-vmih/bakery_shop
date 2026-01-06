@@ -505,6 +505,10 @@ export default function MenuPage() {
             </div>
           </div>
         </section>
+          <RequireAuthModal
+              open={showAuthModal}
+              onClose={() => setShowAuthModal(false)}
+          />
       </div>
   );
 }

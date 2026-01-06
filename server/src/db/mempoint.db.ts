@@ -1,11 +1,12 @@
 import { AppDataSource } from "../config/database";
 import { MembershipPoint } from "../entity/MembershipPoint";
+import { DeepPartial } from "typeorm";
 
 export class MembershipPointDB {
   private static repository = AppDataSource.getRepository(MembershipPoint);
 
   // Thêm bản ghi tích điểm
-  static async addPointRecord(data: Partial<MembershipPoint>) {
+  static async addPointRecord(data: DeepPartial<MembershipPoint>) {
     const record = this.repository.create(data);
     return await this.repository.save(record);
   }

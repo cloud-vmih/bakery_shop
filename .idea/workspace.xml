@@ -5,9 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/client/src/components/BranchSelectModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/utils/formatCurrency.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/utils/pricing.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ProfileInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ProfileInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/CartItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/CartItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ItemPrice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ItemPrice.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/RequireAuthModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/RequireAuthModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/checkout/OrderSummary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/checkout/OrderSummary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/context/CartContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/context/CartContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/context/InventoryContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/context/InventoryContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/context/OrderContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/CheckoutConfirm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/CheckoutConfirm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ManageBranch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ManageBranch.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/MenuPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MenuPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/NearestBranch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/NearestBranch.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/SuccessPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/SuccessPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/VNPayReturnPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/VNPayReturnPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/address.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/address.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/branch.services.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/cart.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/cart.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/inventory.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/inventory.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/orders.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/orders.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/utils/orderCalculator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/utils/orderCalculator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/branch.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/branch.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/cart.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/cart.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/orders.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/orders.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/payment.vnpay.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/payment.vnpay.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/cart.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/cart.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/category.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/category.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/membershipDiscount.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/membershipDiscount.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/mempoint.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/mempoint.db.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/db/order.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/order.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/orders.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/orders.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/entity/Item.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/entity/Item.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/entity/MembershipDiscount.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/entity/MembershipDiscount.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/entity/MembershipPoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/entity/MembershipPoint.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/helpers/vnpay.helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/helpers/vnpay.helper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/cart.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/cart.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/mempoint.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/mempoint.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/orders.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/orders.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +66,7 @@
     <setting file="file://$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -42,7 +82,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/cake-filling",
+    "git-widget-placeholder": "Merging feature/cake-filling",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -88,7 +128,7 @@
       <workItem from="1766997489549" duration="11372000" />
       <workItem from="1767020769017" duration="6333000" />
       <workItem from="1767247993354" duration="5318000" />
-      <workItem from="1767685583840" duration="21313000" />
+      <workItem from="1767685583840" duration="32762000" />
     </task>
     <servers />
   </component>

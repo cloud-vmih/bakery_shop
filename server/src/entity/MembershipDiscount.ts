@@ -15,7 +15,7 @@ export class MembershipDiscount {
   @Column("int")
   minPoints!: number;
 
-  @ManyToMany(() => Item, { nullable: true })  
+  @ManyToMany(() => Item, (i)=> i.membershipDiscounts, { nullable: true })
   @JoinTable({ name: "membership_discount_items" })
   items?: Item[]; 
 

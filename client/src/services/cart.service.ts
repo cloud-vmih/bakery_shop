@@ -1,5 +1,3 @@
-// src/services/cart.services.ts
-import toast from "react-hot-toast";
 import API from "../api/axois.config";
 
 /** ===== TYPES ===== */
@@ -22,7 +20,6 @@ export type CartResponse = {
 /** ===== ADD TO CART ===== */
 export const addToCart = async (itemId: number, quantity = 1) => {
   try {
-    toast.success("Đã thêm vào giỏ hàng");
     await API.post("/cart", { itemId, quantity });
     return true;
   } catch (err: any) {

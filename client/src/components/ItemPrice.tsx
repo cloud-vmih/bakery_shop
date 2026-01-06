@@ -1,3 +1,4 @@
+import { getActiveDiscount } from "../utils/pricing"
 interface PriceDisplayProps {
     item: {
         price?: number;
@@ -21,11 +22,7 @@ export const PriceDisplay = ({
                              }: PriceDisplayProps) => {
     const now = new Date();
 
-    const activeDiscount = item.discounts?.find(discount => {
-        const startDate = new Date(discount.startAt);
-        const endDate = new Date(discount.endAt);
-        return now >= startDate && now <= endDate;
-    });
+    const activeDiscount = getActiveDiscount(item)
 
     if (!item.price) {
         return <span className="text-gray-600">Liên hệ</span>;
