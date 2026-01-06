@@ -10,6 +10,7 @@ export const getCartByUserId = async (userId: number) => {
       items: {
         item: {
           discounts: true,
+          membershipDiscounts: true,
         },
       },
     },

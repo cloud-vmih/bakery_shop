@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 exports.getConversationCustomer = exports.countUnreadMessages = exports.getLatestMessageByConversation = exports.getAllConversations = exports.getMessageBySender = exports.getConversationById = exports.createConversation = exports.getUnReadMessages = exports.getMessages = exports.createMessage = void 0;
+=======
+exports.countUnreadMessages = exports.getLatestMessageByConversation = exports.getAllConversations = exports.getMessageBySender = exports.getConversationById = exports.createConversation = exports.getUnReadMessages = exports.getMessages = exports.createMessage = void 0;
+>>>>>>> origin/feature/cake-filling
 const database_1 = require("../config/database");
 const Message_1 = require("../entity/Message");
 const Conversation_1 = require("../entity/Conversation");
@@ -70,7 +74,10 @@ const getLatestMessageByConversation = async (conversationId) => {
                 id: conversationId,
             } },
         order: { sentAt: "DESC" },
+<<<<<<< HEAD
         relations: ["senderUser"],
+=======
+>>>>>>> origin/feature/cake-filling
     });
 };
 exports.getLatestMessageByConversation = getLatestMessageByConversation;
@@ -88,6 +95,7 @@ const countUnreadMessages = async (conversationId) => {
     });
 };
 exports.countUnreadMessages = countUnreadMessages;
+<<<<<<< HEAD
 const getConversationCustomer = async (conversationId) => {
     const message = await messageRepo.findOne({
         where: { senderUser: { type: (0, typeorm_1.Not)("admin") && (0, typeorm_1.Not)("staff") }, conversation: { id: conversationId } },
@@ -96,3 +104,5 @@ const getConversationCustomer = async (conversationId) => {
     return message?.senderUser || null;
 };
 exports.getConversationCustomer = getConversationCustomer;
+=======
+>>>>>>> origin/feature/cake-filling

@@ -4,6 +4,7 @@ import { useCart } from "../context/CartContext";
 import { useInventory } from "../context/InventoryContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Header } from "../components/Header";
 import { calculateOrderTotals } from "../utils/orderCalculator";
 import BranchSelectModal from "../components/BranchSelectModal";
 import { formatVND } from "../utils/formatCurrency";
@@ -40,7 +41,7 @@ export default function Cart() {
       });
   }, []);
 
-  const { branchId, getItemQuantity, setBranchId, refreshInventory } =
+  const { branchId, getItemQuantity, setBranchId, refreshInventory, findStockBranch } =
     useInventory();
 
   const selectedBranch = branchId
@@ -71,11 +72,13 @@ export default function Cart() {
     );
   }
 
-  const hasOverStockItem =
-    branchId !== null &&
-    items.some((cartItem) => {
-      const available = getItemQuantity(cartItem.item.id, branchId);
-      return cartItem.quantity > available;
+    const hasOverStockItem = items.some((cartItem) => {
+        if (branchId === null) {
+            if (findStockBranch(cartItem.item.id) === null) return false
+            setBranchId(findStockBranch(cartItem.item.id))
+        }
+        const available = getItemQuantity(cartItem.item.id, branchId!);
+        return cartItem.quantity > available;
     });
 
   const cannotCheckout = selectedItems.length === 0 || hasOverStockItem;

@@ -35,6 +35,7 @@ interface InventoryContextType {
   getItemQuantity: (itemId: number, branchId: number) => number;
   clearInventory: () => void;
   refreshInventory: () => void;
+  findStockBranch: (itemId: number) => number;
 }
 
 const InventoryContext = createContext<InventoryContextType | undefined>(
@@ -73,7 +74,6 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const data = await getInventory();
-
       // Transform data to match our interface
       const transformedData: InventoryItem[] = data.map((item: any) => ({
         id: item.id,
@@ -84,8 +84,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
         availableQuantity:
           (item.stockQuantity || 0) - (item.reservedQuantity || 0),
         updatedAt: item.updatedAt,
-      }));
-
+      }))
       setInventory(transformedData);
     } catch (error: any) {
       console.error("Failed to load inventory:", error);
@@ -109,6 +108,16 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     [inventory]
   );
 
+  const findStockBranch = useCallback((itemId: number):number => {
+      const item = inventory.find(
+          (i) => i.itemId === itemId && (i.stockQuantity - i.reservedQuantity) > 0
+      );
+      if (!item) return 0;
+      return item.branchId
+    },
+    [inventory]
+);
+
   // Clear inventory data
   const clearInventory = useCallback(() => {
     setInventory([]);
@@ -128,6 +137,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("selectedBranchId", String(branchId));
     } else {
       localStorage.removeItem("selectedBranchId");
+        //localStorage.setItem("selectedBranchId", String(firstBranch));
     }
   }, [branchId]);
 
@@ -140,6 +150,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     getItemQuantity,
     clearInventory,
     refreshInventory,
+    findStockBranch
   };
 
   return (

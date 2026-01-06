@@ -9,19 +9,21 @@ import {
   printInvoice,
 } from "../controllers/manageOrder.controller";
 
+import { verifyToken, verifyAdminOrStaff } from "../middleware/verifyToken";
+
 // Chung
 // router.use(verifyToken);
 const router = express.Router();
 // Staff + Admin
 // router.use(roleMiddleware(["staff", "admin"]));
-router.get("/", getOrders);
-router.get("/:id", getDetail);
-router.patch("/:id/status", updateStatus);
-router.patch("/:id/cancel", cancel);           // Staff hủy trực tiếp
-router.patch("/:id/handle-cancel", handleCancel); // Staff xử lý yêu cầu hủy
-router.get("/:id/print", printInvoice);
+router.get("/", verifyToken, verifyAdminOrStaff, getOrders);
+router.get("/:id", verifyToken, verifyAdminOrStaff, getDetail);
+router.patch("/:id/status", verifyToken, verifyAdminOrStaff, updateStatus);
+router.patch("/:id/cancel", verifyToken, verifyAdminOrStaff, cancel);           // Staff hủy trực tiếp
+router.patch("/:id/handle-cancel", verifyToken, verifyAdminOrStaff, handleCancel); // Staff xử lý yêu cầu hủy
+router.get("/:id/print", verifyToken, verifyAdminOrStaff, printInvoice);
 
 // Khách hàng (không cần role staff/admin)
-router.patch("/:id/request-cancel", requestCancel);
+router.patch("/:id/request-cancel", verifyToken, requestCancel);
 
 export default router

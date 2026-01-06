@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const data = await verifyToken();
          // FE sẽ tự gửi token bằng headers
-        setUser(data.user); // BE trả user/info
+        setUser(data.user); 
         useSocketStore.getState().reconnectSocket();
       } catch (err) {
         localStorage.removeItem("token");

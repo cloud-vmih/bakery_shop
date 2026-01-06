@@ -1,5 +1,5 @@
 // src/utils/pricing.ts
-
+import { getMyPoints } from "../services/memberpoint.service"
 /**
  * Kiểu discount áp dụng cho sản phẩm
  */
@@ -7,6 +7,13 @@ export type Discount = {
   discountAmount: number; // % giảm giá (ví dụ: 10 = 10%)
   startAt: string | Date;
   endAt: string | Date;
+};
+
+export type MembershipDiscount = {
+    discountAmount: number; // % giảm giá (ví dụ: 10 = 10%)
+    startAt: string | Date;
+    endAt: string | Date;
+    minPoints: number;
 };
 
 /**
@@ -20,19 +27,88 @@ export type PricableItem = {
 /**
  )* Lấy discount đang active (nếu có
  */
-export function getActiveDiscount(item: PricableItem): Discount | null {
+export function getActiveDiscount(item: any): Discount | null {
   if (!item?.discounts || item.discounts.length === 0) return null;
 
   const now = new Date();
 
   return (
-    item.discounts.find((d) => {
+    item.discounts.find((d: any) => {
       const start = new Date(d.startAt);
       const end = new Date(d.endAt);
       return now >= start && now <= end;
     }) || null
   );
 }
+
+export const getMembershipDiscount= async (item: any): Promise<MembershipDiscount | null> => {
+    const points = await getMyPoints();
+    const memberPoint = points.totalPoints
+    if (!item?.membershipDiscounts || item.membershipDiscounts.length === 0) return null;
+
+    const now = new Date();
+
+    return (
+        item.membershipDiscounts.find((d: any) => {
+            const start = new Date(d.startAt);
+            const end = new Date(d.endAt);
+            return now >= start && now <= end && d.minPoints <= memberPoint;
+        }) || null
+    );
+}
+
+export const getTotalMembershipDiscount = async (items: any[]): Promise<number> => {
+    const points = await getMyPoints();
+    const memberPoint = points.totalPoints;
+    const now = new Date();
+
+    return items.reduce((total: number, it: any) => {
+        if (!it?.item.membershipDiscounts?.length) return total;
+
+        const totalPercent = it.item.membershipDiscounts
+            .filter((d: any) => {
+                const start = new Date(d.startAt);
+                const end = new Date(d.endAt);
+                return now >= start && now <= end && d.minPoints <= memberPoint;
+            })
+            .reduce((sum: number, d: any) => sum + d.discountAmount, 0);
+
+        const itemDiscount = it.item.price * (totalPercent / 100);
+
+        return total + itemDiscount;
+    }, 0);
+};
+
+export const getTotalMembershipDiscountByOrder = async (order: any): Promise<number> => {
+    if (!order?.items?.length) return 0;
+
+    const points = await getMyPoints();
+    const memberPoint = points.totalPoints;
+
+    const orderDate = new Date(order.createdAt);
+
+    return order.items.reduce((total: number, it: any) => {
+        const discounts = it?.item?.membershipDiscounts;
+        if (!discounts?.length) return total;
+
+        const totalPercent = discounts
+            .filter((d: any) => {
+                const start = new Date(d.startAt);
+                const end = new Date(d.endAt);
+
+                return (
+                    orderDate >= start &&
+                    orderDate <= end &&
+                    d.minPoints <= memberPoint
+                );
+            })
+            .reduce((sum: number, d: any) => sum + d.discountAmount, 0);
+
+        const itemDiscount = it.item.price  * (totalPercent / 100);
+
+        return total + itemDiscount;
+    }, 0);
+};
 
 /**
  * Giá thực tế dùng để TÍNH TIỀN

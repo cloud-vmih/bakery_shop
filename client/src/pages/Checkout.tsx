@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useUser } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import {
@@ -8,7 +7,7 @@ import {
   createAddressForCheckout,
   Address,
 } from "../services/address.service";
-
+import { getTotalMembershipDiscount } from "../utils/pricing"
 import CustomerInfo from "../components/checkout/CustomerInfo";
 import ShippingInfo from "../components/checkout/ShippingInfo";
 import PaymentMethodSelector from "../components/checkout/PaymentMethodSelector";
@@ -18,7 +17,25 @@ import ConfirmOrderButton from "../components/checkout/ConfirmOrderButton";
 import MapProvider from "../components/MapProvider";
 import { AddressResult } from "../components/AddressAutocomplete";
 
+import { Header } from "../components/Header";
+
+import { useInventory } from "../context/InventoryContext";
+import { getBranches } from "../services/branch.service";
+import { getDistanceKm } from "../utils/distance";
+import { calculateShippingFee } from "../utils/shippingCalculator";
+
 import "../styles/checkout.css";
+export type Branch = {
+    id: number;
+    name: string;
+    address:
+        {
+            placeId: number;
+            lat: number;
+            lng: number;
+            fullAddress: string;
+        }
+};
 
 /* ===============================
    SESSION STORAGE
@@ -59,7 +76,14 @@ export default function Checkout() {
   const { user } = useUser();
   const { items, checkedItems } = useCart();
 
-  const draft = loadDraft();
+    const draft = loadDraft();
+    const { branchId } = useInventory();
+    const [branches, setBranches] = useState<Branch[]>([]);
+    const [cartBranch, setCartBranch] = useState<Branch | null>(null);
+    const [customerLocation, setCustomerLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [shippingFee, setShippingFee] = useState<number>(0);
+    const [shippingDistance, setShippingDistance] = useState<number | null>(null);
+    const [membershipDiscount, setMembershipDiscount] = useState<number | null>(null);
 
   /* ================= CUSTOMER ================= */
   const [customer, setCustomer] = useState({
@@ -82,6 +106,9 @@ export default function Checkout() {
     () => items.filter((i) => checkedItems.includes(i.id)),
     [items, checkedItems]
   );
+  getTotalMembershipDiscount(selectedItems).then(total => {
+        setMembershipDiscount(total || null);
+  });
 
   /* ================= ADDRESS ================= */
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -121,8 +148,70 @@ export default function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+    // Load danh sách chi nhánh
+    useEffect(() => {
+        getBranches()
+            .then(setBranches)
+            .catch(err => {
+                console.error("Lỗi load branches:", err);
+            });
+    }, []);
+
+    // Tìm chi nhánh của giỏ hàng
+    useEffect(() => {
+        if (!branchId) {
+            setCartBranch(null);
+            return;
+        }
+        const branch = branches.find(b => b.id === branchId);
+        setCartBranch(branch || null);
+
+    }, [branchId, branches]);
+
+    // Cập nhật tọa độ khách hàng khi chọn địa chỉ
+    useEffect(() => {
+        let lat: number | null = null;
+        let lng: number | null = null;
+
+        if (selectedAddressId) {
+            const addr = addresses.find(a => a.id === selectedAddressId);
+            lat = addr?.lat ?? null;
+            lng = addr?.lng ?? null;
+        } else if (newAddressObj) {
+            lat = newAddressObj.lat;
+            lng = newAddressObj.lng;
+        }
+
+        setCustomerLocation(lat && lng ? { lat, lng } : null);
+    }, [selectedAddressId, addresses, newAddressObj]);
+
+    // Tính khoảng cách + phí ship
+    useEffect(() => {
+        if (!cartBranch || !customerLocation) {
+            console.log("không có branch")
+            setShippingFee(0);
+            setShippingDistance(null);
+            return;
+        }
+
+        const distance = getDistanceKm(
+            cartBranch.address.lat,
+            cartBranch.address.lng,
+            customerLocation.lat,
+            customerLocation.lng
+        );
+
+        setShippingDistance(distance);
+        setShippingFee(calculateShippingFee(
+            cartBranch.address.lat,
+            cartBranch.address.lng,
+            customerLocation.lat,
+            customerLocation.lng));
+    }, [cartBranch, customerLocation]);
+
+    /* ================= NOTE ================= */
+    const [note, setNote] = useState(draft?.note ?? "");
   /* ================= NOTE ================= */
-  const [note, setNote] = useState(draft?.note ?? "");
 
   /* ================= PAYMENT ================= */
   const [paymentMethod, setPaymentMethod] = useState<"COD" | "VNPAY">(
@@ -207,18 +296,17 @@ export default function Checkout() {
       fullAddress = selected?.fullAddress || "";
     }
 
-    const payload = {
-      customer,
-      address: {
-        addressId,
-        fullAddress,
-      },
-      paymentMethod,
-      items: selectedItems,
-      note,
-      shippingFee: 10000, //thay đổi biến ở đây
-      membershipDiscount: 0,
-    };
+        const payload = {
+            customer,
+            address: {
+                addressId,
+                fullAddress,
+            },
+            paymentMethod,
+            items: selectedItems,
+            note,
+            shippingFee: shippingFee, //thay đổi biến ở đây
+        };
 
     navigate("/checkout/confirm", { state: { payload } });
   };
@@ -273,31 +361,30 @@ export default function Checkout() {
             />
           </div>
         </div>
-
-        <div className="space-y-6">
-          <OrderSummary
-            items={selectedItems}
-            shippingFee={10000} //Thêm biến ở đây
-            membershipDiscount={0} //Thêm biến ở đây
-          />
-          <ConfirmOrderButton onSubmit={handleSubmit} />
-          {errors.length > 0 && (
-            <div className="checkout-errors">
-              {errors.map((e, i) => (
-                <div key={i} className="checkout-error">
-                  • {e}
+                    <div className="space-y-6">
+                        <OrderSummary
+                            items={selectedItems}
+                            shippingFee={shippingFee}
+                            membershipDiscount={membershipDiscount || 0}
+                        />
+                        <ConfirmOrderButton onSubmit={handleSubmit} />
+                        {errors.length > 0 && (
+                            <div className="checkout-errors">
+                                {errors.map((e, i) => (
+                                    <div key={i} className="checkout-error">
+                                        • {e}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <Link
+                            to="/cart"
+                            className="block mt-3 text-center text-sm text-emerald-600"
+                        >
+                            ← Quay lại giỏ hàng
+                        </Link>
+                    </div>
                 </div>
-              ))}
             </div>
-          )}
-          <Link
-            to="/cart"
-            className="block mt-3 text-center text-sm text-emerald-600"
-          >
-            ← Quay lại giỏ hàng
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

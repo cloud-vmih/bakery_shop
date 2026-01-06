@@ -10,9 +10,12 @@ const payment_service_1 = require("../services/payment.service");
 const orders_service_1 = require("../services/orders.service");
 const inventory_service_1 = require("../services/inventory.service");
 const mempoint_service_1 = require("../services/mempoint.service");
+<<<<<<< HEAD
 const enum_1 = require("../entity/enum/enum");
 const notification_service_1 = require("../services/notification.service");
 const user_service_1 = require("../services/user.service");
+=======
+>>>>>>> origin/feature/cake-filling
 const paymentService = new payment_service_1.PaymentService();
 const ordersService = new orders_service_1.OrdersService();
 /* =====================================================
@@ -58,7 +61,10 @@ exports.createVNPayPayment = createVNPayPayment;
    GET /api/payment/vnpay/return
 ===================================================== */
 const vnpayReturn = async (req, res) => {
+<<<<<<< HEAD
     const { amount } = req.body;
+=======
+>>>>>>> origin/feature/cake-filling
     try {
         /* =========================
            1️⃣ VERIFY SIGNATURE
@@ -122,9 +128,12 @@ const vnpayReturn = async (req, res) => {
             await (0, inventory_service_1.commitInventoryForOrder)(branchId, inventoryItems);
             // 3️⃣ confirm order
             await ordersService.confirmOrder(orderId);
+<<<<<<< HEAD
             await (0, notification_service_1.sendNotification)([userId], "Đặt hàng thành công", `Đơn hàng #${order.id} của bạn đã được xác nhận`, enum_1.ENotiType.ORDER, `/orderDetails/${order.id}`);
             const adminStaffIds = await (0, user_service_1.getAdminAndStaffIds)();
             await (0, notification_service_1.sendNotification)(adminStaffIds, "Đơn hàng mới", `Có đơn hàng mới #${order.id} cần xử lý`, enum_1.ENotiType.ORDER, `/admin/manage-orders`);
+=======
+>>>>>>> origin/feature/cake-filling
             await mempoint_service_1.MembershipService.accumulatePoints(userId, orderId, amount);
             return res.redirect(`${process.env.CLIENT_URL}/payment/vnpay/return?` +
                 `vnp_ResponseCode=00&orderId=${orderId}`);

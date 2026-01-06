@@ -68,7 +68,6 @@ export const getMyOrders = async (userId: number) => {
 // Lấy chi tiết trạng thái một đơn hàng
 export const getOrderStatus = async (orderId: number, userId: number) => {
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
-  console.log("Order fetched:", order);
   if (!order) {
     return null;
   }
@@ -83,6 +82,7 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
     createdAt: order.createAt,
     payStatus: order.payment?.status ?? EPayStatus.PENDING,        // THÊM DÒNG NÀY
     cancelStatus: order.cancelStatus ?? ECancelStatus.NONE,
+    cancelReason: order.cancelReason || null,
     timeline,
     payment: order.payment ? {
       method: order.payment.paymentMethod,           // ví dụ: "COD", "VNPAY"
@@ -93,6 +93,8 @@ export const getOrderStatus = async (orderId: number, userId: number) => {
       quantity: detail.quantity ?? detail.item?.quantity ?? 1, // ưu tiên quantity riêng, fallback itemInfo
     })) || [],
     note: order.orderInfo?.note || null,
+    branchId: order.orderInfo?.branchId || null,
+    address: order.orderInfo?.address,
   };
 };
 
@@ -106,7 +108,8 @@ interface CancelResult {
  */
 export const cancelOrder = async (
   orderId: number,
-  userId: number
+  userId: number,
+  reason?: string
 ): Promise<CancelResult> => {
   // 1. Tìm đơn hàng của user
   const order = await orderRepo.findOneByIdAndCustomer(orderId, userId);
@@ -156,7 +159,9 @@ export const cancelOrder = async (
   if (payStatus === EPayStatus.PENDING) {
     order.status = EOrderStatus.CANCELED;
     order.cancelStatus = ECancelStatus.NONE; // Không cần lưu trạng thái yêu cầu
-
+    if (reason?.trim()) {
+      order.cancelReason = reason.trim();  // ← LƯU LÝ DO
+    }
     await orderRepo.save(order);
 
     return {
@@ -170,7 +175,9 @@ export const cancelOrder = async (
   if (payStatus === EPayStatus.PAID) {
     order.cancelStatus = ECancelStatus.REQUESTED;
     // Giữ nguyên status (PENDING/CONFIRMED) để admin có thể xử lý tiếp
-
+    if (reason?.trim()) {
+      order.cancelReason = reason.trim();  // ← LƯU LÝ DO
+    }
     await orderRepo.save(order);
 
     const customer = await getUserById(userId)

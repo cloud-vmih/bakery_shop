@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as branchController from "../controllers/branch.controller";
-import { verifyToken, verifyAdmin } from "../middleware/verifyToken";
+import { verifyToken, verifyAdminOrStaff, verifyAdmin } from "../middleware/verifyToken";
 
 const router = Router();
 

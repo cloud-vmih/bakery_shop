@@ -2,9 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeItemsDiscountController = exports.updateItemsDiscountController = exports.createItemsDiscountController = exports.getOneItemsDiscountController = exports.getAllItemsDiscountController = void 0;
 const itemsDiscount_service_1 = require("../services/itemsDiscount.service");
+<<<<<<< HEAD
 const user_service_1 = require("../services/user.service");
 const enum_1 = require("../entity/enum/enum");
 const notification_service_1 = require("../services/notification.service");
+=======
+>>>>>>> origin/feature/cake-filling
 const getAllItemsDiscountController = async (req, res) => {
     try {
         const data = await (0, itemsDiscount_service_1.getAllItemsDiscount)();
@@ -36,8 +39,11 @@ const createItemsDiscountController = async (req, res) => {
             return res.status(400).json({ message: "Phải chọn ít nhất 1 sản phẩm" });
         }
         const data = await (0, itemsDiscount_service_1.createItemsDiscount)(req.body);
+<<<<<<< HEAD
         const customerIds = await (0, user_service_1.getCustomerIds)();
         await (0, notification_service_1.sendNotification)(customerIds, data.title, "Khuyến mãi mới lên đến " + data.discountAmount + "%", enum_1.ENotiType.SYSTEM, `/menu`);
+=======
+>>>>>>> origin/feature/cake-filling
         return res.status(201).json(data);
     }
     catch (err) {

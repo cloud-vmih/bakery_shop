@@ -1,12 +1,22 @@
 "use strict";
+<<<<<<< HEAD
+=======
+// import { Request, Response } from "express";
+// import { OrdersService } from "../services/orders.service";
+// import { PaymentService } from "../services/payment.service";
+// import { EPayment } from "../entity/enum/enum";
+>>>>>>> origin/feature/cake-filling
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOrderById = exports.createOrder = void 0;
 const orders_service_1 = require("../services/orders.service");
 const payment_service_1 = require("../services/payment.service");
 const inventory_service_1 = require("../services/inventory.service");
 const enum_1 = require("../entity/enum/enum");
+<<<<<<< HEAD
 const user_service_1 = require("../services/user.service");
 const notification_service_1 = require("../services/notification.service");
+=======
+>>>>>>> origin/feature/cake-filling
 const ordersService = new orders_service_1.OrdersService();
 const paymentService = new payment_service_1.PaymentService();
 /**
@@ -43,9 +53,12 @@ const createOrder = async (req, res) => {
             await (0, inventory_service_1.commitInventoryForOrder)(branchId, inventoryItems);
             // confirm order
             await ordersService.confirmOrder(order.id);
+<<<<<<< HEAD
             await (0, notification_service_1.sendNotification)([userId], "Đặt hàng thành công", `Đơn hàng #${order.id} của bạn đã được xác nhận`, enum_1.ENotiType.ORDER, `/orderDetails/${order.id}`);
             const adminStaffIds = await (0, user_service_1.getAdminAndStaffIds)();
             await (0, notification_service_1.sendNotification)(adminStaffIds, "Đơn hàng mới", `Có đơn hàng mới #${order.id} cần xử lý`, enum_1.ENotiType.ORDER, `/admin/manage-orders`);
+=======
+>>>>>>> origin/feature/cake-filling
             return res.status(201).json({
                 success: true,
                 orderId: order.id,

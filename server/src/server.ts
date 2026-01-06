@@ -1,4 +1,3 @@
-// src/server.ts
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -25,6 +24,8 @@ import staffRoutes from "./routes/staff.route";
 import reviewRoutes from "./routes/review.route";
 import membershipDiscountRoutes from "./routes/membershipDiscount.route";
 import mempointRoutes from "./routes/mempoint.route";
+import ratingRouter from "./routes/rating.route";
+
 
 import membershipRoutes from "./routes/mempoint.route";
 
@@ -74,6 +75,8 @@ app.use("/api/promotion", membershipDiscountRoutes);
 app.get("/api/__ping", (req, res) => {
   res.send("OK");
 });
+app.use("/api/ratings", ratingRouter);
+
 
 app.use("/api/membership", membershipRoutes);
 

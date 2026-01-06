@@ -322,7 +322,7 @@ export default function BranchPage() {
 
                                             <div className="flex items-start gap-2 text-emerald-600 mb-6">
                                                 <i className="fas fa-map-marker-alt mt-1 text-emerald-400"></i>
-                                                <p className="text-sm leading-relaxed">{b.address?.fullAddress}</p>
+                                                <p className="text-sm leading-relaxed">{b.address.fullAddress}</p>
                                             </div>
 
                                             <div className="flex gap-3">

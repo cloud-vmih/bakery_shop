@@ -5,7 +5,7 @@ import { ECategory } from "../entity/enum/enum";
 export const findAllItems = async () => {
   const repo = AppDataSource.getRepository(Item);
   return await repo.find({
-      relations: ["discounts"],
+      relations: ["discounts", "membershipDiscounts"],
   });
 };
 
@@ -18,6 +18,6 @@ export const findItemById = async (id: number) => {
   const repo = AppDataSource.getRepository(Item);
   return await repo.findOne({
     where: { id },
-    relations: ["ratings", "wishlists", "inventory", "inventory.branch", "discounts"],
+    relations: ["ratings", "wishlists", "inventory", "inventory.branch", "discounts", "membershipDiscounts"],
   });
 };

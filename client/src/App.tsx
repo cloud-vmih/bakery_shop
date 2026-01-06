@@ -30,9 +30,9 @@ import ItemsDiscountPage from "./pages/ItemsDiscountPage";
 import StaffPage from "./pages/Staff";
 import ManageReviews from "./pages/review";
 import MembershipPoints from "./pages/MembershipPoints";
+import RatingPage from "./pages/Rating";
 import { AdminLayout } from "./layout/AdminLayout";
 import { MainLayout } from "./layout/CustomerLayout";
-
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -94,6 +94,8 @@ export default function App() {
                                             path="/payment-failed"
                                             element={<PaymentFailedPage />}
                                         />
+                                        <Route path="/rating/:orderId" element={<RatingPage />} />
+
                                     </Route>
                                     <Route path="/admin" element={<AdminLayout />}>
                                         <Route index element={<Dashboard />} />

@@ -8,11 +8,8 @@ import {
   findStaffById,
   findUserByAccountId,
   saveAccount,
-  saveUser,
   saveStaff,
   removeStaff,
-  removeUser,
-  removeAccount,
   searchStaff,
 } from "../db/staff.db";
 

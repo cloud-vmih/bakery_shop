@@ -18,8 +18,9 @@ export const createBranchWithAddres = async (req: Request, res: Response) => {
 
 export const getBranches = async (req: Request, res: Response) => {
   try {
-    const result = await branchService.getAllBranchService();
-    res.status(201).json(result);
+    const branches = await branchService.getAllBranchService();
+
+    res.status(201).json(branches);
   } catch (err: any) {
     res.status(400).json({
       message: err.message || "Create branch failed",

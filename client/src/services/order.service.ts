@@ -6,6 +6,8 @@ export type OrderDetailItem = {
     name?: string;
     price?: number;
     flavor?: string;
+    discounts: any;
+    membershipDiscounts: any;
     [key: string]: any;
   };
   quantity: number;
@@ -33,6 +35,7 @@ export type OrderStatusResponse = {
   createdAt: string;
   payStatus: string;                    // THÊM
   cancelStatus?: string;                // THÊM
+  cancelReason?: string;
   payment?: {
     method: string;                     // COD, VNPAY, ...
     status: string;                     // PENDING, PAID
@@ -42,14 +45,25 @@ export type OrderStatusResponse = {
     label: string;
     completed: boolean;
   }[];
-  items: OrderDetailItem[];   
+  items: OrderDetailItem[];
   note?: string;
+  branchId: number ;
+  address: any ;
 };
 
 // Response khi hủy/yêu cầu hủy đơn
 export type CancelOrderResponse = {
   message: string;
   action?: "canceled_directly" | "cancel_requested";
+};
+
+export const processCustomerCancelRequest = (
+  orderId: number,
+  action: "approve" | "reject",
+  note?: string
+) => {
+  // Endpoint đúng là /manage-orders/:id/handle-cancel (PATCH)
+  return API.patch( `/manage-orders/${orderId}/handle-cancel`, { action, note });
 };
 
 // ==================== Các hàm gọi API ====================
@@ -68,10 +82,10 @@ export const orderService = {
   },
 
   // 3. Hủy hoặc yêu cầu hủy đơn hàng
-  cancelOrder: async (orderId: number): Promise<CancelOrderResponse> => {
-    const res = await API.post(`/order/${orderId}/cancel`);
-    return res.data; // backend trả về { message, action? }
-  },
+cancelOrder: async (orderId: number, reason: string): Promise<CancelOrderResponse> => {
+  const res = await API.post(`/order/${orderId}/cancel`, { reason }); // ← gửi reason
+  return res.data;
+},
 };
 
 export const getOrders = (filters = {}) => {

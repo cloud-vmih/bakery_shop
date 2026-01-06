@@ -22,12 +22,12 @@ const ordersService = new OrdersService();
 export const createVNPayPayment = async (req: Request, res: Response) => {
   try {
     const { orderId, amount } = req.body;
-    const userId = Number((req as any).user.id);
+    const userId = Number((req as any).user.id)
 
-    if (!orderId || !amount || !userId) {
+    if (!orderId || !amount) {
       return res.status(400).json({
         success: false,
-        message: "Thiếu orderId hoặc amount hoặc userId",
+        message: "Thiếu orderId hoặc amount",
       });
     }
 
@@ -41,7 +41,7 @@ export const createVNPayPayment = async (req: Request, res: Response) => {
       amount,
       returnUrl: process.env.VNPAY_RETURN_URL!,
       ipAddr,
-      userId,
+        userId
     });
 
     return res.status(200).json({
@@ -106,11 +106,9 @@ export const vnpayReturn = async (req: Request, res: Response) => {
     ========================= */
     const txnRef = vnp_Params["vnp_TxnRef"];
     const responseCode = vnp_Params["vnp_ResponseCode"];
-    const amount = Number(vnp_Params["vnp_Amount"]) / 100; // VNPay trả về *100
 
-    // vnp_TxnRef = orderId[_userId][_timestamp]
+    // vnp_TxnRef = orderId[_timestamp]
     const orderId = Number(txnRef.split("_")[0]);
-    const userId = Number(txnRef.split("_")[1]);
 
     /* =========================
        3️⃣ LOAD ORDER + INVENTORY DATA
@@ -148,7 +146,7 @@ export const vnpayReturn = async (req: Request, res: Response) => {
       await ordersService.confirmOrder(orderId);
 
       await sendNotification(
-        [userId],
+        [order.customer?.id!],
         "Đặt hàng thành công",
         `Đơn hàng #${order.id} của bạn đã được xác nhận`,
         ENotiType.ORDER,

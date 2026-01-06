@@ -37,10 +37,13 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Notification.prototype, "isRead", void 0);
 __decorate([
+<<<<<<< HEAD
     (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", String)
 ], Notification.prototype, "href", void 0);
 __decorate([
+=======
+>>>>>>> origin/feature/cake-filling
     (0, typeorm_1.Column)({
         type: "enum",
         enum: enum_1.ENotiType,

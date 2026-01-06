@@ -39,7 +39,11 @@ const login = async (req, res) => {
         res.cookie("refresh_token", result.refresh_token, {
             httpOnly: true,
             secure: true,
+<<<<<<< HEAD
             sameSite: "strict",
+=======
+            sameSite: "none",
+>>>>>>> origin/feature/cake-filling
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.status(200).json(result);
@@ -70,7 +74,11 @@ const googleLogin = async (req, res) => {
         res.cookie("refresh_token", result.refresh_token, {
             httpOnly: true,
             secure: true,
+<<<<<<< HEAD
             sameSite: "strict",
+=======
+            sameSite: "none",
+>>>>>>> origin/feature/cake-filling
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         return res.json(result);

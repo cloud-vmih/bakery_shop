@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38bf96b7-789c-4e2b-a6a8-b46b9452731a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
+    <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/context/CartContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/context/CartContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Checkout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Checkout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/order.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/order.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/utils/pricing.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/utils/pricing.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/cart.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/cart.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/order.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/order.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/cart.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/cart.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/order.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/order.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/order.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/order.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,39 +25,47 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="feature/updateQuantity" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
-  <component name="ProjectId" id="36iuyehpY00IyPrukaMmODUTrRD" />
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="3746zbLFWoaBb15by6WhDpXUv42" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/thuyvan",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/CNPM/BakeryShop",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable",
-    "ts.external.directory.path": "D:\\CNPM\\BakeryShop\\server\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/cake-filling&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\LTWEB\\Exercise\\IntelliJ IDEA 2025.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\CNPM\BakeryShop\server\src\services" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -59,16 +76,43 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="38bf96b7-789c-4e2b-a6a8-b46b9452731a" name="Changes" comment="" />
-      <created>1765501969022</created>
+      <changelist id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="" />
+      <created>1766150269002</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1765501969022</updated>
-      <workItem from="1765501970199" duration="1390000" />
+      <updated>1766150269002</updated>
+      <workItem from="1766150270492" duration="11056000" />
+      <workItem from="1766197440884" duration="13777000" />
+      <workItem from="1766223803285" duration="3279000" />
+      <workItem from="1766298448858" duration="19845000" />
+      <workItem from="1766382275834" duration="16823000" />
+      <workItem from="1766463362651" duration="8347000" />
+      <workItem from="1766552078840" duration="4717000" />
+      <workItem from="1766634676959" duration="18891000" />
+      <workItem from="1766727016863" duration="12890000" />
+      <workItem from="1766816230148" duration="11907000" />
+      <workItem from="1766909540635" duration="9999000" />
+      <workItem from="1766935669837" duration="4094000" />
+      <workItem from="1766997489549" duration="11372000" />
+      <workItem from="1767020769017" duration="6333000" />
+      <workItem from="1767247993354" duration="5318000" />
+      <workItem from="1767685583840" duration="33396000" />
+      <workItem from="1767722750917" duration="7000000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

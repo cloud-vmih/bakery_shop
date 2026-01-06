@@ -171,14 +171,14 @@ export const googleService = {
         customer.account = acc;
         customer.avatarURL = avatarURL || "";
         user = await createUser(customer);
+        await createEmailVerification(accountId);
       } else {
-        if (await isAccountVerified(user.account.id))
+        // if (await isAccountVerified(user.account.id))
+        //   accountId = user.account.id;
+        // else throw new Error("Please verify email!");
           accountId = user.account.id;
-        else throw new Error("Please verify email!");
       }
-
       await socialAuthRepo.linkSocialAccount(providerUserId, email, accountId!);
-      await createEmailVerification(accountId);
       await verify(accountId);
     }
 
@@ -214,13 +214,7 @@ export const changePassword = {
       }
       await redis.set(`otp:${email}`, otp, { ex: OTP_TTL });
       await redis.set(cooldownKey, "1", { ex: COOLDOWN_TTL });
-
-    //   const html = `
-    //   <h2>Verify your OTP</h2>
-    //   <p>Your OTP:</p>
-    //   <a>${otp}</a>
-    // `;
-    //   await sendEmail(email, "Verify your OTP", html);
+      console.log("OTP saved to Redis");
 
       await emailService.sendOTP(email, user!.fullName!, otp)
       return { message: "The OTP send successfully, please check it." };
