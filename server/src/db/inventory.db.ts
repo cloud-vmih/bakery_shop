@@ -38,7 +38,9 @@ export const updateMultipleQuantities = async (
         },
         relations: ["item", "branch"],
       });
-      if (update.quantity === 0) continue;
+
+      if (update.quantity === 0 || update.quantity === inventory?.stockQuantity) continue;
+      console.log(inventory)
 
       if (!inventory) {
         // Create new if not exists
@@ -62,7 +64,7 @@ export const updateMultipleQuantities = async (
         inventory.branch = branch;
         inventory.reservedQuantity = 0;
       }
-
+        console.log(update.quantity)
       // Update quantity
       inventory.stockQuantity = update.quantity;
 
@@ -73,7 +75,7 @@ export const updateMultipleQuantities = async (
 
     // Commit transaction
     await queryRunner.commitTransaction();
-
+    console.log("OK")
     return {
       message: `Updated ${results.length} items`,
     };

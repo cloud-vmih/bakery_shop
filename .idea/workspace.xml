@@ -6,21 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/CartPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/MenuManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MenuManagement.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/MyOrders.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/MyOrders.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OrderManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OrderManagement.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OrderStatus.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/services/order.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/order.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/manageOrder.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/manageOrder.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/order.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/order.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/db/manageOrder.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/manageOrder.db.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/dashboard.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/dashboard.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/manageOrder.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/manageOrder.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/services/order.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/order.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/templates/invoice.html" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/templates/invoice.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ItemsDiscountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ItemsDiscountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ManageQuantity.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/db/inventory.db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/db/inventory.db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/membershipDiscount.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/membershipDiscount.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +90,7 @@
       <workItem from="1766997489549" duration="11372000" />
       <workItem from="1767020769017" duration="6333000" />
       <workItem from="1767247993354" duration="5318000" />
-      <workItem from="1767685583840" duration="12008000" />
+      <workItem from="1767685583840" duration="16059000" />
     </task>
     <servers />
   </component>

@@ -294,7 +294,7 @@ export default function ItemsDiscountPage() {
       {selectedDiscount && (
         <div className="space-y-2">
           <p><strong>ID:</strong> {selectedDiscount.id}</p>
-          <p><strong>Sản phẩm ID:</strong> {selectedDiscount.itemIds && selectedDiscount.itemIds.length > 0 ? selectedDiscount.itemIds.join(', ') : "Không xác định"}</p>  // ← SỬA: Chỉ dùng itemIds, fallback message nếu empty
+          <p><strong>Sản phẩm ID:</strong> {selectedDiscount.itemIds && selectedDiscount.itemIds.length > 0 ? selectedDiscount.itemIds.join(', ') : "Không xác định"}</p> 
           <p><strong>Tiêu đề:</strong> {selectedDiscount.title}</p>
           <p><strong>% Giảm:</strong> {selectedDiscount.discountAmount}%</p>
           <p><strong>Bắt đầu:</strong> {formatDate(selectedDiscount.startAt)}</p>

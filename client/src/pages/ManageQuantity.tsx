@@ -67,6 +67,7 @@ export default function InventoryPopup({
             ...prev,
             [itemId]: newQuantity
         }));
+        toast.error(String(newQuantity))
     };
 
     const handleSaveInventory = async () => {
