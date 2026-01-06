@@ -4,7 +4,7 @@ import {
   saveOrder,
   saveOrderInfo,
 } from "../db/manageOrder.db";
-import { EOrderStatus, ECancelStatus } from "../entity/enum/enum";
+import { EOrderStatus, ECancelStatus, EPayStatus } from "../entity/enum/enum";
 import { Order } from "../entity/Orders";
 import dayjs from "dayjs";
 import fs from "fs";
@@ -171,28 +171,58 @@ export const getOrderList = async (filters: any) => {
     .leftJoinAndSelect("order.orderDetails", "orderDetail")
     .leftJoinAndSelect("orderDetail.item", "item")
     .leftJoinAndSelect("order.payment", "payment")
+    .leftJoinAndSelect("order.orderInfo", "orderInfo")
     .orderBy("order.createAt", "DESC");
 
+  // 1. Trạng thái đơn hàng
   if (filters.status) {
     query.andWhere("order.status = :status", { status: filters.status });
   }
 
+  // 2. Tên khách hàng (LIKE, không phân biệt hoa thường)
   if (filters.customerName) {
     query.andWhere("LOWER(customer.fullName) LIKE LOWER(:name)", {
       name: `%${filters.customerName}%`,
     });
   }
 
-  if (filters.fromDate) {
-    query.andWhere("order.createAt >= :fromDate", {
-      fromDate: dayjs(filters.fromDate, "DD/MM/YYYY").toDate(),
+  // 3. Số điện thoại
+  if (filters.phone) {
+    query.andWhere("customer.phoneNumber LIKE :phone", {
+      phone: `%${filters.phone}%`,
     });
   }
 
-  if (filters.toDate) {
-    query.andWhere("order.createAt <= :toDate", {
-      toDate: dayjs(filters.toDate, "DD/MM/YYYY").toDate(),
+  // 4. ID đơn hàng
+  if (filters.orderId) {
+    query.andWhere("order.id = :orderId", { orderId: Number(filters.orderId) });
+  }
+
+  // 5. Phương thức thanh toán
+  if (filters.paymentMethod) {
+    query.andWhere("payment.paymentMethod = :paymentMethod", {
+      paymentMethod: filters.paymentMethod,
     });
+  }
+
+  // 6. Trạng thái thanh toán
+  if (filters.payStatus) {
+    query.andWhere("payment.status = :payStatus", { payStatus: filters.payStatus });
+  }
+
+  // 7. Trạng thái hủy đơn
+  if (filters.cancelStatus) {
+    query.andWhere("order.cancelStatus = :cancelStatus", {
+      cancelStatus: filters.cancelStatus,
+    });
+  }
+
+  // 8. Khoảng thời gian (có xử lý startOf/endOf ngày để chính xác)
+  if (filters.fromDate && filters.toDate) {
+    const from = dayjs(filters.fromDate, "DD/MM/YYYY").startOf("day").toDate();
+    const to = dayjs(filters.toDate, "DD/MM/YYYY").endOf("day").toDate();
+    query.andWhere("order.createAt >= :from", { from });
+    query.andWhere("order.createAt <= :to", { to });
   }
 
   return await query.getMany();
@@ -230,6 +260,12 @@ export const updateOrderStatus = async (
   if (!allowedTransitions[order.status!].includes(newStatus)) {
     throw new Error("Không thể chuyển sang trạng thái này");
   }
+
+  if (newStatus === EOrderStatus.COMPLETED) {
+  if (order.payment && order.payment.status === EPayStatus.PENDING) {
+    order.payment.status = EPayStatus.PAID; 
+  }
+}
 
   order.status = newStatus;
   return await saveOrder(order);
