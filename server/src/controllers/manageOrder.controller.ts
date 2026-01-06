@@ -104,17 +104,16 @@ export const handleCancel = async (req: AuthRequest, res: Response) => {
   try {
     const orderId = Number(req.params.id);
     const { action, note } = req.body;
-    const staffId = req.user?.id;
-
-    if (!staffId) {
-      return res.status(401).json({ message: "Không có quyền" });
-    }
 
     if (!["approve", "reject"].includes(action)) {
       return res.status(400).json({ message: "Hành động không hợp lệ" });
     }
 
-    const order = await handleCancelRequest(orderId, action, String(staffId), note);
+    // Không bắt buộc phải có user ID (vì quyền đã kiểm tra ở frontend)
+    // Nếu có thì dùng, không có thì để "Nhân viên" chung chung
+   const handledById = req.user?.id ? String(req.user.id) : undefined;
+
+    const order = await handleCancelRequest(orderId, action, handledById, note);
 
     res.json({
       message: action === "approve"

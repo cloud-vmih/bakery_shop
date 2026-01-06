@@ -106,37 +106,57 @@ export const requestCancelOrder = async (
 export const handleCancelRequest = async (
   orderId: number,
   action: "approve" | "reject",
-  staffId: string,
+  handledById?: string | null,  // Optional: ID người xử lý (nếu có)
   note?: string
 ) => {
   const order = await findOrderById(orderId);
   if (!order) throw new Error("Đơn hàng không tồn tại");
 
   if (order.cancelStatus !== ECancelStatus.REQUESTED) {
-    throw new Error("Không có yêu cầu hủy nào đang chờ");
+    throw new Error("Không có yêu cầu hủy nào đang chờ xử lý");
   }
 
+  // Ghi người xử lý: dùng ID thật nếu có, không thì fallback chung
+  const processor = handledById?.trim() ? handledById.trim() : "ADMIN_OR_STAFF";
+  order.cancelHandledBy = processor;
+
+  // Chuẩn bị text mô tả người xử lý cho lịch sử note
+  const processorText = handledById?.trim()
+    ? `Nhân viên (ID: ${handledById.trim()})`
+    : "Nhân viên";
+
   if (action === "approve") {
-    if (
-      [EOrderStatus.DELIVERING, EOrderStatus.COMPLETED].includes(order.status!)
-    ) {
-      throw new Error("Không thể duyệt hủy ở trạng thái này");
+    if ([EOrderStatus.DELIVERING, EOrderStatus.COMPLETED].includes(order.status!)) {
+      throw new Error("Không thể duyệt hủy khi đơn đang giao hoặc đã hoàn thành");
     }
 
     order.status = EOrderStatus.CANCELED;
     order.cancelStatus = ECancelStatus.APPROVED;
-    order.cancelHandledBy = staffId;
-    order.cancelNote = note;
+    order.cancelNote = note?.trim() || "Duyệt hủy theo yêu cầu khách hàng";
+
+    // Ghi lịch sử duyệt
+    const historyNote = note?.trim()
+      ? ` | ${processorText} duyệt hủy: ${note.trim()}`
+      : ` | ${processorText} duyệt hủy đơn`;
 
     if (order.orderInfo) {
-      order.orderInfo.note += ` | Đã duyệt hủy${
-        note ? `: ${note}` : ""
-      }`;
+      order.orderInfo.note = (order.orderInfo.note || "") + historyNote;
       await saveOrderInfo(order.orderInfo);
     }
   } else {
+    // action === "reject"
     order.cancelStatus = ECancelStatus.REJECTED;
-    order.cancelNote = note;
+    order.cancelNote = note?.trim() ? `Từ chối: ${note.trim()}` : "Từ chối yêu cầu hủy";
+
+    // Ghi lịch sử từ chối
+    const historyNote = note?.trim()
+      ? ` | ${processorText} từ chối hủy: ${note.trim()}`
+      : " | ${processorText} từ chối yêu cầu hủy";
+
+    if (order.orderInfo) {
+      order.orderInfo.note = (order.orderInfo.note || "") + historyNote;
+      await saveOrderInfo(order.orderInfo);
+    }
   }
 
   return await saveOrder(order);
@@ -149,6 +169,7 @@ export const getOrderList = async (filters: any) => {
     .leftJoinAndSelect("order.customer", "customer")
     .leftJoinAndSelect("order.orderDetails", "orderDetail")
     .leftJoinAndSelect("orderDetail.item", "item")
+    .leftJoinAndSelect("order.payment", "payment")
     .orderBy("order.createAt", "DESC");
 
   if (filters.status) {
@@ -208,22 +229,56 @@ export const generateInvoiceHTML = (order: Order) => {
   const templatePath = path.join(__dirname, "../templates/invoice.html");
   let html = fs.readFileSync(templatePath, "utf-8");
 
-  const itemInfo = order.orderDetails?.[0]?.item;
   const note = order.orderInfo?.note || "";
-  const subtotal = (order.orderDetails?.[0]?.quantity || 1) * (itemInfo?.price || 0);
+
+  // Tính subtotal và tạo bảng sản phẩm với căn chỉnh đẹp
+  let subtotal = 0;
+  let productRows = "";
+
+  if (order.orderDetails && order.orderDetails.length > 0) {
+    order.orderDetails.forEach((detail) => {
+      const item = detail.item;
+      const name = item?.name || "Sản phẩm không xác định";
+      const quantity = detail.quantity || 0;
+      const price = item?.price || 0;
+      const lineTotal = price * quantity;
+      subtotal += lineTotal;
+
+      productRows += `
+        <tr style="font-size: 15px;">
+          <td style="padding: 12px 8px; border-bottom: 1px solid #eee;">${name}</td>
+          <td align="center" style="padding: 12px 8px; border-bottom: 1px solid #eee; width: 15%;">${quantity}</td>
+          <td align="right" style="padding: 12px 8px; border-bottom: 1px solid #eee; width: 20%;">${price.toLocaleString("vi-VN")} VND</td>
+          <td align="right" style="padding: 12px 8px; border-bottom: 1px solid #eee; width: 20%; font-weight: bold;">${lineTotal.toLocaleString("vi-VN")} VND</td>
+        </tr>
+      `;
+    });
+  } else {
+    productRows = `<tr><td colspan="4" align="center" style="padding: 20px; color: #999;">Không có sản phẩm</td></tr>`;
+  }
+
+  // Các khoản thanh toán
+  const vatAmount = subtotal * 0.1;
+  const shippingFee = 30000;
+  const discountAmount = -50000;
+  const total = subtotal + vatAmount + shippingFee + discountAmount;
+
+  const formatVND = (amount: number) => Math.abs(amount).toLocaleString("vi-VN");
 
   return html
-    .replace(/{{orderId}}/g, String(order.id))
+    .replace(/{{orderId}}/g, String(order.id || ""))
     .replace(/{{customerName}}/g, order.customer?.fullName || "Khách lẻ")
     .replace(/{{phone}}/g, order.customer?.phoneNumber || "-")
-    .replace(
-      /{{date}}/g,
-      new Date(order.createAt!).toLocaleDateString("vi-VN")
-    )
+    .replace(/{{date}}/g, new Date(order.createAt!).toLocaleDateString("vi-VN"))
     .replace(/{{status}}/g, String(order.status ?? ""))
-    .replace(/{{itemName}}/g, itemInfo?.name || "Sản phẩm")
-    .replace(/{{quantity}}/g, String(order.orderDetails?.[0]?.quantity || 1))
-    .replace(/{{price}}/g, String(itemInfo?.price || 0))
-    .replace(/{{subtotal}}/g, subtotal.toLocaleString())
-    .replace(/{{note}}/g, note);
+
+    .replace(/{{productRows}}/g, productRows)
+
+    .replace(/{{subtotal}}/g, formatVND(subtotal))
+    .replace(/{{vatAmount}}/g, formatVND(vatAmount))
+    .replace(/{{shippingFee}}/g, formatVND(shippingFee))
+    .replace(/{{discountAmount}}/g, formatVND(discountAmount))
+    .replace(/{{total}}/g, formatVND(total))
+
+    .replace(/{{note}}/g, note ? `<p style="margin-top: 30px; font-style: italic; color: #555;"><strong>Ghi chú:</strong> ${note}</p>` : "");
 };

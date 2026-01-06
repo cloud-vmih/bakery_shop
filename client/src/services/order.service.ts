@@ -53,6 +53,15 @@ export type CancelOrderResponse = {
   action?: "canceled_directly" | "cancel_requested";
 };
 
+export const processCustomerCancelRequest = (
+  orderId: number,
+  action: "approve" | "reject",
+  note?: string
+) => {
+  // Endpoint đúng là /manage-orders/:id/handle-cancel (PATCH)
+  return API.patch( `/manage-orders/${orderId}/handle-cancel`, { action, note });
+};
+
 // ==================== Các hàm gọi API ====================
 
 export const orderService = {

@@ -48,7 +48,8 @@ import {
   getOrders,
   updateOrderStatus,
   cancelOrder,
-} from "../services/orders.service";
+  processCustomerCancelRequest,
+} from "../services/order.service";
 import "../styles/OrderManagement.css";
 
 const { Title, Text } = Typography;
@@ -62,8 +63,7 @@ interface OrderRecord {
     fullName?: string;
     phoneNumber?: string;
   };
-  paymentMethod?: string;
-  payStatus?: string;
+
   cancelStatus?: string;
   status?: string;
    cancelReason?: string;     // Lý do khách hàng hủy
@@ -77,8 +77,14 @@ interface OrderRecord {
       name?: string;
       price?: number;
       description?: string;
-    };
+    }; 
+    
   }>;
+  payment?: {
+    paymentMethod: string;  // "COD" | "VNPAY"
+    status: string;         // "PENDING" | "PAID" | "FAILED" | "REFUNDED"
+  } | null;
+
 }
 
 const OrderManagement: React.FC = () => {
@@ -105,6 +111,72 @@ const OrderManagement: React.FC = () => {
   const canAdminCancel = (order: OrderRecord) => {
     return !["DELIVERING", "COMPLETED", "CANCELED"].includes(order.status || "");
   };
+
+// Trong OrderManagement.tsx - hàm handleCustomerCancelRequest (giữ nguyên hoặc copy lại để chắc chắn)
+
+const handleCustomerCancelRequest = (order: OrderRecord) => {
+  let action: "approve" | "reject" = "approve";
+  let adminNote = "";
+
+  Modal.confirm({
+    title: "Xử lý yêu cầu hủy đơn từ khách hàng",
+    icon: <ExclamationCircleOutlined style={{ color: "#faad14" }} />,
+    content: (
+      <>
+        <Text>
+          Đơn hàng <strong>#{order.id}</strong> có yêu cầu hủy từ khách hàng.
+        </Text>
+        {order.cancelReason && (
+          <div style={{ margin: "12px 0" }}>
+            <Text type="secondary">Lý do khách hàng:</Text>
+            <Text style={{ display: "block", marginTop: 4, fontStyle: "italic" }}>
+              "{order.cancelReason}"
+            </Text>
+          </div>
+        )}
+        <div style={{ marginTop: 16 }}>
+          <Text strong>Chọn hành động:</Text>
+          <Select
+            style={{ width: "100%", marginTop: 8 }}
+            placeholder="Chọn duyệt hoặc từ chối"
+            onChange={(value) => (action = value as "approve" | "reject")}
+            defaultValue="approve"
+          >
+            <Option value="approve">
+              <CheckCircleOutlined style={{ color: "#52c41a" }} /> Duyệt hủy đơn
+            </Option>
+            <Option value="reject">
+              <CloseCircleOutlined style={{ color: "#ff4d4f" }} /> Từ chối yêu cầu hủy
+            </Option>
+          </Select>
+        </div>
+        <Input.TextArea
+          placeholder="Ghi chú nội bộ (khuyến khích khi từ chối)"
+          rows={3}
+          style={{ marginTop: 12 }}
+          onChange={(e) => (adminNote = e.target.value)}
+        />
+      </>
+    ),
+    okText: "Thực hiện",
+    okType: "danger",
+    cancelText: "Hủy bỏ",
+    width: 520,
+    onOk: async () => {
+      try {
+        await processCustomerCancelRequest(order.id, action, adminNote.trim() || undefined);
+        message.success(
+          action === "approve"
+            ? "Đã duyệt hủy đơn hàng theo yêu cầu khách"
+            : "Đã từ chối yêu cầu hủy đơn"
+        );
+        fetchOrders();
+      } catch (err: any) {
+        message.error(err.response?.data?.message || "Không thể xử lý yêu cầu");
+      }
+    },
+  });
+};
 
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
@@ -158,6 +230,7 @@ const OrderManagement: React.FC = () => {
   const handlePrintInvoice = (id: number) => {
     window.open(`http://localhost:5000/api/manage-orders/${id}/print`, "_blank");
   };
+  
 
   const columns: ColumnsType<OrderRecord> = [
     {
@@ -194,20 +267,55 @@ const OrderManagement: React.FC = () => {
         </Space>
       ),
     },
-    {
-      title: <>Thanh toán <DollarCircleOutlined /></>,
-      width: 130,
-      render: (_, record) => (
-        <Space direction="vertical" size={4}>
-          <Tag color={record.paymentMethod === "BANKING" ? "success" : "warning"}>
-            {record.paymentMethod === "BANKING" ? "Chuyển khoản" : "COD"}
-          </Tag>
-          <Tag color={record.payStatus === "PAID" ? "success" : "default"}>
-            {record.payStatus === "PAID" ? "Đã thanh toán" : "Chưa thanh toán"}
-          </Tag>
-        </Space>
-      ),
-    },
+  {
+  title: <>Thanh toán <DollarCircleOutlined /></>,
+  width: 160,
+  render: (_, record) => {
+    const method = record.payment?.paymentMethod;
+    const status = record.payment?.status;
+
+    // Hiển thị phương thức
+    const methodText = method === "VNPAY" 
+      ? "VNPAY" 
+      : method === "COD" 
+      ? "COD (Tiền mặt)" 
+      : "Không xác định";
+
+    const methodColor = method === "VNPAY" 
+      ? "green" 
+      : method === "COD" 
+      ? "orange" 
+      : "default";
+
+    // Hiển thị trạng thái
+    const statusText = status === "PAID" 
+      ? "Đã thanh toán" 
+      : status === "REFUNDED" 
+      ? "Đã hoàn tiền" 
+      : status === "FAILED" 
+      ? "Thanh toán thất bại" 
+      : "Chưa thanh toán";
+
+    const statusColor = status === "PAID" 
+      ? "success" 
+      : status === "REFUNDED" 
+      ? "purple" 
+      : status === "FAILED" 
+      ? "red" 
+      : "warning";
+
+    return (
+      <Space direction="vertical" size={4}>
+        <Tag color={methodColor}>
+          {methodText}
+        </Tag>
+        <Tag color={statusColor}>
+          {statusText}
+        </Tag>
+      </Space>
+    );
+  },
+},
     {
       title: <>Yêu cầu hủy <QuestionCircleOutlined /></>,
       width: 140,
@@ -439,6 +547,19 @@ const OrderManagement: React.FC = () => {
           />
         </Tooltip>
       )}
+      {/* Nút mới: Xử lý yêu cầu hủy từ khách */}
+        {record.cancelStatus === "REQUESTED" && (
+          <Tooltip title="Xử lý yêu cầu hủy từ khách">
+            <Button
+              type="primary"
+              danger
+              shape="circle"
+              size="small"
+              icon={<ExclamationCircleOutlined />}
+              onClick={() => handleCustomerCancelRequest(record)}
+            />
+          </Tooltip>
+        )}
 
       {canAdminCancel(record) && (
         <Tooltip title="Hủy đơn">
@@ -461,13 +582,6 @@ const OrderManagement: React.FC = () => {
         />
       </Tooltip>
 
-      {record.cancelStatus === "REQUESTED" && (
-        <Badge dot status="processing" offset={[6, 0]}>
-          <Button type="dashed" danger size="small">
-            Yêu cầu hủy
-          </Button>
-        </Badge>
-      )}
     </Space>
   ),
 },
