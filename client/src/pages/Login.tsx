@@ -104,7 +104,7 @@ export default function AuthPage() {
                     </div>
 
                     <div className="forgot-link">
-                        <a href="/changePW" className="auth-link">
+                        <a href="/change-password" className="auth-link">
                             Quên mật khẩu?
                         </a>
                     </div>
