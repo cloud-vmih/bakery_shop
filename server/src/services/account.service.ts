@@ -171,14 +171,14 @@ export const googleService = {
         customer.account = acc;
         customer.avatarURL = avatarURL || "";
         user = await createUser(customer);
+        await createEmailVerification(accountId);
       } else {
-        if (await isAccountVerified(user.account.id))
+        // if (await isAccountVerified(user.account.id))
+        //   accountId = user.account.id;
+        // else throw new Error("Please verify email!");
           accountId = user.account.id;
-        else throw new Error("Please verify email!");
       }
-
       await socialAuthRepo.linkSocialAccount(providerUserId, email, accountId!);
-      await createEmailVerification(accountId);
       await verify(accountId);
     }
 

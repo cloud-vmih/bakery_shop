@@ -5,18 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c764ea91-7c0a-45bc-ac5e-8b8f1d84b7b7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_12_2025_8_23_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_12_2025_8_23_AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/controllers/account.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/controllers/account.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dist/helpers/sendEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/dist/helpers/sendEmail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ChangePassword.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChangePassword.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Register.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/styles/changePassword.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/changePassword.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/config/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/config/database.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/helpers/sendEmail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/helpers/sendEmail.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/branch.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/branch.route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/dashboard.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/dashboard.route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/manageOrder.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/manageOrder.route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/review.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/review.route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/staff.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/staff.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/account.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/account.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +91,8 @@
       <workItem from="1766935669837" duration="4094000" />
       <workItem from="1766997489549" duration="11372000" />
       <workItem from="1767020769017" duration="6333000" />
+      <workItem from="1767247993354" duration="5318000" />
+      <workItem from="1767685583840" duration="313000" />
     </task>
     <servers />
   </component>
