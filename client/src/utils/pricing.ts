@@ -18,7 +18,7 @@ export type PricableItem = {
 };
 
 /**
- * Lấy discount đang active (nếu có)
+ )* Lấy discount đang active (nếu có
  */
 export function getActiveDiscount(item: PricableItem): Discount | null {
   if (!item?.discounts || item.discounts.length === 0) return null;
