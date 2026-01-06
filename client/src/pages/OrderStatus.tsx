@@ -5,7 +5,8 @@ import { orderService } from "../services/order.service";
 import { addToCart } from "../services/cart.service"; // Hàm addToCart nhận (itemId: number, quantity?: number)
 import { Review} from "../services/review.service"; // Hàm addToCart nhận (itemId: number, quantity?: number)
 import { Header } from "../components/Header";
-
+import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 export default function OrderStatus() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
@@ -108,39 +109,43 @@ export default function OrderStatus() {
     alert("Chuyển đến trang đánh giá đơn hàng...");
   };
 
-  // === CHỨC NĂNG MUA LẠI - ĐÃ ĐIỀU CHỈNH THEO cart.services.ts ===
-  const handleBuyAgain = async () => {
-  if (!data?.items || data.items.length === 0) {
-    alert("Không có sản phẩm để mua lại!");
+// === CHỨC NĂNG MUA LẠI - CẬP NHẬT GIỎ HÀNG VÀ Ở LẠI TRANG ===
+const { reloadCart } = useCart(); // ← Lấy hàm reload giỏ hàng
+
+const handleBuyAgain = async () => {
+  if (!data || !data.items || data.items.length === 0) {
+    toast.error("Không có sản phẩm nào để mua lại.");
     return;
   }
 
-  setAddingToCart(true);
-
   try {
-    for (const cartItem of data.items) {
-      const itemId = cartItem.item?.id;
-      const quantity = cartItem.quantity || 1;
+    // Chuẩn bị danh sách sản phẩm cần thêm
+    const itemsToAdd = data.items.map((i: any) => ({
+      itemId: i.item.id, // chắc chắn backend dùng field "id"
+      quantity: i.quantity || 1,
+    }));
 
-      if (itemId) {
-        await addToCart(itemId, quantity);
-      }
+    // Gọi API thêm nhiều sản phẩm vào giỏ (nếu backend hỗ trợ)
+    // Nếu chưa có addMultiple, thì loop add từng cái
+    for (const { itemId, quantity } of itemsToAdd) {
+      await addToCart (itemId, quantity); // dùng hàm từ cart.service
     }
 
-    // Chuyển ngay luôn, vì toast đã hiện từng cái rồi
-    navigate("/cart");
+    // === QUAN TRỌNG: Reload giỏ hàng để cập nhật UI ngay lập tức ===
+    await reloadCart();
+
+    // Tùy chọn: Có thể chuyển hướng sang giỏ hàng
+    // navigate("/cart");
+
   } catch (error: any) {
-    console.error("Lỗi khi mua lại:", error);
+    console.error("Lỗi khi mua lại đơn hàng:", error);
     if (error.message === "NEED_LOGIN") {
-      alert("Vui lòng đăng nhập để tiếp tục!");
+      toast.error("Vui lòng đăng nhập để mua lại!");
     } else {
-      alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại.");
+      toast.error("Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.");
     }
-  } finally {
-    setAddingToCart(false);
   }
 };
-
   if (loading) {
     return (
       <>
