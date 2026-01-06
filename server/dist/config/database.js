@@ -20,7 +20,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB_NAME,
     //url: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
-    synchronize: true,
+    synchronize: false,
     entities: [path_1.default.join(__dirname, "../entity/**/*.ts")],
     migrations: [path_1.default.join(__dirname, "../migration/*.ts")],
     logging: ["error"],
