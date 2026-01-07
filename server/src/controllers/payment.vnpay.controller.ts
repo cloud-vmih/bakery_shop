@@ -139,9 +139,6 @@ export const vnpayReturn = async (req: Request, res: Response) => {
       // 3️⃣ confirm order
       await ordersService.confirmOrder(orderId);
 
-      // 3️⃣ confirm order
-      await ordersService.confirmOrder(orderId);
-
       // 4️⃣ 🔥 TÍCH ĐIỂM THÀNH VIÊN (VNPay)
       const vnpAmountRaw = vnp_Params["vnp_Amount"];
       const totalAmount = Number(vnpAmountRaw) / 100;

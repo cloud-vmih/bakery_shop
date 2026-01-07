@@ -30,8 +30,6 @@ type Draft = {
   selectedAddressId: number | null;
   newAddress: string;
   newAddressObj?: AddressResult | null;
-  saveAddress: boolean;
-  setDefault: boolean;
   paymentMethod: "COD" | "VNPAY";
   note?: string;
 };
@@ -94,11 +92,6 @@ export default function Checkout() {
     draft?.newAddressObj ?? null
   );
 
-  const [saveAddressState, setSaveAddressState] = useState(
-    draft?.saveAddress ?? false
-  );
-  const [setDefault, setSetDefault] = useState(draft?.setDefault ?? false);
-
   useEffect(() => {
     if (!user) return;
 
@@ -109,8 +102,7 @@ export default function Checkout() {
       if (
         !draft?.selectedAddressId &&
         !draft?.newAddress &&
-        selectedAddressId === null &&
-        newAddress.trim() === ""
+        selectedAddressId === null
       ) {
         const defaultAddr = data.find((a) => a.isDefault);
         setSelectedAddressId(defaultAddr?.id ?? null);
@@ -160,8 +152,6 @@ export default function Checkout() {
       selectedAddressId,
       newAddress,
       newAddressObj,
-      saveAddress: saveAddressState,
-      setDefault,
       paymentMethod,
       note,
     });
@@ -170,8 +160,6 @@ export default function Checkout() {
     selectedAddressId,
     newAddress,
     newAddressObj,
-    saveAddressState,
-    setDefault,
     paymentMethod,
     note,
   ]);
@@ -183,7 +171,7 @@ export default function Checkout() {
     let addressId = selectedAddressId;
     let fullAddress = "";
 
-    // 🔥 CASE 1: user nhập địa chỉ mới
+    // ✅ NHẬP ĐỊA CHỈ MỚI → LUÔN LƯU
     if (!addressId && newAddressObj) {
       try {
         const res = await createAddressForCheckout({
@@ -191,7 +179,6 @@ export default function Checkout() {
           lat: newAddressObj.lat,
           lng: newAddressObj.lng,
           placeId: newAddressObj.placeId,
-          isDefault: setDefault,
         });
         addressId = res.addressId;
         fullAddress = res.fullAddress;
@@ -201,7 +188,7 @@ export default function Checkout() {
       }
     }
 
-    // 🔥 CASE 2: chọn địa chỉ từ sổ địa chỉ
+    // ✅ CHỌN ĐỊA CHỈ CÓ SẴN
     if (addressId && !fullAddress) {
       const selected = addresses.find((a) => a.id === addressId);
       fullAddress = selected?.fullAddress || "";
@@ -216,7 +203,7 @@ export default function Checkout() {
       paymentMethod,
       items: selectedItems,
       note,
-      shippingFee: 10000, //thay đổi biến ở đây
+      shippingFee: 10000,
       membershipDiscount: 0,
     };
 
@@ -246,10 +233,6 @@ export default function Checkout() {
                 onSelectAddress={setSelectedAddressId}
                 newAddress={newAddress}
                 onNewAddressChange={setNewAddress}
-                saveAddress={saveAddressState}
-                setSaveAddress={setSaveAddressState}
-                setDefault={setDefault}
-                setSetDefault={setSetDefault}
                 onSelectNewAddress={setNewAddressObj}
               />
             </div>
@@ -277,10 +260,11 @@ export default function Checkout() {
         <div className="space-y-6">
           <OrderSummary
             items={selectedItems}
-            shippingFee={10000} //Thêm biến ở đây
-            membershipDiscount={0} //Thêm biến ở đây
+            shippingFee={10000}
+            membershipDiscount={0}
           />
           <ConfirmOrderButton onSubmit={handleSubmit} />
+
           {errors.length > 0 && (
             <div className="checkout-errors">
               {errors.map((e, i) => (
@@ -290,6 +274,7 @@ export default function Checkout() {
               ))}
             </div>
           )}
+
           <Link
             to="/cart"
             className="block mt-3 text-center text-sm text-emerald-600"

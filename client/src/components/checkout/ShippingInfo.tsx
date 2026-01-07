@@ -8,13 +8,7 @@ type Props = {
   newAddress: string;
   onNewAddressChange: (v: string) => void;
 
-  saveAddress: boolean;
-  setSaveAddress: (v: boolean) => void;
-
-  setDefault: boolean;
-  setSetDefault: (v: boolean) => void;
-
-  // 🔥 THÊM: nhận full object từ autocomplete
+  // 🔥 nhận full object từ autocomplete
   onSelectNewAddress: (addr: AddressResult) => void;
 };
 
@@ -24,15 +18,8 @@ export default function ShippingInfo({
   onSelectAddress,
   newAddress,
   onNewAddressChange,
-  saveAddress,
-  setSaveAddress,
-  setDefault,
-  setSetDefault,
   onSelectNewAddress,
 }: Props) {
-  const usingNewAddress =
-    selectedAddressId === null && newAddress.trim() !== "";
-
   /* ================= HANDLERS ================= */
 
   const handleSelectExistingAddress = (
@@ -41,21 +28,10 @@ export default function ShippingInfo({
     const value = e.target.value ? Number(e.target.value) : null;
     onSelectAddress(value);
 
+    // Nếu chọn địa chỉ có sẵn → clear địa chỉ mới
     if (value !== null) {
       onNewAddressChange("");
-      setSaveAddress(false);
-      setSetDefault(false);
     }
-  };
-
-  const handleSaveToggle = (checked: boolean) => {
-    setSaveAddress(checked);
-    if (!checked) setSetDefault(false);
-  };
-
-  const handleDefaultToggle = (checked: boolean) => {
-    setSetDefault(checked);
-    if (checked) setSaveAddress(true);
   };
 
   /* ================= RENDER ================= */
@@ -84,36 +60,12 @@ export default function ShippingInfo({
           placeholder="Hoặc nhập / tìm địa chỉ của bạn"
           disabled={selectedAddressId !== null}
           onSelect={(addr) => {
-            onSelectAddress(null); // bỏ chọn address cũ
+            // Khi chọn địa chỉ mới → bỏ chọn address cũ
+            onSelectAddress(null);
             onNewAddressChange(addr.fullAddress);
             onSelectNewAddress(addr);
           }}
         />
-      </div>
-
-      {/* ===== OPTIONS ===== */}
-      <div className="checkout-row">
-        <label className={`toggle ${!usingNewAddress ? "disabled" : ""}`}>
-          <input
-            type="checkbox"
-            checked={saveAddress}
-            disabled={!usingNewAddress}
-            onChange={(e) => handleSaveToggle(e.target.checked)}
-          />
-          <span className="slider" />
-          <span className="toggle-label">Lưu địa chỉ cho lần mua kế tiếp</span>
-        </label>
-
-        <label className={`toggle ${!usingNewAddress ? "disabled" : ""}`}>
-          <input
-            type="checkbox"
-            checked={setDefault}
-            disabled={!usingNewAddress}
-            onChange={(e) => handleDefaultToggle(e.target.checked)}
-          />
-          <span className="slider" />
-          <span className="toggle-label">Địa chỉ mặc định</span>
-        </label>
       </div>
     </section>
   );
